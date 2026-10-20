@@ -1,0 +1,297 @@
+/* ==========================================================================
+   Chapter layouts: hero, chapter title cards, scrub + scrolly stages,
+   halftime, players, final buzzer, mobile.
+   ========================================================================== */
+
+/* --- TIP-OFF -------------------------------------------------------------- */
+.hero { position: relative; height: 100vh; min-height: 680px; overflow: hidden; }
+.hero-stage {
+  position: absolute; inset: 0; display: flex; justify-content: center; align-items: flex-end;
+  perspective: 1300px; perspective-origin: 50% 20%;
+}
+.court3d {
+  position: relative; width: min(1180px, 96vw); aspect-ratio: 50 / 47.5;
+  transform-origin: 50% 85%; transform: translateY(26%) rotateX(60deg); will-change: transform;
+}
+.court3d .court-lines, .court3d .particles { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-copy { position: absolute; left: 6vw; top: calc(var(--hud-h) + 9vh); z-index: 2; max-width: 1040px; }
+.hero-title { font-size: clamp(68px, 12.6vw, 232px); }
+.hero-title > span { display: block; }
+.hero-title .accent { color: var(--three); }
+.hero-title .line-mask:last-child { filter: drop-shadow(0 0 36px rgba(236, 94, 34, 0.4)); }
+.hero-dek { max-width: 600px; font-size: 19px; color: var(--ink-2); margin: 26px 0 30px; }
+.hero-stats { display: flex; gap: 48px; flex-wrap: wrap; }
+.hero-stats .led { font-size: 46px; }
+.hero-stats p { margin: 6px 0 0; font: 500 12px/1.4 var(--mono); letter-spacing: 0.04em; color: var(--ink-2); max-width: 220px; }
+.lower-third {
+  position: absolute; right: 5vw; bottom: 15vh; width: 340px; z-index: 2;
+  background: rgba(18, 21, 28, 0.82); backdrop-filter: blur(8px);
+  border: 1px solid var(--line); border-left: 3px solid var(--three); border-radius: 4px 14px 14px 4px; padding: 16px 18px;
+}
+.lower-third-tag { font: 700 10px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--three); margin: 0 0 8px; }
+.lower-third-quote { margin: 0; font-size: 15px; font-style: italic; }
+.lower-third-who { margin: 8px 0 0; font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.scroll-cue {
+  position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 2;
+  display: flex; align-items: center; gap: 10px; text-decoration: none;
+  font: 600 11px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2);
+}
+.cue-ball { width: 12px; height: 12px; border-radius: 50%; background: var(--three); box-shadow: 0 0 12px var(--three);
+  animation: dribble 1s cubic-bezier(0.5, 0, 0.5, 1) infinite alternate; }
+@keyframes dribble { from { transform: translateY(-8px); } to { transform: translateY(4px) scaleY(0.85); } }
+
+/* --- Chapter title cards ----------------------------------------------------- */
+.chapter-card {
+  position: relative; min-height: 100vh; padding: 18vh 6vw 12vh; display: flex; flex-direction: column; justify-content: center;
+  overflow: hidden;
+}
+.chapter-card .chapter-title { font-size: clamp(72px, 13vw, 250px); }
+.chapter-lead { max-width: 640px; font-size: 20px; color: var(--ink-2); margin: 28px 0 0; }
+.chapter-card::after {           /* half-court circle motif */
+  content: ""; position: absolute; right: -14vw; top: 50%; width: 52vw; aspect-ratio: 1; transform: translateY(-50%);
+  border: 1px solid var(--line); border-radius: 50%; pointer-events: none;
+}
+
+/* --- Shared stage --------------------------------------------------------- */
+.stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+.viz-area { position: absolute; left: 38vw; right: 4vw; top: calc(var(--hud-h) + 4vh); bottom: 5vh; }
+.viz-area .court-lines, .viz-area .particles, .viz-area .overlay { position: absolute; }
+.viz-area .overlay { overflow: visible; pointer-events: none; }
+
+/* --- Q1: scrubbed timeline ------------------------------------------------- */
+.scrub { position: relative; height: 460vh; }
+.q1-season {
+  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%); pointer-events: none; white-space: nowrap;
+  font: 900 25vw/1 var(--display); color: transparent; -webkit-text-stroke: 1px rgba(242, 238, 230, 0.09);
+}
+.q1-top { position: absolute; left: 5vw; top: calc(var(--hud-h) + 4vh); display: flex; flex-direction: column; gap: 12px; z-index: 2; }
+.q1-chart { position: absolute; left: 3vw; right: 33vw; top: 24vh; bottom: 11vh; margin: 0; }
+.q1-chart svg { width: 100%; height: 100%; overflow: visible; }
+.q1-side { position: absolute; right: 4vw; top: calc(var(--hud-h) + 9vh); width: 27vw; bottom: 9vh; display: flex; flex-direction: column; gap: 14px; }
+.scoreboard {
+  background: #0d0f14; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7), 0 0 0 4px rgba(18, 21, 28, 0.7);
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px;
+}
+.scoreboard .cell { display: flex; flex-direction: column; gap: 4px; }
+.scoreboard .cell.wide { grid-column: 1 / -1; }
+.scoreboard .lbl { font: 600 10px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.scoreboard .led { font-size: 30px; }
+.scoreboard .wide .led { font-size: 40px; color: var(--three); }
+.scoreboard .led.off { color: var(--muted); text-shadow: none; }
+.event-stack { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
+.event {
+  background: rgba(18, 21, 28, 0.88); border: 1px solid var(--line); border-left: 3px solid var(--ink);
+  border-radius: 4px 12px 12px 4px; padding: 11px 14px; transition: opacity 0.4s, filter 0.4s;
+}
+.event.milestone { border-left-color: var(--three); }
+.event.old { opacity: 0.4; filter: saturate(0.4); }
+.event .when { font: 600 10px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+.event h4 { margin: 3px 0 2px; font: 800 20px/1.05 var(--display); text-transform: uppercase; }
+.event p { margin: 0; font-size: 13px; color: var(--ink-2); }
+.q1-note { position: absolute; left: 5vw; bottom: 3.5vh; margin: 0; font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.05em; }
+.q1-chart .now-dot { fill: var(--three); filter: drop-shadow(0 0 8px var(--three)); }
+.q1-chart .event-tick { stroke: rgba(242, 238, 230, 0.16); }
+.q1-chart .event-tick.passed { stroke: rgba(242, 238, 230, 0.4); }
+
+/* --- Scrolly (Q2, Q3): sticky stage + step cards --------------------------- */
+.scrolly { position: relative; }
+.steps { position: relative; z-index: 3; margin-top: -100vh; padding-bottom: 20vh; pointer-events: none; }
+.step { min-height: 100vh; display: flex; align-items: center; padding-left: 5vw; }
+.step-card {
+  pointer-events: auto; width: min(400px, 90vw); padding: 24px 26px; border-radius: 18px;
+  background: rgba(18, 21, 28, 0.84); backdrop-filter: blur(12px); border: 1px solid var(--line);
+  opacity: 0.25; transform: translateY(18px); transition: opacity 0.5s, transform 0.7s var(--ease-out);
+}
+.step.is-active .step-card { opacity: 1; transform: none; }
+.step-card .step-num { font: 600 11px var(--mono); letter-spacing: 0.14em; color: var(--three); text-transform: uppercase; margin: 0 0 10px; }
+.step-card h3 { font: 900 38px/0.92 var(--display); text-transform: uppercase; margin: 0 0 14px; }
+.step-card p { color: var(--ink-2); margin: 0 0 10px; font-size: 16px; }
+.step-card p:last-child { margin-bottom: 0; }
+.step-card .controls { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
+.step-card .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.key { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin: 0 4px 0 2px; vertical-align: 0; }
+.key.two { background: var(--two); box-shadow: 0 0 8px var(--two); }
+.key.three { background: var(--three); box-shadow: 0 0 8px var(--three); }
+.key.acc { background: var(--acc); }
+
+/* Q2 */
+.stage-legend { position: absolute; right: 4vw; bottom: 4vh; z-index: 2; display: flex; gap: 18px;
+  font: 600 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.overlay .col-label { font: 800 18px var(--display); text-transform: uppercase; fill: var(--ink); }
+.overlay .col-value { font: 700 26px var(--mono); fill: var(--ink); }
+.overlay .col-sub { font: 500 11px var(--mono); fill: var(--ink-2); letter-spacing: 0.04em; }
+.overlay .season-stamp { font: 900 64px var(--display); fill: rgba(242, 238, 230, 0.9); }
+.overlay .season-sub { font: 600 11px var(--mono); fill: var(--ink-2); letter-spacing: 0.14em; }
+
+/* Q3 */
+.q3-svg { width: 100%; height: 100%; overflow: visible; }
+.ball .leather { fill: #1b1f28; stroke: rgba(242, 238, 230, 0.55); stroke-width: 1; }
+.ball .seam { fill: none; stroke: rgba(242, 238, 230, 0.16); stroke-width: 1; }
+.ball text { font: 700 9px var(--mono); fill: var(--ink); text-anchor: middle; dominant-baseline: central; letter-spacing: 0.02em; pointer-events: none; }
+.ball.hot .leather { fill: var(--three); stroke: #ffd2bf; }
+.ball.cold .leather { fill: var(--two); stroke: #cfe3ff; }
+.ball .logo { display: none; pointer-events: none; }
+.ball.has-logo .logo { display: inline; }
+.ball.has-logo .seam, .ball.has-logo text { display: none; }
+.ball.has-logo .leather { fill: #fff; stroke: rgba(11, 13, 18, 0.6); }
+.ball.has-logo.hot .leather { stroke: var(--three); stroke-width: 3.5; }
+.ball.has-logo.cold .leather { stroke: var(--two); stroke-width: 3.5; }
+.ball.dim { opacity: 0.28; }
+.annot text { font: 600 13px var(--text); fill: var(--ink); }
+.annot .sub { font: 500 11px var(--mono); fill: var(--ink-2); }
+.annot .halo, .annot text { paint-order: stroke; stroke: var(--bg); stroke-width: 5px; stroke-linejoin: round; }
+.annot line, .annot path { stroke: rgba(242, 238, 230, 0.5); fill: none; }
+.quad-label { font: 900 20px var(--display); text-transform: uppercase; fill: var(--ink); }
+.quad-value { font: 700 40px var(--mono); fill: var(--ink); }
+.quad-sub { font: 500 11px var(--mono); fill: var(--ink-2); }
+.r-meter {
+  position: absolute; right: 4vw; top: calc(var(--hud-h) + 56px); z-index: 2; display: grid; grid-template-columns: auto auto; gap: 0 10px;
+  align-items: baseline; padding: 14px 18px; border-radius: 14px; background: #0d0f14; border: 1px solid var(--line);
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.7); opacity: 0; transition: opacity 0.5s;
+}
+.r-meter.show { opacity: 1; }
+.r-meter .r-label { font: italic 700 28px var(--text); color: var(--ink-2); }
+.r-meter .led { font-size: 54px; }
+.r-meter .r-caption { grid-column: 1 / -1; font: 600 10px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
+
+/* --- Halftime (placeholder) ------------------------------------------------- */
+.halftime { position: relative; min-height: 100vh; padding: 18vh 6vw 14vh; border-top: 1px solid var(--line);
+  background: radial-gradient(ellipse at 20% 0%, rgba(61, 143, 240, 0.08), transparent 60%); }
+.halftime .chapter-title { font-size: clamp(60px, 9vw, 160px); max-width: 1100px; }
+.placeholder-card {
+  position: relative; margin-top: 56px; padding: 28px; border-radius: 20px; border: 1.5px dashed rgba(242, 238, 230, 0.22);
+  background: repeating-linear-gradient(135deg, rgba(242, 238, 230, 0.025) 0 2px, transparent 2px 12px);
+  max-width: 1100px;
+}
+.placeholder-card .stage-tag { top: 20px; right: 20px; }
+.placeholder-card h3, .mvp-hall h3 { font: 900 34px var(--display); text-transform: uppercase; margin: 0 0 10px; }
+.placeholder-card p, .mvp-hall p { color: var(--ink-2); max-width: 680px; margin: 0; }
+.ghost-glyphs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+.ghost-glyphs svg { width: 100%; height: auto; }
+.ghost-glyphs text { font: 600 11px var(--mono); fill: var(--ink-2); text-anchor: middle; }
+
+/* --- Q4: player cards -------------------------------------------------------- */
+.players { padding: 6vh 5vw 14vh; position: relative; }
+.players-controls { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 28px; }
+.players-court { display: grid; grid-template-columns: minmax(250px, 1fr) minmax(320px, 1.25fr) minmax(250px, 1fr); gap: 3vw; align-items: center; }
+.player-card { perspective: 1000px; }
+.card-tilt { transform-style: preserve-3d; }
+.card-inner { position: relative; transform-style: preserve-3d; transition: transform 0.9s var(--ease-out); min-height: 580px; }
+.player-card.flipped .card-inner { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 22px; padding: 22px;
+  border: 1px solid var(--line); overflow: hidden;
+  background:
+    radial-gradient(circle at 80% -10%, color-mix(in srgb, var(--accent) 35%, transparent), transparent 55%),
+    linear-gradient(160deg, #161a22, #0d0f14);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45);
+}
+.card-back { transform: rotateY(180deg); }
+.card-face::after {               /* jersey number watermark */
+  content: attr(data-num); position: absolute; right: -6px; bottom: -40px;
+  font: 900 230px/1 var(--display); color: transparent; -webkit-text-stroke: 1px rgba(242, 238, 230, 0.08);
+}
+.card-team { font: 600 11px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
+/* Front: headshot across the top, fading into the card; the text starts over its lower edge */
+.card-front { padding-top: min(46%, 200px); }
+.card-photo {
+  position: absolute; top: 0; left: 0; width: 100%; aspect-ratio: 260 / 190; max-height: 250px;
+  object-fit: cover; object-position: 50% 0; pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 58%, transparent 96%); mask-image: linear-gradient(to bottom, #000 58%, transparent 96%);
+  opacity: 0; transform: translateY(10px); transition: opacity 0.5s, transform 0.8s var(--ease-out);
+}
+.card-photo.loaded { opacity: 1; transform: none; }
+.card-front .card-team { position: relative; display: flex; align-items: center; gap: 10px; margin: 0; }
+.card-front .card-name, .card-front .card-big, .card-front .card-stats { position: relative; }
+.card-name { font: 900 46px/0.9 var(--display); text-transform: uppercase; margin: 10px 0 18px; text-shadow: 0 2px 16px rgba(0, 0, 0, 0.55); }
+.card-big { display: flex; align-items: baseline; gap: 8px; }
+.card-big .led { font-size: 64px; color: var(--accent); text-shadow: 0 0 24px color-mix(in srgb, var(--accent) 60%, transparent); }
+.card-big span { font: 600 12px var(--mono); color: var(--ink-2); letter-spacing: 0.1em; text-transform: uppercase; }
+.card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; margin-top: 18px; }
+.card-stats div { display: flex; flex-direction: column; }
+.card-stats b { font: 700 20px var(--mono); }
+.card-stats small { font: 600 10px var(--mono); color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.card-actions { position: absolute; left: 22px; right: 22px; bottom: 20px; display: flex; gap: 8px; z-index: 2; }
+.card-actions input { flex: 1; min-width: 0; }
+.card-back table { width: 100%; border-collapse: collapse; font: 500 13px var(--mono); margin-top: 14px; }
+.card-back td { padding: 7px 0; border-bottom: 1px solid var(--line); }
+.card-back td:last-child { text-align: right; color: var(--ink); }
+.card-back td:first-child { color: var(--ink-2); }
+.duel { margin: 0; }
+.duel svg { width: 100%; height: auto; overflow: visible; }
+.duel .ring { fill: none; stroke: var(--grid); }
+.duel .spoke { stroke: var(--grid); }
+.duel .axis-name { font: 800 15px var(--display); text-transform: uppercase; fill: var(--ink); }
+.duel .shape { stroke-width: 2.5; stroke-linejoin: round; }
+.mvp-hall { margin-top: 12vh; padding-top: 32px; border-top: 1px solid var(--line); }
+.mvp-head { display: flex; align-items: center; gap: 16px; }
+.mvp-row { display: flex; gap: 14px; margin-top: 24px; overflow: hidden; }
+.mvp-ghost {
+  flex: 0 0 150px; height: 200px; border-radius: 14px; border: 1.5px dashed rgba(242, 238, 230, 0.18);
+  display: flex; flex-direction: column; justify-content: flex-end; padding: 14px;
+  font: 600 11px var(--mono); letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase;
+  background: repeating-linear-gradient(135deg, rgba(242, 238, 230, 0.025) 0 2px, transparent 2px 12px);
+}
+.mvp-ghost b { font: 900 34px var(--display); color: rgba(242, 238, 230, 0.25); }
+
+/* --- FINAL -------------------------------------------------------------- */
+.final { padding: 18vh 6vw 10vh; border-top: 1px solid var(--line);
+  background: radial-gradient(ellipse at 50% 0%, rgba(236, 94, 34, 0.12), transparent 55%); }
+.final-title { font-size: clamp(64px, 11vw, 200px); }
+.final-sub { font: 600 12px var(--mono); color: var(--ink-2); letter-spacing: 0.12em; text-transform: uppercase; margin: 28px 0 18px; }
+.final-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; padding: 14px; border-radius: 20px;
+  background: #090a0e; border: 1px solid var(--line); box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.8); max-width: 1100px; }
+.final-panel { padding: 18px 20px; border-radius: 12px; background: #0f1218; border: 1px solid rgba(242, 238, 230, 0.05); }
+.final-panel .lbl { font: 700 12px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
+.final-panel .led { display: block; font-size: clamp(48px, 7vw, 96px); margin: 10px 0 12px; }
+.final-panel .meter { height: 6px; border-radius: 6px; background: var(--bg-3); overflow: hidden; }
+.final-panel .meter span { display: block; height: 100%; width: 100%; transform-origin: 0 50%; transform: scaleX(0); border-radius: 6px; }
+.final-panel small { display: block; margin-top: 10px; font: 500 12px var(--text); color: var(--ink-2); }
+.takeaways { max-width: 900px; margin: 64px 0 0; padding-left: 1.2em; font-size: 20px; color: var(--ink-2); }
+.takeaways li { margin-bottom: 16px; }
+.final-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4vw; margin-top: 72px; max-width: 1200px; }
+.final-cols h3 { font: 800 24px var(--display); text-transform: uppercase; margin: 0 0 12px; }
+.final-cols p, .final-cols li { color: var(--ink-2); font-size: 15px; }
+.final-cols ul { padding-left: 1.1em; margin: 0; }
+.final-cols a { color: var(--three); }
+.starting-five { list-style: none; padding: 0 !important; }
+.starting-five li { display: flex; gap: 12px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line); color: var(--ink); }
+.starting-five span { font: 700 13px var(--mono); color: var(--three); }
+.starting-five em { font: 500 11px var(--mono); color: var(--muted); font-style: normal; text-transform: uppercase; letter-spacing: 0.08em; margin-left: auto; }
+.colophon { margin-top: 80px; font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+
+/* --- Mobile ------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .hud { padding: 0 14px; gap: 10px; }
+  .hud-brand { display: none; }
+  .hud-periods { margin: 0; overflow-x: auto; max-width: calc(100vw - 90px); }
+  .hud-periods a { padding: 8px 9px; }
+  .hero-copy { left: 5vw; right: 5vw; top: calc(var(--hud-h) + 4vh); }
+  .hero-dek { font-size: 16px; }
+  .hero-stats { gap: 24px; }
+  .hero-stats .led { font-size: 34px; }
+  .lower-third { display: none; }
+  .court3d { width: 150vw; }
+  .chapter-card { padding: 14vh 5vw 10vh; }
+  .chapter-card::after { display: none; }
+  .q1-chart { left: 4vw; right: 4vw; top: 21vh; bottom: 42vh; }
+  .q1-side { left: 4vw; right: 4vw; width: auto; top: auto; bottom: 3vh; height: 33vh; }
+  .scoreboard .led { font-size: 22px; }
+  .scoreboard .wide .led { font-size: 28px; }
+  .event-stack .event:not(:first-child) { display: none; }
+  .q1-note { display: none; }
+  .viz-area { left: 3vw; right: 3vw; top: calc(var(--hud-h) + 2vh); bottom: 42vh; }
+  .step { align-items: flex-end; padding: 0 4vw 5vh; }
+  .step-card { width: 100%; padding: 18px; }
+  .step-card h3 { font-size: 30px; }
+  .r-meter { top: calc(var(--hud-h) + 1vh); bottom: auto; right: 3vw; padding: 8px 12px; }
+  .r-meter .led { font-size: 32px; }
+  .stage-legend { display: none; }
+  .players-court { grid-template-columns: 1fr; }
+  .final-board, .final-cols { grid-template-columns: 1fr; }
+  .ghost-glyphs { grid-template-columns: repeat(2, 1fr); }
+  .stage > .stage-tag { display: none; }
+  .seg { max-width: 100%; overflow-x: auto; }
+  .q1-top { right: 4vw; }
+}

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Is It All About Threes?</title>
+  <meta name="description" content="A data story in four quarters: how the NBA moved out to the three-point line, and why taking more threes no longer separates winners. CS6730, team TheVizG.O.A.T.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%23ec5e22'/%3E%3Cpath d='M2 16h28M16 2v28M6 6c6 5 6 15 0 20M26 6c-6 5-6 15 0 20' stroke='%230b0d12' stroke-width='1.6' fill='none'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@400..900&family=Inter:wght@400..700&family=JetBrains+Mono:wght@400..700&display=swap">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/chapters.css">
+  <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+
+<!-- Loader: sets the scale of the data before the story starts -->
+<div class="loader" id="loader" aria-hidden="true">
+  <svg class="loader-arc" viewBox="-4 0 224 122">
+    <g class="loader-hoop">
+      <line class="board" x1="213" y1="68" x2="213" y2="108"/><line class="board" x1="203" y1="100" x2="213" y2="100"/>
+      <line x1="177" y1="101" x2="181" y2="118"/><line x1="203" y1="101" x2="199" y2="118"/>
+      <line x1="177" y1="101" x2="199" y2="118"/><line x1="203" y1="101" x2="181" y2="118"/>
+    </g>
+    <path d="M10 100 Q 100 -40 190 100"/>
+    <ellipse class="loader-rim" cx="190" cy="100" rx="13" ry="3"/>
+    <circle r="7" cx="10" cy="100"/>
+  </svg>
+  <p class="loader-count"><span id="loader-num">0</span> shots</p>
+  <p class="loader-label" id="loader-label">Loading the box scores…</p>
+</div>
+
+<!-- HUD: game clock (overall progress), periods, shot clock (progress inside the current chapter) -->
+<div class="game-clock" aria-hidden="true"><span id="game-clock-bar"></span></div>
+<header class="hud">
+  <a class="hud-brand" href="#tipoff" data-goto="tipoff">TheVizG.O.A.T</a>
+  <nav class="hud-periods" aria-label="Chapters">
+    <a href="#tipoff" data-goto="tipoff">Tip-off</a>
+    <a href="#q1" data-goto="q1">Q1</a>
+    <a href="#q2" data-goto="q2">Q2</a>
+    <a href="#half" data-goto="half">Half</a>
+    <a href="#q3" data-goto="q3">Q3</a>
+    <a href="#q4" data-goto="q4">Q4</a>
+    <a href="#final" data-goto="final">Final</a>
+  </nav>
+  <div class="shot-clock" aria-hidden="true" title="Shot clock: how far you are into this chapter">
+    <span class="shot-clock-num" id="shot-clock">24</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ TIP-OFF ============ -->
+  <section class="hero" id="tipoff" data-period="tipoff">
+    <div class="hero-stage" aria-hidden="true">
+      <div class="court3d" id="hero-court">
+        <svg class="court-lines" id="hero-lines"></svg>
+        <canvas class="particles" id="hero-canvas"></canvas>
+      </div>
+    </div>
+    <div class="hero-copy">
+      <p class="kicker">NBA regular seasons · 1979-80 to 2025-26 · a data story in four quarters</p>
+      <h1 class="hero-title" id="hero-title"><span>Is it all</span><span class="accent">about threes?</span></h1>
+      <p class="hero-dek">Fans say the league traded post-ups for threes. The data agrees. It also says that
+        <em>taking</em> more threes no longer separates the winners. <em>Making</em> them does.</p>
+      <div class="hero-stats">
+        <div><span class="led">37.0</span>
+          <p>threes per team-game, up from 3.3 in 1985-86</p></div>
+        <div><span class="led">10.1%</span>
+          <p>of shots from mid-range, down from 36.8% in 1997-98</p></div>
+      </div>
+    </div>
+    <aside class="lower-third">
+      <p class="lower-third-tag">Old-head take</p>
+      <p class="lower-third-quote">“Back in my day, big men went to war in the paint. Now it’s just threes. That’s not real basketball.”</p>
+      <p class="lower-third-who">Every NBA fan’s uncle</p>
+    </aside>
+    <a class="scroll-cue" href="#q1" data-goto="q1"><span class="cue-ball"></span>Scroll to tip off</a>
+  </section>
+
+  <!-- ============ Q1 · annotated timeline (sketch QF1) ============ -->
+  <section class="chapter-card" id="q1" data-period="q1">
+    <p class="period-label">1st quarter</p>
+    <h2 class="chapter-title">The long way out</h2>
+    <p class="chapter-lead">How the three-pointer took over the NBA, one season at a time. Scroll to run the clock from 1979-80, the
+      line’s first season, to today.</p>
+  </section>
+  <section class="scrub" id="q1-scrub" data-period="q1">
+    <div class="stage" id="q1-stage">
+      <div class="q1-season" id="q1-season" aria-hidden="true">1979-80</div>
+      <div class="stage-tag">Prototype · live</div>
+      <div class="q1-top">
+        <p class="stage-kicker" id="q1-kicker">League average per team-game</p>
+        <div class="seg" id="q1-metric" role="group" aria-label="Timeline metric"></div>
+      </div>
+      <figure class="q1-chart" id="q1-chart" role="img" aria-label="Line chart of league three-point shooting since 1979-80, with rule changes marked"></figure>
+      <aside class="q1-side">
+        <div class="scoreboard" id="q1-board"></div>
+        <ol class="event-stack" id="q1-events"></ol>
+      </aside>
+      <p class="q1-note" id="q1-note"></p>
+    </div>
+  </section>
+
+  <!-- ============ Q2 · shot particles (sketches ZD8 / QF7) ============ -->
+  <section class="chapter-card" id="q2" data-period="q2">
+    <p class="period-label">2nd quarter</p>
+    <h2 class="chapter-title">Where the shots went</h2>
+    <p class="chapter-lead">The court is the same size it has always been. Where teams shoot from is not.</p>
+  </section>
+  <section class="scrolly" id="q2-scrolly" data-period="q2">
+    <div class="stage" id="q2-stage">
+      <div class="stage-tag">Draft</div>
+      <div class="viz-area" id="q2-viz">
+        <svg class="court-lines" id="q2-lines"></svg>
+        <canvas class="particles" id="q2-canvas"></canvas>
+        <svg class="overlay" id="q2-overlay"></svg>
+      </div>
+      <div class="stage-legend" id="q2-legend"></div>
+    </div>
+    <div class="steps" id="q2-steps"></div>
+  </section>
+
+  <!-- ============ HALFTIME · placeholder (sketch KN1) ============ -->
+  <section class="halftime" id="half" data-period="half">
+    <p class="period-label">Halftime report</p>
+    <h2 class="chapter-title">First half: the shift is real</h2>
+    <p class="chapter-lead">Threes went from a novelty to two of every five shots, and the mid-range all but disappeared.
+      Second half: <strong>did the teams that shot the most threes win the most games?</strong></p>
+    <div class="placeholder-card">
+      <div class="stage-tag">Placeholder</div>
+      <h3>Era fingerprints</h3>
+      <p>One radar glyph per era, showing the league-average team: 3-point rate, 3P%, pace, offensive rating, rebounding,
+        turnovers. Reuses the radar from the 4th quarter. Data ready in <code>league_seasons.csv</code> · sketch KN1.</p>
+      <div class="ghost-glyphs" id="half-glyphs"></div>
+    </div>
+  </section>
+
+  <!-- ============ Q3 · does volume win? (sketches QF8 / KN7 / JB2 / JB4 / JB6) ============ -->
+  <section class="chapter-card" id="q3" data-period="q3">
+    <p class="period-label">3rd quarter · the main message</p>
+    <h2 class="chapter-title">Does volume win?</h2>
+    <p class="chapter-lead">If threes are worth more, the teams that take the most of them should win the most. Let’s check.</p>
+  </section>
+  <section class="scrolly" id="q3-scrolly" data-period="q3">
+    <div class="stage" id="q3-stage">
+      <div class="stage-tag">Prototype · live</div>
+      <div class="viz-area" id="q3-viz">
+        <svg class="q3-svg" id="q3-svg" role="img" aria-label="Teams plotted by three-point shooting and win percentage"></svg>
+      </div>
+      <div class="r-meter" id="q3-r"><span class="r-label">r</span><span class="led" id="q3-r-value">0.00</span><span class="r-caption" id="q3-r-caption"></span></div>
+    </div>
+    <div class="steps" id="q3-steps"></div>
+  </section>
+
+  <!-- ============ Q4 · players (sketches ZD2 / KN4) ============ -->
+  <section class="chapter-card" id="q4" data-period="q4">
+    <p class="period-label">4th quarter</p>
+    <h2 class="chapter-title">The players</h2>
+    <p class="chapter-lead">Some stars bent the league toward the arc. Others won without it. Compare any two players from one
+      season on six skills, each ranked against that season’s league.</p>
+  </section>
+  <section class="players" id="q4-players" data-period="q4">
+    <div class="players-controls" id="q4-controls"></div>
+    <div class="players-court">
+      <article class="player-card" id="card-a"></article>
+      <figure class="duel" id="q4-radar" role="img" aria-label="Radar chart comparing two players"></figure>
+      <article class="player-card" id="card-b"></article>
+    </div>
+    <div class="stage-tag static">Draft</div>
+    <div class="mvp-hall">
+      <div class="mvp-head">
+        <h3>MVP hall</h3>
+        <span class="stage-tag static">Placeholder</span>
+      </div>
+      <p>Every MVP as a card, placed by how many threes they took. Did the league’s best players follow the shift
+        (Curry, Harden) or win without it (Jokić, Antetokounmpo)? Needs a short hand-made MVP table · sketch KN4.</p>
+      <div class="mvp-row" id="mvp-row"></div>
+    </div>
+  </section>
+
+  <!-- ============ FINAL BUZZER ============ -->
+  <section class="final" id="final" data-period="final">
+    <p class="period-label">Final buzzer</p>
+    <h2 class="final-title">Making beats taking</h2>
+    <p class="final-sub" id="final-sub">How closely each stat tracks winning, 2025-26 (correlation with win %)</p>
+    <div class="final-board" id="final-board"></div>
+    <ol class="takeaways">
+      <li><strong>The three-point revolution is real.</strong> Attempts per team-game rose about elevenfold since 1985-86, and
+        the mid-range share of shots fell from 37% in 1997-98 to 10% in 2025-26.</li>
+      <li><strong>Taking more threes is no longer linked to winning more.</strong> Volume’s link to winning faded once every
+        team shot threes. Accuracy and overall efficiency track win % far more closely, and accuracy’s link keeps rising.</li>
+      <li><strong>Next:</strong> test the pattern on playoff teams and champions, and follow the players who take the shots.</li>
+    </ol>
+    <div class="final-cols">
+      <div>
+        <h3>Limits</h3>
+        <ul>
+          <li>Regular season only. With 23–30 teams a season, single-season correlations are noisy.</li>
+          <li>Correlation, not causation. Rule changes appear because they happened alongside the trend.</li>
+          <li>3-point attempts were not logged for every game before 1985-86. Shot locations start in 1996-97.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Data &amp; methods</h3>
+        <p>NBA.com stats through <code>nba_api</code>, cleaned by <code>build_clean_data.py</code>. The clean tables, data
+          dictionary, cleaning rules and validation checks are in <a href="../data/clean/README.md">data/clean/</a>.
+          Correlations compare each team only with its own season’s league (z-scores). Player photos and current logos:
+          NBA.com. Older logos: SportsLogos.net.</p>
+      </div>
+      <div>
+        <h3>Starting five</h3>
+        <ul class="starting-five">
+          <li><span>01</span>Qixiang (David) Fan</li>
+          <li><span>02</span>Yurun Zhu</li>
+          <li><span>03</span>Kunhao Ni</li>
+          <li><span>04</span>Zhaorui Ding</li>
+          <li><span>05</span>Jun Woo Beck</li>
+        </ul>
+      </div>
+    </div>
+    <p class="colophon">TheVizG.O.A.T · CS6730 Data Visualization · Georgia Tech</p>
+  </section>
+
+</main>
+</body>
+</html>
