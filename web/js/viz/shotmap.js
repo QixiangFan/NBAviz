@@ -58,7 +58,7 @@ export function initShotMap(data) {
     for (let i = 0; i < n; i++) { feetX[i] = sm.x[assign[i]]; feetY[i] = sm.y[assign[i]]; }
   }
 
-  function showCourt(season, highlight, { animate = true } = {}) {
+  function showCourt(season, highlight, { animate = true, duration = null } = {}) {
     const sm = sample(season);
     const moved = season !== state.season;
     if (moved) pair(season);
@@ -76,7 +76,7 @@ export function initShotMap(data) {
     labels(null);
     stamp(season, highlight);
     return field.morph(tx, ty, st, {
-      duration: animate ? dur(moved ? 2.2 : 0.7) : 0, spread: moved ? 0.55 : 0.25, ease: "power3.inOut",
+      duration: animate ? dur(duration ?? (moved ? 2.2 : 0.7)) : 0, spread: moved ? 0.55 : 0.25, ease: "power3.inOut",
     });
   }
 
@@ -165,7 +165,7 @@ export function initShotMap(data) {
         " points per attempt. A corner three returned ", b(zoneStat(last, "C3").pps.toFixed(2)), ", and a shot at the rim ", b(zoneStat(last, "RA").pps.toFixed(2)), "."),
       h("p", null, "Each column holds one zone’s dots; the bright ones at the bottom went in.")] },
     { num: "Your turn", title: "Pick a season", body: [
-      h("p", null, `Drag through ${seasons.length} seasons of shot charts, ${fmtSeason(seasons[0])} to ${fmtSeason(last)}, and filter by shot type.`),
+      h("p", null, `Drag through ${seasons.length} seasons of shot charts, ${fmtSeason(seasons[0])} to ${fmtSeason(last)}, or press play, and filter by shot type.`),
       seasons[0] < STANDARD_LINE && h("p", null, `In ${fmtSeason(seasons[0])} the arc was 22 ft all the way around. Watch it move back out.`),
       controls] },
   ].filter(Boolean);
@@ -178,9 +178,36 @@ export function initShotMap(data) {
     () => showCourt(explore.season, explore.highlight),
   ];
 
-  slider(controls, "Season", seasons, explore.season, fmtSeason, (v) => {
+  const row = h("div", { class: "row" });
+  controls.append(row);
+  const seasonSlider = slider(row, "Season", seasons, explore.season, fmtSeason, (v) => {
+    stop();
     explore.season = v;
     showCourt(explore.season, explore.highlight);
+  });
+  seasonSlider.input.style("width", "150px");
+  // Play runs every season in order, with shorter morphs so each year settles before the next
+  let timer = null;
+  const playBtn = h("button", { class: "btn primary", type: "button" }, "▶ Play");
+  row.append(playBtn);
+  function stop() {
+    timer?.stop();
+    timer = null;
+    playBtn.textContent = "▶ Play";
+  }
+  playBtn.addEventListener("click", () => {
+    if (timer) { stop(); return; }
+    const show = () => {
+      seasonSlider.set(explore.season);
+      showCourt(explore.season, explore.highlight, { duration: 0.9 });
+    };
+    if (explore.season === last) { explore.season = seasons[0]; show(); }
+    playBtn.textContent = "❚❚ Pause";
+    timer = d3.interval(() => {
+      explore.season = seasons[seasons.indexOf(explore.season) + 1];
+      show();
+      if (explore.season === last) stop();
+    }, 1100);
   });
   const chipSel = d3.select(chips).selectAll("button")
     .data([["all", "All"], ["two", "Twos"], ["three", "Threes"], ["mid", "Mid-range"]]).join("button")
@@ -200,7 +227,7 @@ export function initShotMap(data) {
 
   fit();
   showCourt(first, "all", { animate: false });
-  const story = setupSteps(document.getElementById("q2-steps"), steps, (i) => actions[i]());
+  const story = setupSteps(document.getElementById("q2-steps"), steps, (i) => { stop(); actions[i](); });
   new ResizeObserver(() => {
     fit();
     const { season, highlight, view } = state;

@@ -291,7 +291,6 @@
   .players-court { grid-template-columns: 1fr; }
   .final-board, .final-cols { grid-template-columns: 1fr; }
   .ghost-glyphs { grid-template-columns: repeat(2, 1fr); }
-  .stage > .stage-tag { display: none; }
   .seg { max-width: 100%; overflow-x: auto; }
   .q1-top { right: 4vw; }
 }

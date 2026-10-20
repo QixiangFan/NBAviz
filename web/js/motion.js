@@ -43,7 +43,7 @@ export function initSnap(selector) {
   let timer = 0;
   let dir = 1;
   let touching = false;
-  const schedule = () => { clearTimeout(timer); timer = setTimeout(settle, 140); };
+  const schedule = () => { clearTimeout(timer); timer = setTimeout(settle, 10); };
   lenis.on("scroll", (l) => { if (l.direction) dir = l.direction; schedule(); });
   addEventListener("touchstart", () => { touching = true; clearTimeout(timer); }, { passive: true });
   ["touchend", "touchcancel"].forEach((type) => addEventListener(type, () => { touching = false; schedule(); }, { passive: true }));
@@ -59,7 +59,7 @@ export function initSnap(selector) {
       .map((r) => Math.min(Math.max(r, 0), lenis.limit));
     const aim = y + dir * 0.3 * vh;
     const target = rests.reduce((a, r) => (Math.abs(r - aim) < Math.abs(a - aim) ? r : a));
-    if (Math.abs(target - y) > 2) lenis.scrollTo(target, { duration: 0.8, easing: (t) => 1 - Math.pow(1 - t, 3) });
+    if (Math.abs(target - y) > 2) lenis.scrollTo(target, { duration: 0.3, easing: (t) => 1 - Math.pow(1 - t, 3) });
   }
 }
 
