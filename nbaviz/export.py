@@ -99,9 +99,25 @@ def player_seasons() -> pd.DataFrame:
     for axis, col in RADAR.items():
         p[f"{axis}_pctl"] = (100 * p.groupby("season")[col].rank(pct=True)).round().astype(int)
     p = p.rename(columns={"team_abbreviation": "team", "player_height_inches": "height_in"})
+    p = _with_rosters(p)
     p = p.round({**{c: 2 for c in RADAR.values()}, "ts_pct": 3, "fg3a_rate": 3, "min": 0})
-    return p[["season", "player_id", "player_name", "team", "age", "height_in", "gp", "min",
+    return p[["season", "player_id", "player_name", "team", "jersey", "position", "age", "height_in", "gp", "min",
               *RADAR.values(), "fg3a_rate", *(f"{a}_pctl" for a in RADAR)]]
+
+
+def _with_rosters(p: pd.DataFrame) -> pd.DataFrame:
+    """Jersey number and position from the season rosters: the roster of the player's last team first,
+    then any roster that lists him that season (traded players), else blank."""
+    try:
+        r = load.player_rosters()
+    except FileNotFoundError:  # rosters not downloaded yet (python collect_data.py rosters)
+        return p.assign(jersey=np.nan, position=np.nan)
+    keys = ["season", "player_id"]
+    last_team = p[keys + ["team_id"]].merge(r, on=keys + ["team_id"], how="left")
+    any_team = p[keys].merge(r.drop_duplicates(keys).drop(columns="team_id"), on=keys, how="left")
+    for col in ("jersey", "position"):
+        p[col] = last_team[col].fillna(any_team[col]).to_numpy()
+    return p
 
 
 def events() -> pd.DataFrame:
@@ -174,6 +190,8 @@ TABLES = {
     "player_seasons": (player_seasons, f"Players with {PLAYER_MIN_MINUTES}+ minutes and {PLAYER_MIN_GAMES}+ "
                                        "games, one row per player-season since 1996-97.", {
         "team": "Last team that season (traded players appear once)",
+        "jersey": "Jersey number that season, as text (\"00\" is not \"0\"); blank if no roster lists him",
+        "position": "Roster position: G, F, C or a combination such as G-F",
         "*_pg": "Per-game averages; stocks = steals + blocks", "ts_pct": "True shooting %",
         "*_pctl": "Percentile (0-100) within the season among qualified players, for the radar"}),
     "events": (events, "Hand-picked rule changes and milestones for the timeline.", {
@@ -200,6 +218,9 @@ CLEANING_RULES = [
     "and twos inside one to Mid-Range. Left and right corners are combined; backcourt heaves are excluded.",
     "Players: traded players have one combined row under their last team. The radar only ranks players "
     f"with {PLAYER_MIN_MINUTES}+ minutes and {PLAYER_MIN_GAMES}+ games, against the same season's players.",
+    "Jersey numbers and positions come from each team's season roster. A player traded mid-season gets "
+    "the number on his last team's roster, or on any roster that lists him that season. Numbers are kept "
+    "as text so 00 and 0 stay different.",
 ]
 
 
@@ -263,4 +284,9 @@ def checks() -> list:
     gap = (player_pts / team_pts - 1).abs()
     out.append(_check("Player points add up to team points (within 0.5%)", bool((gap < 0.005).all()),
                       f"largest gap {gap.max():.2%} in {C.season_str(gap.idxmax())}"))
+
+    known = player_seasons()["jersey"].notna()
+    out.append(_check("Jersey numbers found on the season rosters", None,
+                      f"{known.mean():.1%} of {len(known):,} player-seasons" if known.any()
+                      else "no rosters yet: run python collect_data.py rosters"))
     return out

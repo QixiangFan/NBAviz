@@ -1,9 +1,11 @@
 // 4th quarter (sketches ZD2 / QF4 / YZ1): two player cards and a radar duel between them. Each axis is a
 // percentile within the season (players with 500+ minutes), so players from any era can be compared.
-// Cards tilt toward the pointer and flip to show the numbers behind the radar. DRAFT.
+// Cards are dressed in the team's colors and logo, tilt toward the pointer, and flip to the back of the
+// player's jersey and the numbers behind the radar. DRAFT.
 import { season as fmtSeason } from "../data.js";
 import { dur, instant } from "../motion.js";
-import { headshotUrl } from "../media.js";
+import { headshotUrl, teamColors } from "../media.js";
+import { jersey } from "../ui/jersey.js";
 import { showTip, moveTip, hideTip } from "../ui/tooltip.js";
 import { h } from "./steps.js";
 
@@ -19,6 +21,7 @@ const SLOTS = [
   { el: "card-a", color: "#ec5e22", fallback: "Stephen Curry" },
   { el: "card-b", color: "#3d8ff0", fallback: "Nikola Jokić" },
 ];
+const surname = (name) => name.split(" ").slice(1).join(" ") || name;   // what goes on the back of the jersey
 
 export function initPlayers(data) {
   const bySeason = d3.group(data.players, (p) => p.season);
@@ -48,7 +51,8 @@ export function initPlayers(data) {
     update();
   });
 
-  // Cards: tilt wrapper > flip wrapper > front/back faces
+  // Cards: tilt wrapper > flip wrapper > front/back faces. The slot color (orange/blue) stays on the edge,
+  // the points and the radar shape; the team's colors and logo dress the rest.
   const cards = SLOTS.map((slot, i) => {
     const article = document.getElementById(slot.el);
     article.style.setProperty("--accent", slot.color);
@@ -56,6 +60,9 @@ export function initPlayers(data) {
     photo.addEventListener("load", () => photo.classList.add("loaded"));
     const logo = h("img", { class: "logo-chip", alt: "" });
     logo.addEventListener("error", () => { logo.hidden = true; });
+    const mark = h("img", { class: "card-mark", alt: "", decoding: "async" });   // big logo watermark
+    mark.addEventListener("error", () => { mark.hidden = true; });
+    const kit = h("div", { class: "card-kit" });   // back of the jersey
     const name = h("h3", { class: "card-name" });
     const team = h("span");
     const big = h("span", { class: "led" });
@@ -64,9 +71,9 @@ export function initPlayers(data) {
     const list = h("datalist", { id: `${slot.el}-list` });
     const flip = h("button", { class: "btn", type: "button" }, "Flip");
     const table = h("table");
-    const front = h("div", { class: "card-face card-front" }, photo, h("p", { class: "card-team" }, logo, team), name, h("div", { class: "card-big" }, big, h("span", null, "points / game")), stats,
+    const front = h("div", { class: "card-face card-front" }, mark, photo, h("p", { class: "card-team" }, logo, team), name, h("div", { class: "card-big" }, big, h("span", null, "points / game")), stats,
       h("div", { class: "card-actions" }, input, flip));
-    const back = h("div", { class: "card-face card-back" }, h("p", { class: "card-team" }, "Percentile in the season (0–100)"), table);
+    const back = h("div", { class: "card-face card-back" }, kit, h("p", { class: "card-team" }, "Percentile in the season (0–100)"), table);
     const inner = h("div", { class: "card-inner" }, front, back);
     const tilt = h("div", { class: "card-tilt" }, inner);
     article.append(tilt, list);
@@ -86,7 +93,7 @@ export function initPlayers(data) {
       });
       article.addEventListener("pointerleave", () => { rx(0); ry(0); });
     }
-    return { article, photo, logo, name, team, big, stats, input, list, table, faces: [front, back] };
+    return { article, photo, logo, mark, name, team, big, stats, input, list, table, kit, front };
   });
 
   function fillLists() {
@@ -95,8 +102,9 @@ export function initPlayers(data) {
     });
   }
 
-  // Radar duel
+  // Radar duel, under a VS badge
   const fig = d3.select("#q4-radar");
+  fig.append("div").attr("class", "vs").attr("aria-hidden", "true").text("VS");
   const svg = fig.append("svg");
   let size = 0;
   const angle = (i) => (Math.PI * 2 * i) / AXES.length - Math.PI / 2;
@@ -133,17 +141,28 @@ export function initPlayers(data) {
     picked.forEach((p, i) => {
       const c = cards[i];
       c.name.textContent = p.player_name;
-      c.team.textContent = `${p.team} · ${fmtSeason(season)} · ${p.gp} games`;
+      c.team.textContent = [p.jersey && `#${p.jersey}`, p.position, p.team, fmtSeason(season), `${p.gp} games`].filter(Boolean).join(" · ");
       const src = headshotUrl(p.player_id);
       if (c.photo.getAttribute("src") !== src) {
         c.photo.classList.remove("loaded");
         c.photo.src = src;
       }
-      const logo = data.logo(data.teamBySeason.get(season)?.get(p.team));
-      c.logo.hidden = !logo;
-      if (logo) c.logo.src = logo;
+      const row = data.teamBySeason.get(season)?.get(p.team);
+      const colors = teamColors(row);
+      c.article.style.setProperty("--team", colors.tint);
+      c.article.style.setProperty("--team-a", colors.primary);
+      c.article.style.setProperty("--team-b", colors.secondary);
+      const logo = data.logo(row);
+      for (const img of [c.logo, c.mark]) {
+        img.hidden = !logo;
+        if (logo) img.src = logo;
+      }
       c.big.textContent = p.pts_pg.toFixed(1);
-      c.faces.forEach((f) => f.setAttribute("data-num", Math.round(p.pts_pg)));
+      c.front.setAttribute("data-num", p.jersey ?? "");   // the jersey number, outlined behind the stats
+      c.kit.replaceChildren(jersey({
+        ...colors, number: p.jersey ?? "", name: surname(p.player_name),
+        label: `${p.player_name}’s jersey${p.jersey ? `, number ${p.jersey}` : ""}`,
+      }));
       c.input.value = "";
       d3.select(c.stats).selectAll("div").data([[p.fg3m_pg.toFixed(1), "3PM / game"], [p.ast_pg.toFixed(1), "AST / game"],
         [p.reb_pg.toFixed(1), "REB / game"], [`${(p.ts_pct * 100).toFixed(1)}%`, "True shooting"]])

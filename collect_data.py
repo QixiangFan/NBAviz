@@ -1,9 +1,11 @@
 """Step 1: download everything the project needs from stats.nba.com into data/raw/.
 
-    python collect_data.py                 # all groups (~1,040 requests; 30-60 min the first time)
+    python collect_data.py                 # all groups (~1,930 requests; 1-2 hours the first time)
     python collect_data.py gamelogs shots  # only some groups
 
-Shot charts are most of it: one request per team per season, 1996-97 to now.
+Shot charts and rosters are most of it: one request per team per season, 1996-97 to now.
+Rosters (jersey numbers and positions) read the game logs to know which teams played, so
+download the game logs first.
 
 Downloads are cached per request, so re-running skips anything already saved
 and retries only what failed.
@@ -20,6 +22,7 @@ GROUPS = {
     "gamelogs": (fetch.team_game_logs, range(C.GAMELOG_FIRST_SEASON, C.LAST_SEASON + 1)),
     "players": (fetch.player_totals, detail_seasons),
     "bio": (fetch.player_bio, detail_seasons),
+    "rosters": (fetch.team_rosters, detail_seasons),
     "shots": (fetch.shot_chart, C.SHOT_CHART_SEASONS),
 }
 

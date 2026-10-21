@@ -6,9 +6,10 @@ tip.className = "tooltip";
 tip.setAttribute("role", "status");
 document.body.appendChild(tip);
 
-/** spec = { title, logo?, rows: [{ value, label, color? }], note? } */
+/** spec = { title, logo?, accent?, rows: [{ value, label, color? }], note? }; accent: a team color for the edge */
 export function showTip(event, spec) {
   tip.replaceChildren();
+  tip.style.setProperty("--tt-accent", spec.accent || "");
   if (spec.title) {
     const title = tip.appendChild(node("div", "tt-title", spec.title));
     if (spec.logo) {

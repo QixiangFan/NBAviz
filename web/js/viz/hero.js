@@ -1,9 +1,11 @@
-// TIP-OFF: thousands of real shots from the latest season burst out of the rim onto a court tilted
-// in 3D (closest shots land first, threes last). Scrolling lays the court flat; the pointer turns it.
-import { sampleShots, season as fmtSeason, STANDARD_LINE } from "../data.js";
+// TIP-OFF: thousands of real shots from the latest season burst out of the rim onto a hardwood court
+// tilted in 3D (closest shots land first, threes last), while Curry rises into his jumper beside it.
+// Scrolling lays the court flat; the pointer turns it.
+import { shotSampler, season as fmtSeason, STANDARD_LINE } from "../data.js";
 import { ParticleField } from "./particles.js";
 import { fitCourt, drawCourt } from "./court.js";
 import { dur, instant, countTo } from "../motion.js";
+import { cutout } from "../ui/cutout.js";
 
 // Particle styles shared with the 2nd quarter: index = (three ? 2 : 0) + made
 export const SHOT_STYLES = [
@@ -20,7 +22,7 @@ export function initHero(data) {
   const lines = document.getElementById("hero-lines");
   const latest = data.gridSeasons[data.gridSeasons.length - 1];
   const n = window.innerWidth < 900 ? 2600 : 6000;
-  const shots = sampleShots(data.gridBySeason.get(latest), n, 11);
+  const shots = shotSampler(n, 11)(data.gridBySeason.get(latest));
   const styles = Uint8Array.from({ length: n }, (_, i) => shotStyle(shots.zone[i], shots.made[i]));
   const field = new ParticleField(canvas, n);
   field.setStyles(SHOT_STYLES);
@@ -30,7 +32,7 @@ export function initHero(data) {
 
   function layout() {
     s = fitCourt(box.offsetWidth, box.offsetHeight);   // offset sizes ignore the 3D transform
-    drawCourt(lines, s);
+    drawCourt(lines, s, { paint: true });
     field.resize(s.w, s.h);
     tx = Float32Array.from(shots.x, (v) => s.x(v));
     ty = Float32Array.from(shots.y, (v) => s.y(v));
@@ -50,19 +52,28 @@ export function initHero(data) {
   noteA.textContent = `threes per team-game, up from ${first3pa.fg3a_pg.toFixed(1)} in ${fmtSeason(first3pa.season)}`;
   noteB.textContent = `of shots from mid-range, down from ${(midFirst * 100).toFixed(1)}% in ${fmtSeason(midSeason)}`;
 
+  // The player: held below the floor (.waiting) until play(), with two orange echoes of his outline
+  const player = document.getElementById("hero-player");
+  const photo = data.cutouts.get("curry-hero");
+  if (photo) player.append(cutout(photo, { echoes: 2 }));
+  player.classList.toggle("waiting", !instant);
+
   gsap.set(box, { yPercent: 26, rotateX: 60, transformOrigin: "50% 85%" });
   gsap.timeline({ scrollTrigger: { trigger: "#tipoff", start: "top top", end: "bottom top", scrub: 0.6 } })
     .to(box, { rotateX: 16, yPercent: 4, scale: 0.84, ease: "none" }, 0)
+    .to(player, { yPercent: 18, opacity: 0, ease: "none" }, 0)
     .to(".hero-copy", { yPercent: -16, opacity: 0, ease: "none" }, 0)
     .to(".lower-third, .scroll-cue", { y: -50, opacity: 0, ease: "none" }, 0);
 
   if (!instant) {
     const turn = gsap.quickTo(box, "rotateZ", { duration: 1.4, ease: "power3" });
     const slide = gsap.quickTo(box, "x", { duration: 1.4, ease: "power3" });
+    const drift = gsap.quickTo(player, "x", { duration: 1.6, ease: "power3" });   // nearer than the floor, so it moves against it
     document.getElementById("tipoff").addEventListener("pointermove", (e) => {
       const dx = e.clientX / window.innerWidth - 0.5;
       turn(dx * -5);
       slide(dx * 40);
+      drift(dx * -24);
     });
   }
 
@@ -89,6 +100,7 @@ export function initHero(data) {
       countTo(ledA, first3pa.fg3a_pg, last.fg3a_pg, { decimals: 1, duration: 2.4, delay: 0.6 });
       countTo(ledB, midFirst * 100, midLast * 100, { decimals: 1, suffix: "%", duration: 2.4, delay: 0.8 });
       if (instant) return;
+      player.classList.remove("waiting");   // CSS transitions raise him, then fan out the echoes
       gsap.from(titleLines, { yPercent: 110, duration: 1.4, stagger: 0.12, ease: "expo.out", delay: 0.1 });
       gsap.from(".hero-copy .kicker, .hero-dek, .hero-stats, .lower-third, .scroll-cue", {
         y: 26, opacity: 0, duration: 1.2, stagger: 0.1, delay: 0.5,

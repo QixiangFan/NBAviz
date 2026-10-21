@@ -8,6 +8,7 @@ import time
 
 import pandas as pd
 from nba_api.stats.endpoints import (
+    commonteamroster,
     leaguedashplayerbiostats,
     leaguedashplayerstats,
     leaguegamelog,
@@ -85,4 +86,22 @@ def player_bio(season: int) -> None:
         per_mode_simple="PerGame",
         timeout=C.REQUEST_TIMEOUT,
     ).get_data_frames()[0])
+
+
+def team_rosters(season: int) -> None:
+    """Each team's roster for the season: jersey number and position per player. Only teams in that
+    season's game log are requested, so franchises that did not exist yet (e.g. NOP in 2000-01) are skipped."""
+    logs = C.RAW_DIR / "team_game_logs" / f"{C.season_str(season)}.csv"
+    if not logs.exists():
+        raise FileNotFoundError(f"{logs} is missing. Run: python collect_data.py gamelogs")
+    playing = set(pd.read_csv(logs, usecols=["TEAM_ID"])["TEAM_ID"])
+    for team in sorted(static_teams.get_teams(), key=lambda t: t["abbreviation"]):
+        if team["id"] not in playing:
+            continue
+        _cached("team_rosters", f"{C.season_str(season)}_{team['abbreviation']}",
+                lambda team_id=team["id"]: commonteamroster.CommonTeamRoster(
+                    team_id=team_id,
+                    season=C.season_str(season),
+                    timeout=C.REQUEST_TIMEOUT,
+                ).get_data_frames()[0])
 

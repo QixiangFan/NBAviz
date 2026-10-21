@@ -86,6 +86,8 @@ Players with 500+ minutes and 20+ games, one row per player-season since 1996-97
 | Column | Meaning |
 |---|---|
 | `team` | Last team that season (traded players appear once) |
+| `jersey` | Jersey number that season, as text ("00" is not "0"); blank if no roster lists him |
+| `position` | Roster position: G, F, C or a combination such as G-F |
 | `*_pg` | Per-game averages; stocks = steals + blocks |
 | `ts_pct` | True shooting % |
 | `*_pctl` | Percentile (0-100) within the season among qualified players, for the radar |
@@ -109,6 +111,7 @@ Hand-picked rule changes and milestones for the timeline. 8 rows.
 6. Shot charts: team files for franchises that did not exist that season are empty and skipped; heaves from beyond half court are dropped from the grid but counted when checking totals.
 7. Shot zones are rebuilt from the shot charts and must agree with the shot type. NBA.com draws its zones with today's 23.75 ft arc, so in 1996-97, when the line was 22 ft all around, 19,165 threes (a tenth of all shots) are labeled Mid-Range. That inflated the season's mid-range share from 29.8% to 40.0%. Threes outside a 3-point zone are moved to the corner or above-the-break zone by location, and twos inside one to Mid-Range. Left and right corners are combined; backcourt heaves are excluded.
 8. Players: traded players have one combined row under their last team. The radar only ranks players with 500+ minutes and 20+ games, against the same season's players.
+9. Jersey numbers and positions come from each team's season roster. A player traded mid-season gets the number on his last team's roster, or on any roster that lists him that season. Numbers are kept as text so 00 and 0 stay different.
 
 ## Validation checks
 
@@ -124,3 +127,4 @@ Hand-picked rule changes and milestones for the timeline. 8 rows.
 | Empty shot-chart files skipped | INFO | 8: 1996-97_NOP, 1997-98_NOP, 1998-99_NOP, 1999-00_NOP, 2000-01_NOP, 2001-02_NOP, 2002-03_CHA, 2003-04_CHA |
 | Shot zones relabeled to match the shot type | INFO | 22,647 shots in total; 19,626 in 1996-97 (22 ft line), at most 378 in any other season |
 | Player points add up to team points (within 0.5%) | PASS | largest gap 0.00% in 1996-97 |
+| Jersey numbers found on the season rosters | INFO | 97.4% of 10,116 player-seasons |

@@ -1,9 +1,12 @@
 // 3rd quarter, the main message (sketches QF8 / KN7 / JB2 / JB4 / JB6). Each team is a ball with its logo.
 // Scroll steps move the same balls from volume to accuracy to efficiency, zoom out to every season
-// (correlation lines), then sort every team-season into four groups. The last step hands over the controls.
+// (correlation lines), pour every team-season into one cloud (volume × accuracy), then sort the cloud's
+// four corners into four groups. The last step hands over the controls.
 import { season as fmtSeason } from "../data.js";
 import { dur, instant } from "../motion.js";
+import { teamColors } from "../media.js";
 import { setupSteps, h, b } from "./steps.js";
+import { ballSeams } from "./court.js";
 import { segmented, slider } from "../ui/controls.js";
 import { showTip, hideTip } from "../ui/tooltip.js";
 
@@ -14,13 +17,12 @@ export const METRICS = [
 ];
 const [VOL, ACC, EFF] = METRICS;
 const X_MAX = 3.6;           // |z| of the most extreme team-season is about 3.5
+const clampZ = (v) => Math.max(-X_MAX, Math.min(X_MAX, v));
+const sdTick = (v) => (v === 0 ? "league avg" : `${v > 0 ? "+" : "−"}${Math.abs(v)} SD`);
 const pct = d3.format(".1%");
 const pct0 = d3.format(".0%");
 const r2 = (v) => (v < 0 ? "−" : "") + Math.abs(v).toFixed(2);
 const ordinalLow = (k) => (k === 1 ? "lowest" : `${["", "", "second", "third", "fourth", "fifth"][k] || `${k}th`}-lowest`);
-const seamPath = (r) => `M${-r},0H${r}M0,${-r}V${r}`
-  + `M${-r * 0.72},${-r * 0.69}C${-r * 0.22},${-r * 0.3} ${-r * 0.22},${r * 0.3} ${-r * 0.72},${r * 0.69}`
-  + `M${r * 0.72},${-r * 0.69}C${r * 0.22},${-r * 0.3} ${r * 0.22},${r * 0.3} ${r * 0.72},${r * 0.69}`;
 
 export function initTeams(data) {
   const teams = data.teams;
@@ -38,11 +40,25 @@ export function initTeams(data) {
   const counter = d3.greatest(now.filter((d) => d.fg3a_rate_z < 0), (d) => d.win_pct);
   const lowRank = now.filter((d) => d.fg3a_rate <= counter.fg3a_rate).length;
   const peak = d3.greatest(seasons, (s) => rOf(s, VOL.key));
+  // The cloud and the four groups: every team-season, bright when it won at least half its games
+  const everyTeam = teams.filter((d) => d.fg3a_rate_z != null && d.fg3_pct_z != null);
+  const dotKey = (d) => `${d.season}-${d.team_id}`;
+  const shade = (d) => (d.win_pct >= 0.5 ? 0.9 : 0.22);
+  const winners = everyTeam.filter((d) => d.win_pct >= 0.5);
+  const winnersWhere = (test) => pct0(d3.mean(winners, (d) => (test(d) ? 1 : 0)));
 
   // Logos: a team whose logo fails to load (e.g. offline) falls back to its abbreviation
   const failed = new Set();
   const logoOf = (d) => { const url = data.logo(d); return url && !failed.has(url) ? url : null; };
   now.forEach((d) => { if (logoOf(d)) new Image().src = logoOf(d); });   // fetch during the loader
+
+  // Title card: today's thirty logos drift past in three rows. Each row holds its logos twice, so
+  // sliding it by half its width loops without a seam.
+  const wall = now.map(logoOf).filter(Boolean);
+  d3.select("#q3-wall").selectAll("div").data(d3.range(3)).join("div").attr("class", "logo-row").each(function (k) {
+    const row = wall.filter((_, i) => i % 3 === k);
+    for (const src of [...row, ...row]) this.append(h("img", { src, alt: "", decoding: "async" }));
+  });
 
   // --- SVG scaffold --------------------------------------------------------------------------
   const area = document.getElementById("q3-viz");
@@ -56,7 +72,9 @@ export function initTeams(data) {
   const gRef = root.append("g");
   const fitLine = root.append("line").style("stroke-width", 2.5).style("stroke-linecap", "round").style("opacity", 0);
   const gCorr = root.append("g").style("opacity", 0);
-  const gQuads = root.append("g").style("opacity", 0);
+  const gQuads = root.append("g").style("opacity", 0);     // group labels and dividers
+  const gCloud = root.append("g").attr("class", "cloud-corners").style("opacity", 0);
+  const gDots = root.append("g").style("opacity", 0);      // every team-season: the cloud, then the groups
   const gBalls = root.append("g");
   const gAnnot = root.append("g").attr("class", "annot");
   const hit = root.append("rect").style("fill", "transparent");
@@ -68,6 +86,15 @@ export function initTeams(data) {
   let W, H, iw, ih, R;
   let current = null;           // the state currently on screen
   let dropped = false;          // the balls have made their entrance
+  let hovered = null;           // the team-season under the pointer
+
+  // The hovered ball grows, takes its team's color as a ring and comes to the front
+  function hover(d) {
+    if (d === hovered) return;
+    hovered = d;
+    const balls = gBalls.selectAll("g.ball").classed("hover", (x) => x === d);
+    if (d) balls.filter((x) => x === d).raise();
+  }
 
   function size() {
     W = area.clientWidth;
@@ -83,6 +110,7 @@ export function initTeams(data) {
   }
   const xz = () => d3.scaleLinear().domain([-X_MAX, X_MAX]).range([0, iw]);
   const yw = () => d3.scaleLinear().domain([0, 1]).range([ih, 0]);
+  const ya = () => d3.scaleLinear().domain([-X_MAX, X_MAX]).range([ih, 0]);   // accuracy (3P% z), for the cloud
   const xt = () => d3.scaleLinear().domain([seasons[0], last]).range([0, iw]);
   const yr = () => d3.scaleLinear().domain([-0.2, 1]).range([ih, 0]);
 
@@ -97,8 +125,7 @@ export function initTeams(data) {
       gGrid.transition(t).call(d3.axisLeft(y).ticks(4).tickSize(-iw).tickFormat(""));
       gY.transition(t).call(d3.axisLeft(y).ticks(4).tickFormat(pct0).tickSize(0).tickPadding(10));
       gX.attr("transform", `translate(0,${ih})`).transition(t)
-        .call(d3.axisBottom(x).tickValues(iw < 460 ? [-2, 0, 2] : [-3, -2, -1, 0, 1, 2, 3]).tickSizeOuter(0)
-          .tickFormat((v) => (v === 0 ? "league avg" : `${v > 0 ? "+" : "−"}${Math.abs(v)} SD`)));
+        .call(d3.axisBottom(x).tickValues(iw < 460 ? [-2, 0, 2] : [-3, -2, -1, 0, 1, 2, 3]).tickSizeOuter(0).tickFormat(sdTick));
       xTitle.attr("x", iw / 2).attr("y", ih + 48).text(iw < 460
         ? `${metric.label} (${metric.name}) vs. league avg →`
         : `${metric.label}: ${metric.long}, vs. that season’s league average →`);
@@ -106,6 +133,24 @@ export function initTeams(data) {
       gRef.selectAll("line").data([[x(0), x(0), 0, ih], [0, iw, y(0.5), y(0.5)]]).join("line")
         .attr("x1", (d) => d[0]).attr("x2", (d) => d[1]).attr("y1", (d) => d[2]).attr("y2", (d) => d[3])
         .style("stroke", "rgba(242,238,230,0.18)");
+    } else if (view === "cloud") {
+      // Volume across, accuracy up, both against the team's own season. The two average lines cut the
+      // cloud into the four groups of the next step, and become that step's dividers.
+      const x = xz();
+      const y = ya();
+      const ticks = iw < 460 ? [-2, 0, 2] : [-3, -2, -1, 0, 1, 2, 3];
+      gGrid.transition(t).call(d3.axisLeft(y).tickValues(ticks).tickSize(-iw).tickFormat(""));
+      gY.transition(t).call(d3.axisLeft(y).tickValues(ticks).tickSize(0).tickPadding(10)
+        .tickFormat((v) => (v === 0 ? "avg" : `${v > 0 ? "+" : "−"}${Math.abs(v)}`)));
+      gX.attr("transform", `translate(0,${ih})`).transition(t)
+        .call(d3.axisBottom(x).tickValues(ticks).tickSizeOuter(0).tickFormat(sdTick));
+      xTitle.attr("x", iw / 2).attr("y", ih + 48).text(iw < 460
+        ? `${VOL.label} (${VOL.name}) vs. league avg →`
+        : `${VOL.label}: ${VOL.long}, vs. that season’s league average →`);
+      yTitle.attr("transform", `translate(-44,${ih / 2}) rotate(-90)`).text(`${ACC.label}: ${ACC.name} vs. league avg (SD) →`);
+      gRef.selectAll("line").data([[x(0), x(0), 0, ih], [0, iw, y(0), y(0)]]).join("line")
+        .attr("x1", (d) => d[0]).attr("x2", (d) => d[1]).attr("y1", (d) => d[2]).attr("y2", (d) => d[3])
+        .style("stroke", "rgba(242,238,230,0.3)");
     } else {
       const x = xt();
       const y = yr();
@@ -136,13 +181,14 @@ export function initTeams(data) {
       (enter) => {
         const g = enter.append("g").attr("class", "ball")
           .attr("transform", (d) => `translate(${X(d)},${drop ? -R * 3 - Math.random() * ih * 0.4 : Y(d)}) scale(${drop ? 1 : 0.001})`);
-        g.append("circle").attr("class", "leather");
-        g.append("path").attr("class", "seam");
-        g.append("image").attr("class", "logo").on("error", function () {
+        const body = g.append("g").attr("class", "ball-body");   // scaled on hover; the outer g places the ball
+        body.append("circle").attr("class", "leather");
+        body.append("path").attr("class", "seam");
+        body.append("image").attr("class", "logo").on("error", function () {
           failed.add(this.getAttribute("href"));
-          d3.select(this.parentNode).classed("has-logo", false);
+          d3.select(this.closest("g.ball")).classed("has-logo", false);
         });
-        g.append("text");
+        body.append("text");
         return g;
       },
       (update) => update,
@@ -151,8 +197,9 @@ export function initTeams(data) {
       }).remove(),
     );
     balls.select("circle").attr("r", R);
-    balls.select("path").attr("d", seamPath(R));
+    balls.select("path").attr("d", ballSeams(R));
     balls.select("text").text((d) => d.team);
+    balls.style("--team", (d) => teamColors(d).accent).classed("hover", (d) => d === hovered);
     balls.select("image").attr("x", -R * 0.78).attr("y", -R * 0.78).attr("width", R * 1.56).attr("height", R * 1.56)
       .attr("href", logoOf);
     balls.classed("has-logo", (d) => !!logoOf(d));
@@ -204,10 +251,12 @@ export function initTeams(data) {
     hit.style("pointer-events", "all").on("pointermove", (event) => {
       const [px, py] = d3.pointer(event);
       const d = rows[delaunay.find(px, py)];
-      if (!d || Math.hypot(X(d) - px, Y(d) - py) > 36) { hideTip(); return; }
+      if (!d || Math.hypot(X(d) - px, Y(d) - py) > 36) { hideTip(); hover(null); return; }
+      hover(d);
       showTip(event, {
         title: `${d.team_name} · ${fmtSeason(d.season)}`,
         logo: logoOf(d),
+        accent: teamColors(d).accent,
         rows: [
           { value: pct(d.win_pct), label: `win % (${d.wins}-${d.games - d.wins})` },
           ...METRICS.map((mm) => ({
@@ -216,7 +265,7 @@ export function initTeams(data) {
           })),
         ],
       });
-    }).on("pointerleave", hideTip);
+    }).on("pointerleave", () => { hideTip(); hover(null); });
   }
 
   function setMeter(r, st) {
@@ -272,9 +321,65 @@ export function initTeams(data) {
       .attr("dy", "0.8em").attr("text-anchor", "middle").text((l) => l);
   }
 
-  // --- Every team-season: four groups ---------------------------------------------------------------
+  // --- Every team-season: one cloud ------------------------------------------------------------------
+  const cloudR = () => Math.max(1.8, Math.min(3.2, iw / 320));
+  const cloudXY = () => {
+    const x = xz();
+    const y = ya();
+    return [(d) => x(clampZ(d.fg3a_rate_z)), (d) => y(clampZ(d.fg3_pct_z))];
+  };
+
+  // The legend is shared: above the cloud (whose x labels sit under it), under the groups
+  function dotLegend(t, y) {
+    const legend = gDots.selectAll("g.qkey").data([[0.9, "winning record"], [0.22, "losing record"]]).join((enter) => {
+      const g = enter.append("g").attr("class", "qkey").attr("transform", (_, i) => `translate(${i * 150},${y})`);
+      g.append("circle").attr("r", 4).style("fill", "var(--ink)");
+      g.append("text").attr("x", 10).attr("dy", "0.35em").style("font", "500 11px var(--mono)").style("fill", "var(--ink-2)");
+      return g;
+    });
+    legend.transition(t).attr("transform", (_, i) => `translate(${i * 150},${y})`);
+    legend.select("circle").style("opacity", (k) => k[0]);
+    legend.select("text").text((k) => `= ${k[1]}`);
+  }
+
+  // pour (arriving from the views above): the seasons pour in, oldest first. Otherwise (back from the
+  // groups, or a resize) every dot walks to its place in the cloud.
+  function cloud(t, pour) {
+    const [X, Y] = cloudXY();
+    const r = cloudR();
+    gDots.transition(t).style("opacity", 1);
+    gCloud.transition(t).style("opacity", 1);
+    const dots = gDots.selectAll("circle.dot").data(everyTeam, dotKey)
+      .join((enter) => enter.append("circle").attr("class", "dot").attr("r", 0))
+      .style("fill", "var(--ink)").style("opacity", shade);
+    if (pour && !instant) {
+      const span = last - seasons[0];
+      dots.interrupt().attr("cx", X).attr("cy", Y).attr("r", 0)
+        .transition().delay((d) => 250 + ((d.season - seasons[0]) / span) * 1200 + Math.random() * 150)
+        .duration(500).ease(d3.easeBackOut).attr("r", r);
+    } else {
+      dots.transition(t).delay(() => (instant ? 0 : Math.random() * 300)).duration(instant ? 0 : 1100)
+        .attr("cx", X).attr("cy", Y).attr("r", r);
+    }
+    // The four corners, named as the groups they become
+    const short = iw < 560;
+    const corners = [
+      [0, 0, "start", short ? "Fewer 3s · accurate" : "Fewer threes · more accurate"],
+      [iw, 0, "end", short ? "More 3s · accurate" : "More threes · more accurate"],
+      [0, ih, "start", short ? "Fewer 3s · inaccurate" : "Fewer threes · less accurate"],
+      [iw, ih, "end", short ? "More 3s · inaccurate" : "More threes · less accurate"],
+    ];
+    gCloud.selectAll("text").data(corners).join("text")
+      .attr("x", (c) => c[0] + (c[2] === "start" ? 10 : -10)).attr("y", (c) => c[1] + (c[1] ? -12 : 20))
+      .attr("text-anchor", (c) => c[2]).text((c) => c[3]);
+    dotLegend(t, -12);
+  }
+
+  // --- Every team-season: four groups -----------------------------------------------------------------
+  // Each corner of the cloud lines up in its own quarter of the chart, best record first, so a dot
+  // never leaves its corner; the best teams move first and fill the rows in reading order.
   function quadrants(t) {
-    const all = teams.filter((d) => d.fg3a_rate_z != null && d.fg3_pct_z != null);
+    const all = everyTeam;
     const blocks = [
       { volume: "low", accuracy: "high", col: 0, row: 0, name: "Fewer threes, more accurate" },
       { volume: "high", accuracy: "high", col: 1, row: 0, name: "More threes, more accurate" },
@@ -289,23 +394,25 @@ export function initTeams(data) {
     while (d > 4 && Math.ceil(d3.max(counts) / Math.floor((bw - 48) / d)) * d > bh - 116) d -= 0.5;
     const cols = Math.floor((bw - 48) / d);
     const pos = new Map();
+    const order = new Map();   // 0 for the group's best record, 1 for its worst
     for (const blk of blocks) {
       const members = all.filter((r) => (r.fg3a_rate_z > 0 ? "high" : "low") === blk.volume
         && (r.fg3_pct_z > 0 ? "high" : "low") === blk.accuracy).sort((a, c) => c.win_pct - a.win_pct);
       blk.n = members.length;
-      members.forEach((r, i) => pos.set(r, [blk.col * bw + 24 + (i % cols) * d, blk.row * bh + 96 + Math.floor(i / cols) * d]));
+      members.forEach((r, i) => {
+        pos.set(r, [blk.col * bw + 24 + (i % cols) * d, blk.row * bh + 96 + Math.floor(i / cols) * d]);
+        order.set(r, i / Math.max(1, members.length - 1));
+      });
     }
     gQuads.transition(t).style("opacity", 1);
-    const x = xz();
-    const y = yw();
-    gQuads.selectAll("circle.dot").data(all, (r) => `${r.season}-${r.team_id}`).join(
-      (enter) => enter.append("circle").attr("class", "dot")
-        .attr("cx", (r) => x(Math.max(-X_MAX, Math.min(X_MAX, r.fg3a_rate_z)))).attr("cy", (r) => y(r.win_pct)),
+    gDots.transition(t).style("opacity", 1);
+    const [X, Y] = cloudXY();
+    gDots.selectAll("circle.dot").data(all, dotKey).join(
+      (enter) => enter.append("circle").attr("class", "dot").attr("cx", X).attr("cy", Y).attr("r", cloudR()),   // e.g. a deep link
     )
-      .attr("r", Math.max(1.8, d * 0.36))
-      .style("fill", "var(--ink)").style("opacity", (r) => (r.win_pct >= 0.5 ? 0.9 : 0.22))
-      .transition(t).delay(() => (instant ? 0 : Math.random() * 700)).duration(instant ? 0 : 1300)
-      .attr("cx", (r) => pos.get(r)[0]).attr("cy", (r) => pos.get(r)[1]);
+      .style("fill", "var(--ink)").style("opacity", shade)
+      .transition(t).delay((r) => (instant ? 0 : order.get(r) * 700)).duration(instant ? 0 : 1100)
+      .attr("cx", (r) => pos.get(r)[0]).attr("cy", (r) => pos.get(r)[1]).attr("r", Math.max(1.8, d * 0.36));
     const labels = gQuads.selectAll("g.qlabel").data(blocks, (blk) => blk.name).join((enter) => {
       const g = enter.append("g").attr("class", "qlabel");
       g.append("text").attr("class", "quad-label");
@@ -316,14 +423,7 @@ export function initTeams(data) {
     labels.select(".quad-label").attr("y", 16).text((blk) => blk.name);
     labels.select(".quad-value").attr("y", 58).text((blk) => pct(quad(blk.volume, blk.accuracy).win_pct));
     labels.select(".quad-sub").attr("y", 78).text((blk) => `average win % · ${blk.n} team-seasons`);
-    const legend = gQuads.selectAll("g.qkey").data([[0.9, "winning record"], [0.22, "losing record"]]).join((enter) => {
-      const g = enter.append("g").attr("class", "qkey");
-      g.append("circle").attr("r", 4).style("fill", "var(--ink)");
-      g.append("text").attr("x", 10).attr("dy", "0.35em").style("font", "500 11px var(--mono)").style("fill", "var(--ink-2)");
-      return g;
-    }).attr("transform", (_, i) => `translate(${i * 150},${ih + 28})`);
-    legend.select("circle").style("opacity", (k) => k[0]);
-    legend.select("text").text((k) => `= ${k[1]}`);
+    dotLegend(t, ih + 28);
     gQuads.selectAll("line.divider").data([[bw, bw, 0, ih], [0, iw, bh, bh]]).join("line").attr("class", "divider")
       .attr("x1", (q) => q[0]).attr("x2", (q) => q[1]).attr("y1", (q) => q[2]).attr("y2", (q) => q[3])
       .style("stroke", "rgba(242,238,230,0.14)");
@@ -342,11 +442,15 @@ export function initTeams(data) {
       hit.style("pointer-events", "none");
       setMeter(null, st);
       hideTip();
+      hover(null);
     }
     if (st.view !== "history") gCorr.transition(t).style("opacity", 0);
     if (st.view !== "quads") gQuads.transition(t).style("opacity", 0);
+    if (st.view !== "cloud") gCloud.transition(t).style("opacity", 0);
+    if (st.view !== "cloud" && st.view !== "quads") gDots.transition(t).style("opacity", 0);
     if (st.view === "scatter") scatter(st, t);
     if (st.view === "history") history(t, prevView !== "history" && animate);
+    if (st.view === "cloud") cloud(t, animate && prevView !== "cloud" && prevView !== "quads");
     if (st.view === "quads") quadrants(t);
   }
 
@@ -361,6 +465,7 @@ export function initTeams(data) {
     { ...base, highlight: true, fit: true, metric: ACC },
     { ...base, highlight: true, fit: true, metric: EFF },
     { ...base, view: "history" },
+    { ...base, view: "cloud" },
     { ...base, view: "quads" },
     null,   // explore: built from the controls
   ];
@@ -382,8 +487,12 @@ export function initTeams(data) {
     { num: "Step 6", title: "It wasn’t always like this", body: [
       h("p", null, "Every season since ", fmtSeason(seasons[0]), ". Volume’s link to winning peaked at ", b(`r = ${r2(rOf(peak, VOL.key))}`), " in ", fmtSeason(peak), ", when only some teams leaned on threes. Once everyone did, it faded to ", b(r2(vol)), "."),
       h("p", null, "Accuracy went the other way: r = ", r2(rEra(1985, 1999, ACC.key)), " in 1985–2000, ", r2(rEra(2020, last, ACC.key)), " since 2020.")] },
-    { num: "Step 7", title: "Four kinds of teams", body: [
-      h("p", null, "All ", d3.format(",")(nAll), " team-seasons since ", fmtSeason(seasons[0]), ", split by whether they shot more threes than average and whether they made more. Bright dots had winning records."),
+    { num: "Step 7", title: "Every team, every season", body: [
+      h("p", null, "All ", d3.format(",")(nAll), " team-seasons since ", fmtSeason(seasons[0]), ", each against its own season’s league. Left to right: how much more often it shot threes. Bottom to top: how much better it made them."),
+      h("p", null, "Bright dots had winning records. ", b(winnersWhere((d) => d.fg3_pct_z > 0)), " of them sit above the middle line: more accurate than their league. Only ",
+        b(winnersWhere((d) => d.fg3a_rate_z > 0)), " sit right of it: more threes.")] },
+    { num: "Step 8", title: "Four kinds of teams", body: [
+      h("p", null, "Cut the cloud at both averages and line up each corner’s teams, best record first."),
       h("p", null, "Accurate, low-volume teams won ", b(pct(quad("low", "high").win_pct)), ". High-volume, inaccurate teams won ", b(pct(quad("high", "low").win_pct)), ".")] },
     { num: "Your turn", title: "Run the seasons", body: [
       h("p", null, "Pick a stat and a season, or press play to run every season since ", fmtSeason(seasons[0]), ". Hover a ball for its numbers."),

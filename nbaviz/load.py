@@ -21,10 +21,11 @@ def _files(dataset: str, group: str, seasons=None) -> list:
 
 def _read(dataset: str, group: str, seasons=None, **read_kw) -> pd.DataFrame:
     """Concatenate data/raw/<dataset>/*.csv, tagging each row with the season in its file name."""
+    dtype = {"GAME_ID": str, **read_kw.pop("dtype", {})}
     frames = []
     for f in _files(dataset, group, seasons):
         try:
-            df = pd.read_csv(f, dtype={"GAME_ID": str}, **read_kw)
+            df = pd.read_csv(f, dtype=dtype, **read_kw)
         except pd.errors.EmptyDataError:
             continue
         if f.stem[:4].isdigit():
@@ -209,3 +210,14 @@ def player_seasons() -> pd.DataFrame:
     if p["usg_pct"].median() > 1:  # some API versions return 25.3 instead of 0.253
         p["usg_pct"] = p["usg_pct"] / 100
     return p
+
+
+@lru_cache
+def player_rosters() -> pd.DataFrame:
+    """Jersey number and position per season, team and player, from the season rosters. A player
+    traded mid-season can be on more than one roster. Numbers stay text, so "00" is not "0"."""
+    r = _read("team_rosters", "rosters", dtype={"NUM": str})
+    r = r.drop(columns="SEASON", errors="ignore")  # the file name already gives the season
+    r = r.rename(columns=str.lower).rename(columns={"teamid": "team_id", "num": "jersey"})
+    r["jersey"] = r["jersey"].str.strip().replace("", np.nan)
+    return r[["season", "team_id", "player_id", "jersey", "position"]].drop_duplicates(["season", "team_id", "player_id"])

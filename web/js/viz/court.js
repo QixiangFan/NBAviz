@@ -18,8 +18,16 @@ export function fitCourt(w, h, pad = 0) {
   };
 }
 
-/** Court lines into an <svg>. shortLine draws the uniform 22 ft arc of 1994-95 to 1996-97. */
-export function drawCourt(svgEl, s, { shortLine = false } = {}) {
+/** Seams of a basketball of radius r centered on the origin, as SVG path data. */
+export const ballSeams = (r) => `M${-r},0H${r}M0,${-r}V${r}`
+  + `M${-r * 0.72},${-r * 0.69}C${-r * 0.22},${-r * 0.3} ${-r * 0.22},${r * 0.3} ${-r * 0.72},${r * 0.69}`
+  + `M${r * 0.72},${-r * 0.69}C${r * 0.22},${-r * 0.3} ${r * 0.22},${r * 0.3} ${r * 0.72},${r * 0.69}`;
+
+/**
+ * Court lines into an <svg>. shortLine draws the uniform 22 ft arc of 1994-95 to 1996-97. paint stains
+ * the floor under the lines: darker inside the arc, darkest in the lane and the two circles.
+ */
+export function drawCourt(svgEl, s, { shortLine = false, paint = false } = {}) {
   const svg = d3.select(svgEl).attr("width", s.w).attr("height", s.h).attr("viewBox", `0 0 ${s.w} ${s.h}`);
   svg.selectAll("*").remove();
   const line = d3.line().x((p) => s.x(p[0])).y((p) => s.y(p[1]));
@@ -28,21 +36,32 @@ export function drawCourt(svgEl, s, { shortLine = false } = {}) {
     return [cx + r * Math.cos(a), cy + r * Math.sin(a)];
   });
   const box = (x0, y0, x1, y1) => [[x0, y0], [x1, y0], [x1, y1], [x0, y1], [x0, y0]];
+  // 3-point line: corner lines up from the baseline, joined by the arc
+  let three;
+  if (shortLine) {
+    three = [[22, COURT.baseline], ...arc(0, 0, 22, 0, Math.PI), [-22, COURT.baseline]];
+  } else {
+    const top = Math.sqrt(23.75 ** 2 - 22 ** 2);
+    const a0 = Math.atan2(top, 22);
+    three = [[22, COURT.baseline], ...arc(0, 0, 23.75, a0, Math.PI - a0), [-22, COURT.baseline]];
+  }
+  const ftCircle = arc(0, 13.75, 6, 0, Math.PI);
+  const centerCircle = arc(0, COURT.halfcourt, 6, Math.PI, 2 * Math.PI);
+  if (paint) {
+    const stain = svg.append("g").attr("class", "paint");
+    stain.append("path").attr("class", "inside-arc").attr("d", `${line(three)}Z`);
+    stain.selectAll("path.spot").data([box(-8, COURT.baseline, 8, 13.75), ftCircle, centerCircle]).join("path")
+      .attr("class", "spot").attr("d", (p) => `${line(p)}Z`);
+  }
   const paths = [
     box(COURT.left, COURT.baseline, COURT.right, COURT.halfcourt),
     box(-8, COURT.baseline, 8, 13.75),                        // lane, free-throw line 15 ft from the board
     box(-6, COURT.baseline, 6, 13.75),
-    arc(0, 13.75, 6, 0, Math.PI),                             // free-throw circle
+    ftCircle,                                                 // free-throw circle
     [[-4, COURT.board], ...arc(0, 0, 4, Math.PI, 0), [4, COURT.board]],   // restricted area
-    arc(0, COURT.halfcourt, 6, Math.PI, 2 * Math.PI),         // center circle
+    centerCircle,
+    three,
   ];
-  if (shortLine) {
-    paths.push(arc(0, 0, 22, 0, Math.PI), [[-22, COURT.baseline], [-22, 0]], [[22, COURT.baseline], [22, 0]]);
-  } else {
-    const top = Math.sqrt(23.75 ** 2 - 22 ** 2);
-    const a0 = Math.atan2(top, 22);
-    paths.push(arc(0, 0, 23.75, a0, Math.PI - a0), [[-22, COURT.baseline], [-22, top]], [[22, COURT.baseline], [22, top]]);
-  }
   svg.append("g").selectAll("path").data(paths).join("path").attr("d", line);
   drawHoop(svg, s);
   return svg;

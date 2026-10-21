@@ -4,9 +4,19 @@ import { logoLookup } from "./media.js";
 
 const DATA = "../data/clean/";
 const LOGOS = "assets/logos/logos.csv";
+const CUTOUTS = "assets/players/cutouts.csv";
 const TABLES = {
   league: "league_seasons", events: "events", teams: "team_seasons", corr: "win_correlations",
   quads: "quadrants", zones: "zone_seasons", grid: "shot_grid", players: "player_seasons",
+};
+const TEXT = { players: ["jersey"] };   // columns d3.autoType must not touch: jersey "00" would become 0
+
+/** d3.autoType, except that the named columns stay text (blank → null). */
+const typed = (text = []) => (row) => {
+  const kept = text.map((k) => row[k]);
+  d3.autoType(row);
+  text.forEach((k, i) => { row[k] = kept[i] || null; });
+  return row;
 };
 
 export const ZONES = ["RA", "PAINT", "MID", "C3", "AB3"];   // rim outwards; index >= 3 is a three
@@ -23,8 +33,9 @@ export async function loadAll(onProgress = () => {}) {
   const entries = Object.entries(TABLES);
   let done = 0;
   const logoEras = d3.csv(LOGOS, d3.autoType).catch(() => []);   // optional, see collect_logos.py
+  const cutouts = d3.csv(CUTOUTS, d3.autoType).catch(() => []);  // optional, see make_cutouts.swift
   const loaded = await Promise.all(entries.map(([key, file]) =>
-    d3.csv(`${DATA}${file}.csv`, d3.autoType).then((rows) => {
+    d3.csv(`${DATA}${file}.csv`, typed(TEXT[key])).then((rows) => {
       onProgress(++done / entries.length);
       return [key, rows];
     })));
@@ -37,6 +48,7 @@ export async function loadAll(onProgress = () => {}) {
   data.lastSeason = d3.max(data.league, (d) => d.season);
   data.teamBySeason = d3.index(data.teams, (d) => d.season, (d) => d.team);   // players only carry the abbreviation
   data.logo = logoLookup(data.teams, await logoEras);
+  data.cutouts = new Map((await cutouts).map((d) => [d.slug, d]));   // player photos for the hero and Q1
   return data;
 }
 
@@ -51,48 +63,51 @@ export function rng(seed = 1) {
   };
 }
 
-/**
- * Draw n shots from one season's grid, weighted by attempts. Each shot gets a random spot inside
- * its 1 ft cell and goes in with that cell's FG%. Coordinates are feet from the hoop. Shots at the
- * rim pile into a few cells, so they get an extra Gaussian spread (σ = 0.9 ft) to read as a cloud.
- */
-export function sampleShots(cells, n, seed = 7) {
-  const random = rng(seed);
-  const cum = new Float64Array(cells.length);
-  let total = 0;
-  cells.forEach((c, i) => { total += c.fga; cum[i] = total; });
-  const out = { n, x: new Float32Array(n), y: new Float32Array(n), zone: new Uint8Array(n), made: new Uint8Array(n) };
-  for (let i = 0; i < n; i++) {
-    const c = cells[Math.min(d3.bisectRight(cum, random() * total), cells.length - 1)];
-    let dx = 0;
-    let dy = 0;
-    if (c.zone === "RA") {   // Box-Muller
-      const r = 0.9 * Math.sqrt(-2 * Math.log(1 - random()));
-      const a = 2 * Math.PI * random();
-      dx = r * Math.cos(a);
-      dy = r * Math.sin(a);
-    }
-    out.x[i] = c.x + random() + dx;
-    out.y[i] = Math.max(-5.1, c.y + random() + dy);
-    out.zone[i] = ZONE_INDEX[c.zone];
-    out.made[i] = random() < c.fgm / c.fga ? 1 : 0;
-  }
-  return out;
-}
+// Angle around the hoop: 0 straight behind it, then counterclockwise, so the seam is where nobody shoots
+const angleOf = (x, y) => {
+  const a = Math.atan2(y, x) + Math.PI / 2;
+  return a < 0 ? a + 2 * Math.PI : a;
+};
 
 /**
- * Order points so a morph moves each dot outward along the floor instead of across it:
- * equal-count distance bands from the hoop, then by angle inside each band.
- * Returns ranks: order[k] is the index of the point with rank k.
+ * n shot particles that can be drawn from any season's grid, weighted by attempts. Each particle keeps
+ * its own random numbers across seasons: one picks a direction from the hoop (by that season's angle
+ * mix), one a distance along it, the rest its spot inside the 1 ft cell and whether it went in (the
+ * cell's FG%). When the shot mix changes, a particle slides out along its ray instead of jumping, so a
+ * season-to-season morph shows only the real change. Coordinates are feet from the hoop. Shots at the
+ * rim pile into a few cells, so they get an extra Gaussian spread (σ = 0.9 ft) to read as a cloud.
  */
-export function migrationOrder(xs, ys, n, bands = 28) {
-  const dist = Float32Array.from({ length: n }, (_, i) => Math.hypot(xs[i], ys[i]));
-  const angle = Float32Array.from({ length: n }, (_, i) => Math.atan2(ys[i], xs[i]));
-  const idx = d3.range(n).sort((a, b) => dist[a] - dist[b]);
-  const per = Math.ceil(n / bands);
-  const order = [];
-  for (let b = 0; b < n; b += per) {
-    order.push(...idx.slice(b, b + per).sort((a, c) => angle[a] - angle[c]));
-  }
-  return order;
+export function shotSampler(n, seed = 7, sectors = 72) {
+  const random = rng(seed);
+  const u = Float64Array.from({ length: n * 7 }, random);
+  return (cells) => {
+    const groups = d3.range(sectors).map(() => []);
+    for (const c of cells) {
+      groups[Math.min(sectors - 1, Math.floor((angleOf(c.x + 0.5, c.y + 0.5) / (2 * Math.PI)) * sectors))].push(c);
+    }
+    groups.forEach((g) => g.sort((a, c) => Math.hypot(a.x + 0.5, a.y + 0.5) - Math.hypot(c.x + 0.5, c.y + 0.5)));
+    const cum = groups.map((g) => d3.cumsum(g, (c) => c.fga));
+    const sectorCum = d3.cumsum(cum, (c) => (c.length ? c[c.length - 1] : 0));
+    const total = sectorCum[sectors - 1];
+    const out = { n, x: new Float32Array(n), y: new Float32Array(n), zone: new Uint8Array(n), made: new Uint8Array(n) };
+    for (let i = 0; i < n; i++) {
+      const r = u.subarray(i * 7, i * 7 + 7);
+      const s = d3.bisectRight(sectorCum, r[0] * total);   // empty sectors have zero width and are never hit
+      const g = groups[s];
+      const c = g[Math.min(d3.bisectRight(cum[s], r[1] * cum[s][g.length - 1]), g.length - 1)];
+      let dx = 0;
+      let dy = 0;
+      if (c.zone === "RA") {   // Box-Muller
+        const rad = 0.9 * Math.sqrt(-2 * Math.log(1 - r[4]));
+        const a = 2 * Math.PI * r[5];
+        dx = rad * Math.cos(a);
+        dy = rad * Math.sin(a);
+      }
+      out.x[i] = c.x + r[2] + dx;
+      out.y[i] = Math.max(-5.1, c.y + r[3] + dy);
+      out.zone[i] = ZONE_INDEX[c.zone];
+      out.made[i] = r[6] < c.fgm / c.fga ? 1 : 0;
+    }
+    return out;
+  };
 }

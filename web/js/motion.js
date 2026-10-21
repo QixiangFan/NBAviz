@@ -5,6 +5,7 @@ export const params = new URLSearchParams(location.search);
 export const shotMode = params.has("shot");
 export const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches || params.has("static");
 export const instant = shotMode || reduceMotion;
+document.documentElement.classList.toggle("instant", instant);   // CSS holds looping decoration still
 
 /** Duration helper: every animation goes through it so instant mode is one switch. */
 export const dur = (seconds) => (instant ? 0 : seconds);
@@ -37,29 +38,50 @@ export function scrollToEl(el, offset = 0) {
  * at the top of the screen, or a tall block's bottom at the bottom. The aim leans 30% of a screen
  * the way the reader was going, so crossing a fifth of the way into the next block carries on to it.
  * Inside a block taller than the screen (the Q1 scrub, long sections) scrolling stays free.
+ *
+ * "At rest" means Lenis is idle, or its smooth scroll is within 10 px of where it will stop (the lerp
+ * tail crawls on for most of a second); native scrolling (touch, scrollbar) is idle 400 ms after its
+ * last event. A plain debounce is not enough: Lenis emits once per frame, so a short timer fires between
+ * frames, mid-scroll. The snap's own glide is not the reader's scroll: its events are ignored (they
+ * would read as a change of direction), and any wheel, key or touch hands control back to the reader.
  */
 export function initSnap(selector) {
   if (!lenis) return;
   let timer = 0;
   let dir = 1;
   let touching = false;
-  const schedule = () => { clearTimeout(timer); timer = setTimeout(settle, 10); };
-  lenis.on("scroll", (l) => { if (l.direction) dir = l.direction; schedule(); });
-  addEventListener("touchstart", () => { touching = true; clearTimeout(timer); }, { passive: true });
+  let gliding = false;
+  const moving = () => lenis.isScrolling === "native"
+    || (lenis.isScrolling === "smooth" && Math.abs(lenis.targetScroll - lenis.animatedScroll) > 10);
+  const cancel = () => { clearTimeout(timer); timer = 0; };
+  const schedule = () => { cancel(); timer = setTimeout(settle, 60); };
+  lenis.on("scroll", (l) => {
+    if (gliding) return;
+    if (l.direction) dir = l.direction;
+    if (moving()) cancel();
+    else if (!timer) schedule();
+  });
+  const reader = () => { gliding = false; };
+  addEventListener("wheel", reader, { passive: true });
+  addEventListener("keydown", reader);
+  addEventListener("touchstart", () => { reader(); touching = true; cancel(); }, { passive: true });
   ["touchend", "touchcancel"].forEach((type) => addEventListener(type, () => { touching = false; schedule(); }, { passive: true }));
 
   function settle() {
-    if (touching || lenis.isStopped) return;
-    const y = window.scrollY;
+    timer = 0;
+    if (touching || gliding || lenis.isStopped || moving()) return;
+    const y = lenis.targetScroll;   // where the reader's scroll stops
     const vh = window.innerHeight;
-    const tops = [...document.querySelectorAll(selector)].map((el) => el.getBoundingClientRect().top + y).sort((a, b) => a - b);
+    const tops = [...document.querySelectorAll(selector)].map((el) => el.getBoundingClientRect().top + window.scrollY).sort((a, b) => a - b);
     if (!tops.some((t) => t > y + 2 && t < y + vh - 2)) return;
     const ends = [...tops.slice(1), document.documentElement.scrollHeight];
     const rests = tops.flatMap((t, i) => (ends[i] - t > vh ? [t, ends[i] - vh] : [t]))
       .map((r) => Math.min(Math.max(r, 0), lenis.limit));
     const aim = y + dir * 0.3 * vh;
     const target = rests.reduce((a, r) => (Math.abs(r - aim) < Math.abs(a - aim) ? r : a));
-    if (Math.abs(target - y) > 2) lenis.scrollTo(target, { duration: 0.3, easing: (t) => 1 - Math.pow(1 - t, 3) });
+    if (Math.abs(target - y) <= 2) return;
+    gliding = true;
+    lenis.scrollTo(target, { duration: 0.35, easing: (t) => 1 - Math.pow(1 - t, 3), onComplete: () => { gliding = false; } });
   }
 }
 

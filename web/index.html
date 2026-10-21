@@ -26,12 +26,17 @@
   <svg class="loader-arc" viewBox="-4 0 224 122">
     <g class="loader-hoop">
       <line class="board" x1="213" y1="68" x2="213" y2="108"/><line class="board" x1="203" y1="100" x2="213" y2="100"/>
-      <line x1="177" y1="101" x2="181" y2="118"/><line x1="203" y1="101" x2="199" y2="118"/>
-      <line x1="177" y1="101" x2="199" y2="118"/><line x1="203" y1="101" x2="181" y2="118"/>
+      <g class="loader-net" id="loader-net">
+        <line x1="177" y1="101" x2="181" y2="118"/><line x1="203" y1="101" x2="199" y2="118"/>
+        <line x1="177" y1="101" x2="199" y2="118"/><line x1="203" y1="101" x2="181" y2="118"/>
+      </g>
     </g>
     <path d="M10 100 Q 100 -40 190 100"/>
-    <ellipse class="loader-rim" cx="190" cy="100" rx="13" ry="3"/>
-    <circle r="7" cx="10" cy="100"/>
+    <ellipse class="loader-rim" id="loader-rim" cx="190" cy="100" rx="13" ry="3"/>
+    <g class="loader-ball" id="loader-ball" transform="translate(10 100)">
+      <circle r="7"/>
+      <path d="M-7,0H7M0,-7V7M-5.04,-4.83C-1.54,-2.1 -1.54,2.1 -5.04,4.83M5.04,-4.83C1.54,-2.1 1.54,2.1 5.04,4.83"/>
+    </g>
   </svg>
   <p class="loader-count"><span id="loader-num">0</span> shots</p>
   <p class="loader-label" id="loader-label">Loading the box scores…</p>
@@ -61,10 +66,12 @@
   <section class="hero" id="tipoff" data-period="tipoff">
     <div class="hero-stage" aria-hidden="true">
       <div class="court3d" id="hero-court">
+        <div class="court-floor"></div>
         <svg class="court-lines" id="hero-lines"></svg>
         <canvas class="particles" id="hero-canvas"></canvas>
       </div>
     </div>
+    <div class="hero-player" id="hero-player" aria-hidden="true"></div>
     <div class="hero-copy">
       <p class="kicker">NBA regular seasons · 1979-80 to 2025-26 · a data story in four quarters</p>
       <h1 class="hero-title" id="hero-title"><span>Is it all</span><span class="accent">about threes?</span></h1>
@@ -86,7 +93,8 @@
   </section>
 
   <!-- ============ Q1 · annotated timeline (sketch QF1) ============ -->
-  <section class="chapter-card" id="q1" data-period="q1">
+  <section class="chapter-card" id="q1" data-period="q1" data-q="1">
+    <div class="lineage" id="q1-lineage" aria-hidden="true"></div>
     <p class="period-label">1st quarter</p>
     <h2 class="chapter-title">The long way out</h2>
     <p class="chapter-lead">How the three-pointer took over the NBA, one season at a time. Scroll to run the clock from 1979-80, the
@@ -109,7 +117,7 @@
   </section>
 
   <!-- ============ Q2 · shot particles (sketches ZD8 / QF7) ============ -->
-  <section class="chapter-card" id="q2" data-period="q2">
+  <section class="chapter-card" id="q2" data-period="q2" data-q="2">
     <p class="period-label">2nd quarter</p>
     <h2 class="chapter-title">Where the shots went</h2>
     <p class="chapter-lead">The court is the same size it has always been. Where teams shoot from is not.</p>
@@ -117,6 +125,7 @@
   <section class="scrolly" id="q2-scrolly" data-period="q2">
     <div class="stage" id="q2-stage">
       <div class="viz-area" id="q2-viz">
+        <canvas class="heat" id="q2-heat"></canvas>
         <svg class="court-lines" id="q2-lines"></svg>
         <canvas class="particles" id="q2-canvas"></canvas>
         <svg class="overlay" id="q2-overlay"></svg>
@@ -143,6 +152,7 @@
 
   <!-- ============ Q3 · does volume win? (sketches QF8 / KN7 / JB2 / JB4 / JB6) ============ -->
   <section class="chapter-card" id="q3" data-period="q3">
+    <div class="logo-wall" id="q3-wall" aria-hidden="true"></div>
     <p class="period-label">3rd quarter · the main message</p>
     <h2 class="chapter-title">Does volume win?</h2>
     <p class="chapter-lead">If threes are worth more, the teams that take the most of them should win the most. Let’s check.</p>
@@ -152,13 +162,13 @@
       <div class="viz-area" id="q3-viz">
         <svg class="q3-svg" id="q3-svg" role="img" aria-label="Teams plotted by three-point shooting and win percentage"></svg>
       </div>
-      <div class="r-meter" id="q3-r"><span class="r-label">r</span><span class="led" id="q3-r-value">0.00</span><span class="r-caption" id="q3-r-caption"></span></div>
+      <div class="r-meter" id="q3-r"><span class="r-label">r</span><span class="led dots" id="q3-r-value">0.00</span><span class="r-caption" id="q3-r-caption"></span></div>
     </div>
     <div class="steps" id="q3-steps"></div>
   </section>
 
   <!-- ============ Q4 · players (sketches ZD2 / KN4) ============ -->
-  <section class="chapter-card" id="q4" data-period="q4">
+  <section class="chapter-card" id="q4" data-period="q4" data-q="4">
     <p class="period-label">4th quarter</p>
     <h2 class="chapter-title">The players</h2>
     <p class="chapter-lead">Some stars bent the league toward the arc. Others won without it. Compare any two players from one
@@ -171,6 +181,8 @@
       <figure class="duel" id="q4-radar" role="img" aria-label="Radar chart comparing two players"></figure>
       <article class="player-card" id="card-b"></article>
     </div>
+  </section>
+  <section class="mvp" id="q4-mvp" data-period="q4">
     <div class="mvp-hall">
       <div class="mvp-head">
         <h3>MVP hall</h3>
@@ -209,18 +221,19 @@
         <p>NBA.com stats through <code>nba_api</code>, cleaned by <code>build_clean_data.py</code>. The clean tables, data
           dictionary, cleaning rules and validation checks are in <a href="../data/clean/README.md">data/clean/</a>.
           Correlations compare each team only with its own season’s league (z-scores). Player photos and current logos:
-          NBA.com. Older logos: SportsLogos.net.</p>
+          NBA.com. Older logos: SportsLogos.net. Action cutouts: press and web photos (Wikimedia Commons, PNGKey),
+          cut out with Apple’s Vision framework, used for this course project only.</p>
       </div>
-      <div>
-        <h3>Starting five</h3>
-        <ul class="starting-five">
-          <li><span>01</span>Qixiang Fan</li>
-          <li><span>02</span>Yurun Zhu</li>
-          <li><span>03</span>Kunhao Ni</li>
-          <li><span>04</span>Zhaorui Ding</li>
-          <li><span>05</span>Jun Woo Beck</li>
-        </ul>
-      </div>
+    </div>
+    <div class="lineup">
+      <h3>Starting five</h3>
+      <ul class="starting-five" id="lineup">
+        <li data-name="Fan"><span>01</span>Qixiang Fan</li>
+        <li data-name="Zhu"><span>02</span>Yurun Zhu</li>
+        <li data-name="Ni"><span>03</span>Kunhao Ni</li>
+        <li data-name="Ding"><span>04</span>Zhaorui Ding</li>
+        <li data-name="Beck"><span>05</span>Jun Woo Beck</li>
+      </ul>
     </div>
     <p class="colophon">TheVizG.O.A.T · CS6730 Data Visualization · Georgia Tech</p>
   </section>

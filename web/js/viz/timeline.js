@@ -2,9 +2,12 @@
 // scoreboard reads out the season, and rule changes pop up as the line passes them. Switching the
 // metric morphs the line; hovering reads any season the clock has reached.
 import { season as fmtSeason } from "../data.js";
-import { dur } from "../motion.js";
+import { dur, instant } from "../motion.js";
 import { segmented } from "../ui/controls.js";
 import { showTip, hideTip } from "../ui/tooltip.js";
+import { cutout } from "../ui/cutout.js";
+import { ballSeams } from "./court.js";
+import { h } from "./steps.js";
 
 const METRICS = [
   { key: "fg3a_pg", label: "Attempts", title: "3-point attempts per team-game", fmt: d3.format(".1f"), axis: d3.format("d"), zero: true, color: "var(--three)" },
@@ -15,6 +18,7 @@ const METRICS = [
 const BOARD = [["season", "Season"], ["fg3a_pg", "3PA / game"], ["fg3a_rate", "3PT share"], ["fg3_pct", "3P%"], ["fg3m_pg", "3PM / game"]];
 const SHORT_LINE = [1994, 1996];   // seasons with the 22 ft arc
 const HOLD = [0.06, 0.9];          // scroll progress where the clock starts and stops
+const LINEAGE = ["bird-q1", "allen-q1", "curry-q1"];   // title card: one shooter per era, oldest first
 
 export function initTimeline(data) {
   const league = data.league;
@@ -35,10 +39,12 @@ export function initTimeline(data) {
   document.getElementById("q1-note").textContent =
     "3-point attempts were not logged for every game before 1985-86, so attempts, share and accuracy start there.";
 
+  lineage(data.cutouts, bySeason);
+
   const cells = d3.select("#q1-board").selectAll("div").data(BOARD).join("div")
     .attr("class", (d) => `cell${d[0] === "season" ? " wide" : ""}`);
   cells.append("span").attr("class", "lbl").text((d) => d[1]);
-  cells.append("span").attr("class", "led");
+  cells.append("span").attr("class", "led dots");
 
   const yScale = (m, ih) => {
     const vals = league.map((d) => d[m.key]).filter((v) => v != null);
@@ -95,12 +101,14 @@ export function initTimeline(data) {
     const path = g.append("path").attr("clip-path", "url(#q1-clip)")
       .style("fill", "none").style("stroke-width", 2.5).style("stroke-linejoin", "round").style("stroke-linecap", "round");
     const nowLine = g.append("line").attr("y1", -8).attr("y2", ih).style("stroke", "rgba(242,238,230,0.3)");
-    const nowDot = g.append("circle").attr("class", "now-dot").attr("r", 6);
+    const nowBall = g.append("g").attr("class", "now-ball");   // the clock's ball, rolling along the line
+    nowBall.append("circle").attr("r", 7);
+    nowBall.append("path").attr("d", ballSeams(7));
     const cross = g.append("line").attr("y1", 0).attr("y2", ih).style("stroke", "var(--ink-2)").style("display", "none");
     g.append("rect").attr("width", iw).attr("height", ih).style("fill", "transparent")
       .on("pointermove", (event) => hover(event)).on("pointerleave", () => { cross.style("display", "none"); hideTip(); });
 
-    refs = { x, y: yScale(metric, ih), iw, ih, clip, grid, yAxis, ticks, area, glow, path, nowLine, nowDot, cross };
+    refs = { x, y: yScale(metric, ih), iw, ih, clip, grid, yAxis, ticks, area, glow, path, nowLine, nowBall, cross };
     paint();
     setSeason(current, true);
   }
@@ -150,7 +158,7 @@ export function initTimeline(data) {
   function setSeason(sf, force = false) {
     current = sf;
     if (!refs) return;
-    const { x, y, clip, nowLine, nowDot, ticks } = refs;
+    const { x, y, clip, nowLine, nowBall, ticks } = refs;
     clip.attr("width", Math.max(0, x(sf) + 12));
     const lo = Math.floor(sf);
     const hi = Math.min(last, lo + 1);
@@ -158,7 +166,9 @@ export function initTimeline(data) {
     const c = bySeason.get(hi)?.[metric.key];
     const v = a != null && c != null ? a + (c - a) * (sf - lo) : a;
     nowLine.attr("x1", x(sf)).attr("x2", x(sf));
-    nowDot.style("display", v == null ? "none" : null).attr("cx", x(sf)).attr("cy", v == null ? 0 : y(v));
+    // 36° per season, so the ball rolls forward with the clock and back when scrolling up
+    nowBall.style("display", v == null ? "none" : null)
+      .attr("transform", `translate(${x(sf)},${v == null ? 0 : y(v)}) rotate(${((sf - first) * 36).toFixed(1)})`);
     ticks.select("line").classed("passed", (e) => e.season <= sf);
     ticks.select("circle").style("fill", (e) => (e.season <= sf ? (e.kind === "rule" ? "var(--ink)" : "var(--three)") : "var(--bg)"));
     ticks.select("text").style("fill", (e) => (e.season <= sf ? "var(--bg)" : "var(--ink-2)"));
@@ -220,4 +230,24 @@ export function initTimeline(data) {
   draw();
 
   return { trigger };
+}
+
+/**
+ * Q1 title card: three generations of shooters, each captioned with the league's 3-point attempts in
+ * their season. They rise one after another as the card arrives; scrolling on, the nearer ones sink faster.
+ */
+function lineage(cutouts, bySeason) {
+  const figs = LINEAGE.map((slug) => cutouts.get(slug)).filter(Boolean).map((p) => {
+    const fg3a = bySeason.get(p.season)?.fg3a_pg;
+    return cutout(p, { caption: [h("b", null, p.player),
+      fg3a == null ? fmtSeason(p.season) : `${fmtSeason(p.season)} · league ${fg3a.toFixed(1)} 3PA / game`] });
+  });
+  document.getElementById("q1-lineage").append(...figs);
+  if (instant || !figs.length) return;
+  const arrive = { trigger: "#q1", start: "top 60%", once: true };
+  gsap.from(figs.map((f) => f.querySelector(".cutout-art")), { yPercent: 22, opacity: 0, duration: 1.4, stagger: 0.25, ease: "expo.out", scrollTrigger: arrive });
+  gsap.from(figs.map((f) => f.querySelector("figcaption")), { y: 12, opacity: 0, duration: 0.8, stagger: 0.25, delay: 0.5, scrollTrigger: { ...arrive } });
+  figs.forEach((f, i) => gsap.to(f, {
+    yPercent: 5 * (i + 1), ease: "none", scrollTrigger: { trigger: "#q1", start: "top top", end: "bottom top", scrub: true },
+  }));
 }

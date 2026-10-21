@@ -47,9 +47,29 @@ async function hideLoader(data) {
   if (instant) { loader.remove(); return; }
   document.getElementById("loader-label").textContent =
     `${data.gridSeasons.length} seasons of shot charts · ${d3.format(",")(data.teams.length)} team-seasons · ${d3.format(",")(data.players.length)} player-seasons`;
-  await countTo(document.getElementById("loader-num"), 0, data.totalShots, { duration: 1.6, format: (v) => d3.format(",")(Math.round(v)) });
+  await Promise.all([
+    countTo(document.getElementById("loader-num"), 0, data.totalShots, { duration: 1.6, format: (v) => d3.format(",")(Math.round(v)) }),
+    shoot(1.6),
+  ]);
   await gsap.to(loader, { yPercent: -100, duration: 1.1, ease: "expo.inOut", delay: 0.35 });
   loader.remove();
+}
+
+/** The loader's ball flies along the dotted arc while the shots count up, then drops through the net. */
+function shoot(duration) {
+  const ball = document.getElementById("loader-ball");
+  const rim = document.getElementById("loader-rim");
+  // The arc is the quadratic curve (10,100) → (100,-40) → (190,100): x moves at a steady speed, y as a
+  // parabola, like a real shot. Backspin turns the ball the other way.
+  const at = (t) => [10 + 180 * t, (1 - t) ** 2 * 100 - 2 * (1 - t) * t * 40 + t * t * 100];
+  const place = (x, y, turn) => ball.setAttribute("transform", `translate(${x} ${y}) rotate(${turn})`);
+  const flight = { t: 0, drop: 0 };
+  return gsap.timeline()
+    .to(flight, { t: 1, duration, ease: "none", onUpdate: () => place(...at(flight.t), -540 * flight.t) })
+    .call(() => rim.classList.add("hit"))
+    .to(flight, { drop: 1, duration: 0.3, ease: "power2.in", onUpdate: () => place(190, 100 + 20 * flight.drop, -540) })
+    .to(ball, { opacity: 0, duration: 0.15 }, "<0.15")
+    .fromTo("#loader-net", { scaleY: 1 }, { scaleY: 1.35, duration: 0.14, yoyo: true, repeat: 1, ease: "power1.out", transformOrigin: "50% 0%" }, "<-0.1");
 }
 
 /** Period nav, game clock (whole page) and shot clock (24 → 0 inside each section). */
