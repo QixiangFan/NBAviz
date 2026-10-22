@@ -1,10 +1,12 @@
 // FINAL BUZZER: the closing scoreboard. One panel per stat: how closely it tracked winning in the
-// latest season (r with win %). Digits count up, the meters fill and the backboard light goes red when
-// the board scrolls into view. Below it, the team's starting five on jerseys.
+// latest season (r with win %). When the board scrolls into view each LED powers on (a flicker, a burst
+// of random digits), counts up while its meter fills, and once every number has settled the buzzer goes:
+// the backboard light turns red and the arena's edges flash. Below it, the team's starting lineup on jerseys.
 import { season as fmtSeason } from "../data.js";
-import { countTo, instant } from "../motion.js";
+import { countTo, instant, scramble } from "../motion.js";
 import { jersey } from "../ui/jersey.js";
 import { METRICS } from "./teams.js";
+import { h } from "./steps.js";
 
 const NOTES = {
   fg3a_rate: "Taking threes: how many of a team’s shots were threes",
@@ -27,20 +29,40 @@ export function initScoreboard(data) {
   panels.append("div").attr("class", "meter").append("span").style("background", (m) => m.color);
   panels.append("small").text((m) => NOTES[m.key]);
 
+  const board = document.getElementById("final-board");
   const run = () => {
-    document.getElementById("final-board").classList.add("buzzer");
+    const counts = [];
     panels.each(function (m, i) {
       const value = r(m.key);
-      countTo(this.querySelector(".led"), 0, value, { decimals: 2, duration: 1.8, delay: i * 0.25 });
-      gsap.to(this.querySelector(".meter span"), { scaleX: Math.max(0, value), duration: instant ? 0 : 1.8, delay: instant ? 0 : i * 0.25, ease: "power3.out" });
+      const led = this.querySelector(".led");
+      const meter = this.querySelector(".meter span");
+      if (instant) {
+        countTo(led, 0, value, { decimals: 2 });
+        gsap.set(meter, { scaleX: Math.max(0, value) });
+        return;
+      }
+      gsap.fromTo(led, { opacity: 0.15 }, { opacity: 1, duration: 0.45, delay: i * 0.25, ease: "steps(5)" });
+      counts.push(scramble(led, "0.00", { duration: 0.6, chars: "0123456789", delay: i * 0.25 }).then(() => {
+        gsap.to(meter, { scaleX: Math.max(0, value), duration: 1.6, ease: "power3.out" });
+        return countTo(led, 0, value, { decimals: 2, duration: 1.6 });
+      }));
     });
+    if (instant) board.classList.add("buzzer");
+    else Promise.all(counts).then(buzzer);
   };
+  // The backboard light and a red flash around the screen, three times, then a shake of the board
+  function buzzer() {
+    board.classList.add("buzzer");
+    const flash = document.body.appendChild(h("div", { class: "buzzer-flash", "aria-hidden": "true" }));
+    gsap.fromTo(flash, { opacity: 0 }, { opacity: 1, duration: 0.15, repeat: 5, yoyo: true, ease: "power1.inOut", onComplete: () => flash.remove() });
+    gsap.fromTo(board, { x: -6 }, { x: 0, duration: 0.9, ease: "elastic.out(1.2, 0.25)" });
+  }
   if (instant) run();
   else ScrollTrigger.create({ trigger: "#final-board", start: "top 80%", once: true, onEnter: run });
   initLineup();
 }
 
-/** Starting five: each name on a jersey in the site's colors, popping up one by one on first view. */
+/** Starting lineup: each name on a jersey in the site's colors, popping up one by one on first view. */
 function initLineup() {
   const items = [...document.querySelectorAll("#lineup li")];
   const shirts = items.map((li) => {

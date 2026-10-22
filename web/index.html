@@ -16,6 +16,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script type="module" src="js/main.js"></script>
 </head>
@@ -90,6 +91,7 @@
       <p class="lower-third-who">Every NBA fan’s uncle</p>
     </aside>
     <a class="scroll-cue" href="#q1" data-goto="q1"><span class="cue-ball"></span>Scroll to tip off</a>
+    <div class="ribbon" id="hero-ribbon" aria-hidden="true"></div>
   </section>
 
   <!-- ============ Q1 · annotated timeline (sketch QF1) ============ -->
@@ -137,6 +139,7 @@
 
   <!-- ============ HALFTIME · placeholder (sketch KN1) ============ -->
   <section class="halftime" id="half" data-period="half">
+    <div class="ribbon" id="half-ribbon" aria-hidden="true"></div>
     <p class="period-label">Halftime report</p>
     <h2 class="chapter-title">First half: the shift is real</h2>
     <p class="chapter-lead">Threes went from a novelty to two of every five shots, and the mid-range all but disappeared.
@@ -226,13 +229,12 @@
       </div>
     </div>
     <div class="lineup">
-      <h3>Starting five</h3>
+      <h3>Starting lineup</h3>
       <ul class="starting-five" id="lineup">
         <li data-name="Fan"><span>01</span>Qixiang Fan</li>
         <li data-name="Zhu"><span>02</span>Yurun Zhu</li>
         <li data-name="Ni"><span>03</span>Kunhao Ni</li>
         <li data-name="Ding"><span>04</span>Zhaorui Ding</li>
-        <li data-name="Beck"><span>05</span>Jun Woo Beck</li>
       </ul>
     </div>
     <p class="colophon">TheVizG.O.A.T · CS6730 Data Visualization · Georgia Tech</p>

@@ -52,6 +52,18 @@ export async function loadAll(onProgress = () => {}) {
   return data;
 }
 
+/**
+ * The headline shift, shared by the tip-off and the ribbon boards: league rows for the first season with
+ * logged 3-point attempts and the latest season, and the mid-range share of shots from the first season
+ * with today's arc (in 1996-97 the line was 22 ft) to the latest.
+ */
+export function shiftNumbers(data) {
+  const first = data.league.find((d) => d.fg3a_pg != null);
+  const last = data.league[data.league.length - 1];
+  const midSeason = d3.min(data.zones.filter((d) => d.season >= STANDARD_LINE), (d) => d.season);
+  return { first, last, midSeason, midFirst: data.zoneShare(midSeason, "MID").share, midLast: data.zoneShare(last.season, "MID").share };
+}
+
 /** Seeded random numbers (mulberry32) so every visit draws the same particles. */
 export function rng(seed = 1) {
   let a = seed >>> 0;

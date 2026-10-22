@@ -132,7 +132,7 @@ body::after {
 .seg button, .chip, .btn {
   white-space: nowrap; font: 600 12px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase;
   color: var(--ink-2); background: transparent; border: 0; border-radius: 999px; padding: 9px 14px; cursor: pointer;
-  transition: color 0.25s, background 0.25s, transform 0.25s var(--ease-out);
+  transition: color 0.25s, background 0.25s;   /* no transform: GSAP moves magnetic buttons (js/ui/cursor.js) */
 }
 .seg button:hover, .chip:hover, .btn:hover { color: var(--ink); }
 .seg button[aria-pressed="true"], .chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
@@ -235,6 +235,31 @@ svg text { fill: var(--ink-2); font: 500 12px var(--text); }
   font: 600 10px/1.3 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2);
 }
 .cutout figcaption b { font: 800 20px/1 var(--display); letter-spacing: 0.04em; color: var(--ink); }
+
+/* Ribbon board (js/viz/ribbons.js): an LED ticker lit through the same dot screen as .led.dots, fading
+   out at both ends. Positions are set per chapter. */
+.ribbon {
+  --pitch: 2px;
+  --plate: #07080b;
+  position: absolute; left: 0; right: 0; z-index: 2; height: 46px; overflow: hidden; pointer-events: none;
+  background: radial-gradient(circle, rgba(242, 238, 230, 0.06) 0 30%, transparent 40%) 0 0 / var(--pitch) var(--pitch), var(--plate);
+  border-block: 1px solid rgba(242, 238, 230, 0.08);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.ribbon::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(circle, transparent 0 56%, var(--plate) 68%) 0 0 / var(--pitch) var(--pitch);
+}
+.ribbon-track, .ribbon-run { display: flex; align-items: center; width: max-content; height: 100%; }
+.ribbon-item { display: flex; align-items: baseline; gap: 12px; padding: 0 26px; white-space: nowrap; }
+.ribbon-item small { font: 700 11px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); }
+.ribbon-item b { font: 800 21px/1 var(--mono); letter-spacing: 0.02em; text-transform: uppercase; color: var(--ink);
+  text-shadow: 0 0 12px rgba(242, 238, 230, 0.45); }
+.ribbon-item.three b { color: var(--three); text-shadow: 0 0 14px rgba(236, 94, 34, 0.75); }
+.ribbon-item.two b { color: var(--two); text-shadow: 0 0 14px rgba(61, 143, 240, 0.75); }
+.ribbon-item.acc b { color: var(--acc); text-shadow: 0 0 14px rgba(22, 171, 133, 0.75); }
+.ribbon-sep { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--three); box-shadow: 0 0 10px var(--three); }
 
 /* Reduced motion: everything still works, nothing slides or loops. ?static and ?shot= (class .instant,
    set in motion.js) also hold looping decoration still. */

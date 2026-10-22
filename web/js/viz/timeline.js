@@ -39,7 +39,7 @@ export function initTimeline(data) {
   document.getElementById("q1-note").textContent =
     "3-point attempts were not logged for every game before 1985-86, so attempts, share and accuracy start there.";
 
-  lineage(data.cutouts, bySeason);
+  lineage(data.cutouts);
 
   const cells = d3.select("#q1-board").selectAll("div").data(BOARD).join("div")
     .attr("class", (d) => `cell${d[0] === "season" ? " wide" : ""}`);
@@ -233,15 +233,12 @@ export function initTimeline(data) {
 }
 
 /**
- * Q1 title card: three generations of shooters, each captioned with the league's 3-point attempts in
- * their season. They rise one after another as the card arrives; scrolling on, the nearer ones sink faster.
+ * Q1 title card: three generations of shooters, each captioned with their season. They rise one after
+ * another as the card arrives; scrolling on, the nearer ones sink faster.
  */
-function lineage(cutouts, bySeason) {
-  const figs = LINEAGE.map((slug) => cutouts.get(slug)).filter(Boolean).map((p) => {
-    const fg3a = bySeason.get(p.season)?.fg3a_pg;
-    return cutout(p, { caption: [h("b", null, p.player),
-      fg3a == null ? fmtSeason(p.season) : `${fmtSeason(p.season)} · league ${fg3a.toFixed(1)} 3PA / game`] });
-  });
+function lineage(cutouts) {
+  const figs = LINEAGE.map((slug) => cutouts.get(slug)).filter(Boolean)
+    .map((p) => cutout(p, { caption: [h("b", null, p.player), fmtSeason(p.season)] }));
   document.getElementById("q1-lineage").append(...figs);
   if (instant || !figs.length) return;
   const arrive = { trigger: "#q1", start: "top 60%", once: true };

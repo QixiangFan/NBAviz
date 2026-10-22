@@ -1,13 +1,15 @@
 // Boot: load the data behind a loader, start the motion system, build every chapter, run the HUD.
 // ?shot=<chapter>[:<step>] jumps straight to a chapter state for screenshots, e.g. ?shot=q1:0.6, ?shot=q3:5.
 import { loadAll } from "./data.js";
-import { initMotion, initSnap, revealText, scrollToEl, countTo, params, instant, stopScroll, startScroll } from "./motion.js";
+import { initMotion, initSnap, revealText, parallaxCards, scrollToEl, countTo, params, instant, stopScroll, startScroll } from "./motion.js";
 import { initHero } from "./viz/hero.js";
 import { initTimeline } from "./viz/timeline.js";
 import { initShotMap } from "./viz/shotmap.js";
 import { initTeams } from "./viz/teams.js";
 import { initPlayers, initHalftime } from "./viz/players.js";
 import { initScoreboard } from "./viz/scoreboard.js";
+import { initRibbons } from "./viz/ribbons.js";
+import { initCursor } from "./ui/cursor.js";
 
 async function boot() {
   initMotion();
@@ -30,8 +32,11 @@ async function boot() {
   const q3 = initTeams(data);
   initPlayers(data);
   initScoreboard(data);
+  initRibbons(data);
   revealText();
+  parallaxCards();
   initHud();
+  initCursor();
   initSnap("main > section:not(.scrolly), .scrolly .step");   // a scrolly section starts at its first step
   ScrollTrigger.refresh();
 

@@ -1,12 +1,13 @@
-// 4th quarter (sketches ZD2 / QF4 / YZ1): two player cards and a radar duel between them. Each axis is a
-// percentile within the season (players with 500+ minutes), so players from any era can be compared.
-// Cards are dressed in the team's colors and logo, tilt toward the pointer, and flip to the back of the
-// player's jersey and the numbers behind the radar. DRAFT.
+// 4th quarter (sketches ZD2 / QF4 / YZ1): two player cards and a radar duel between them (radar.js). Each
+// axis is a percentile within the season (players with 500+ minutes), so players from any era can be
+// compared. Cards are dressed in the team's colors and logo, tilt toward the pointer, and flip to the back
+// of the player's jersey and the numbers behind the radar. A new player is dealt in: the card turns edge-on
+// and back, the name scrambles into place and the points count to the new value. DRAFT.
 import { season as fmtSeason } from "../data.js";
-import { dur, instant } from "../motion.js";
+import { countTo, instant, scramble } from "../motion.js";
 import { headshotUrl, teamColors } from "../media.js";
 import { jersey } from "../ui/jersey.js";
-import { showTip, moveTip, hideTip } from "../ui/tooltip.js";
+import { radarDuel } from "./radar.js";
 import { h } from "./steps.js";
 
 const AXES = [
@@ -22,6 +23,7 @@ const SLOTS = [
   { el: "card-b", color: "#3d8ff0", fallback: "Nikola Jokić" },
 ];
 const surname = (name) => name.split(" ").slice(1).join(" ") || name;   // what goes on the back of the jersey
+const ordinal = (k) => `${k}${Math.floor(k / 10) % 10 === 1 ? "th" : ["th", "st", "nd", "rd"][k % 10] || "th"}`;
 
 export function initPlayers(data) {
   const bySeason = d3.group(data.players, (p) => p.season);
@@ -93,7 +95,7 @@ export function initPlayers(data) {
       });
       article.addEventListener("pointerleave", () => { rx(0); ry(0); });
     }
-    return { article, photo, logo, mark, name, team, big, stats, input, list, table, kit, front };
+    return { article, tilt, photo, logo, mark, name, team, big, stats, input, list, table, kit, front, shown: null, pts: 0, deal: null };
   });
 
   function fillLists() {
@@ -102,112 +104,89 @@ export function initPlayers(data) {
     });
   }
 
-  // Radar duel, under a VS badge
-  const fig = d3.select("#q4-radar");
-  fig.append("div").attr("class", "vs").attr("aria-hidden", "true").text("VS");
-  const svg = fig.append("svg");
-  let size = 0;
-  const angle = (i) => (Math.PI * 2 * i) / AXES.length - Math.PI / 2;
+  // Radar duel, under a VS badge. Hovering an axis compares the two players on it.
+  const fig = document.getElementById("q4-radar");
+  fig.append(h("div", { class: "vs", "aria-hidden": "true" }, "VS"));
+  const radar = radarDuel(fig, {
+    axes: AXES,
+    colors: SLOTS.map((s) => s.color),
+    describe: (j) => {
+      const a = AXES[j];
+      return {
+        title: `${a.label} · ${fmtSeason(season)}`,
+        rows: picked.map((p, i) => ({ value: ordinal(p[`${a.key}_pctl`] ?? 0), label: `${p.player_name} · ${a.fmt(p[a.raw])}`, color: SLOTS[i].color })),
+        note: "Percentile among the season’s players with 500+ minutes and 20+ games",
+      };
+    },
+  });
 
-  function drawFrame() {
-    size = Math.min(fig.node().clientWidth, 520);
-    const r = size / 2 - 62;
-    svg.attr("viewBox", `0 0 ${size} ${size}`).selectAll("*").remove();
-    const g = svg.append("g").attr("class", "frame").attr("transform", `translate(${size / 2},${size / 2})`);
-    for (const v of [0.25, 0.5, 0.75, 1]) {
-      g.append("path").attr("class", "ring").attr("d", d3.line()(AXES.map((_, i) => [r * v * Math.cos(angle(i)), r * v * Math.sin(angle(i))])) + "Z");
-    }
-    AXES.forEach((a, i) => {
-      g.append("line").attr("class", "spoke").attr("x2", r * Math.cos(angle(i))).attr("y2", r * Math.sin(angle(i)));
-      const lx = (r + 30) * Math.cos(angle(i));
-      g.append("text").attr("class", "axis-name").attr("x", lx).attr("y", (r + 26) * Math.sin(angle(i))).attr("dy", "0.35em")
-        .attr("text-anchor", Math.abs(lx) < 5 ? "middle" : lx > 0 ? "start" : "end").text(a.label);
-    });
-    g.append("text").attr("class", "axis").attr("x", 4).attr("y", -r * 0.5).attr("dy", "-0.3em").text("50");
-    g.append("text").attr("class", "axis").attr("x", 4).attr("y", -r).attr("dy", "-0.3em").text("100");
-    svg.append("g").attr("class", "shapes").attr("transform", `translate(${size / 2},${size / 2})`);
-    return r;
-  }
-  let radius = drawFrame();
-
-  function points(p) {
-    return AXES.map((a, i) => {
-      const v = (p[`${a.key}_pctl`] || 0) / 100;
-      return [radius * v * Math.cos(angle(i)), radius * v * Math.sin(angle(i))];
-    });
+  // Nothing moves until the radar first scrolls into view: then it sweeps in and the points count up.
+  // After that, every new player is dealt in.
+  let live = false;
+  function reveal() {
+    live = true;
+    radar.intro();
+    cards.forEach((c) => countTo(c.big, 0, c.pts, { decimals: 1, duration: 1.6, delay: 0.5 }));
   }
 
   function update() {
+    let k = 0;
     picked.forEach((p, i) => {
       const c = cards[i];
-      c.name.textContent = p.player_name;
-      c.team.textContent = [p.jersey && `#${p.jersey}`, p.position, p.team, fmtSeason(season), `${p.gp} games`].filter(Boolean).join(" · ");
-      const src = headshotUrl(p.player_id);
-      if (c.photo.getAttribute("src") !== src) {
-        c.photo.classList.remove("loaded");
-        c.photo.src = src;
-      }
-      const row = data.teamBySeason.get(season)?.get(p.team);
-      const colors = teamColors(row);
-      c.article.style.setProperty("--team", colors.tint);
-      c.article.style.setProperty("--team-a", colors.primary);
-      c.article.style.setProperty("--team-b", colors.secondary);
-      const logo = data.logo(row);
-      for (const img of [c.logo, c.mark]) {
-        img.hidden = !logo;
-        if (logo) img.src = logo;
-      }
-      c.big.textContent = p.pts_pg.toFixed(1);
-      c.front.setAttribute("data-num", p.jersey ?? "");   // the jersey number, outlined behind the stats
-      c.kit.replaceChildren(jersey({
-        ...colors, number: p.jersey ?? "", name: surname(p.player_name),
-        label: `${p.player_name}’s jersey${p.jersey ? `, number ${p.jersey}` : ""}`,
-      }));
-      c.input.value = "";
-      d3.select(c.stats).selectAll("div").data([[p.fg3m_pg.toFixed(1), "3PM / game"], [p.ast_pg.toFixed(1), "AST / game"],
-        [p.reb_pg.toFixed(1), "REB / game"], [`${(p.ts_pct * 100).toFixed(1)}%`, "True shooting"]])
-        .join((e) => { const d = e.append("div"); d.append("b"); d.append("small"); return d; })
-        .call((d) => { d.select("b").text((x) => x[0]); d.select("small").text((x) => x[1]); });
-      d3.select(c.table).selectAll("tr").data(AXES).join((e) => { const tr = e.append("tr"); tr.append("td"); tr.append("td"); return tr; })
-        .call((tr) => {
-          tr.select("td:first-child").text((a) => a.label);
-          tr.select("td:last-child").text((a) => `${a.fmt(p[a.raw])} · ${p[`${a.key}_pctl`]}`);
-        });
+      if (c.shown === p) return;
+      c.shown = p;
+      c.deal?.kill();
+      if (!live || instant) { fill(c, p, false); return; }
+      c.deal = gsap.timeline({ delay: 0.08 * k++ })
+        .to(c.tilt, { scaleX: 0, duration: 0.18, ease: "power2.in" })
+        .call(() => fill(c, p, true))
+        .to(c.tilt, { scaleX: 1, duration: 0.45, ease: "back.out(2)" });
     });
-    const shapes = svg.select("g.shapes");
-    const t = d3.transition().duration(dur(0.9) * 1000).ease(d3.easeCubicInOut);
-    const line = (pts) => d3.line()(pts) + "Z";
-    shapes.selectAll("path.shape").data(picked.map((p, i) => ({ p, slot: SLOTS[i] }))).join(
-      (enter) => enter.append("path").attr("class", "shape").attr("d", (d) => line(points(d.p).map(() => [0, 0]))),
-    ).style("fill", (d) => d.slot.color).style("fill-opacity", 0.14).style("stroke", (d) => d.slot.color)
-      .transition(t).attrTween("d", function (d) {
-        const from = this.__pts || points(d.p).map(() => [0, 0]);
-        const to = points(d.p);
-        this.__pts = to;
-        const interp = d3.interpolateArray(from, to);
-        return (tt) => line(interp(tt));
+    radar.set(picked.map((p) => AXES.map((a) => (p[`${a.key}_pctl`] || 0) / 100)), { animate: live });
+  }
+
+  function fill(c, p, animate) {
+    if (animate) scramble(c.name, p.player_name, { duration: 0.7 });
+    else c.name.textContent = p.player_name;
+    c.team.textContent = [p.jersey && `#${p.jersey}`, p.position, p.team, fmtSeason(season), `${p.gp} games`].filter(Boolean).join(" · ");
+    const src = headshotUrl(p.player_id);
+    if (c.photo.getAttribute("src") !== src) {
+      c.photo.classList.remove("loaded");
+      c.photo.src = src;
+    }
+    const row = data.teamBySeason.get(season)?.get(p.team);
+    const colors = teamColors(row);
+    c.article.style.setProperty("--team", colors.tint);
+    c.article.style.setProperty("--team-a", colors.primary);
+    c.article.style.setProperty("--team-b", colors.secondary);
+    const logo = data.logo(row);
+    for (const img of [c.logo, c.mark]) {
+      img.hidden = !logo;
+      if (logo) img.src = logo;
+    }
+    if (animate) countTo(c.big, c.pts, p.pts_pg, { decimals: 1, duration: 0.9 });
+    else c.big.textContent = (live || instant ? p.pts_pg : 0).toFixed(1);   // before the reveal the LED waits at zero
+    c.pts = p.pts_pg;
+    c.front.setAttribute("data-num", p.jersey ?? "");   // the jersey number, outlined behind the stats
+    c.kit.replaceChildren(jersey({
+      ...colors, number: p.jersey ?? "", name: surname(p.player_name),
+      label: `${p.player_name}’s jersey${p.jersey ? `, number ${p.jersey}` : ""}`,
+    }));
+    c.input.value = "";
+    d3.select(c.stats).selectAll("div").data([[p.fg3m_pg.toFixed(1), "3PM / game"], [p.ast_pg.toFixed(1), "AST / game"],
+      [p.reb_pg.toFixed(1), "REB / game"], [`${(p.ts_pct * 100).toFixed(1)}%`, "True shooting"]])
+      .join((e) => { const d = e.append("div"); d.append("b"); d.append("small"); return d; })
+      .call((d) => { d.select("b").text((x) => x[0]); d.select("small").text((x) => x[1]); });
+    d3.select(c.table).selectAll("tr").data(AXES).join((e) => { const tr = e.append("tr"); tr.append("td"); tr.append("td"); return tr; })
+      .call((tr) => {
+        tr.select("td:first-child").text((a) => a.label);
+        tr.select("td:last-child").text((a) => `${a.fmt(p[a.raw])} · ${p[`${a.key}_pctl`]}`);
       });
-    const dots = picked.flatMap((p, i) => points(p).map((pt, j) => ({ pt, p, a: AXES[j], color: SLOTS[i].color, k: `${i}-${j}` })));
-    shapes.selectAll("circle").data(dots, (d) => d.k).join((e) => e.append("circle").attr("r", 4.5))
-      .style("fill", (d) => d.color).style("stroke", "var(--bg)").style("stroke-width", 2)
-      .on("pointerenter", (event, d) => showTip(event, {
-        title: `${d.p.player_name} · ${fmtSeason(season)}`,
-        rows: [{ value: `${d.p[`${d.a.key}_pctl`]}th`, label: `percentile · ${d.a.label.toLowerCase()}`, color: d.color },
-          { value: d.a.fmt(d.p[d.a.raw]) }],
-      }))
-      .on("pointermove", moveTip).on("pointerleave", hideTip)
-      .transition(t).attr("cx", (d) => d.pt[0]).attr("cy", (d) => d.pt[1]);
   }
 
   fillLists();
   update();
-  new ResizeObserver(() => {
-    const w = Math.min(fig.node().clientWidth, 520);
-    if (Math.abs(w - size) < 2) return;
-    radius = drawFrame();
-    svg.selectAll("path.shape").each(function () { this.__pts = null; });
-    update();
-  }).observe(fig.node());
+  if (!instant) ScrollTrigger.create({ trigger: fig, start: "top 75%", once: true, onEnter: reveal });
 
   // MVP hall placeholder: ghost cards for the most recent seasons
   d3.select("#mvp-row").selectAll("div").data(d3.range(8).map((i) => seasons[seasons.length - 1 - i])).join("div")

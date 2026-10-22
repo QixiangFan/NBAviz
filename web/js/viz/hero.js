@@ -1,7 +1,7 @@
 // TIP-OFF: thousands of real shots from the latest season burst out of the rim onto a hardwood court
 // tilted in 3D (closest shots land first, threes last), while Curry rises into his jumper beside it.
 // Scrolling lays the court flat; the pointer turns it.
-import { shotSampler, season as fmtSeason, STANDARD_LINE } from "../data.js";
+import { shotSampler, season as fmtSeason, shiftNumbers } from "../data.js";
 import { ParticleField } from "./particles.js";
 import { fitCourt, drawCourt } from "./court.js";
 import { dur, instant, countTo } from "../motion.js";
@@ -41,12 +41,7 @@ export function initHero(data) {
   field.place(new Float32Array(n).fill(s.x(0)), new Float32Array(n).fill(s.y(0)), styles);
 
   // Hero numbers come from the data, not the HTML fallbacks
-  const first3pa = data.league.find((d) => d.fg3a_pg != null);
-  const last = data.league[data.league.length - 1];
-  // Mid-range baseline: the first season with today's arc (in 1996-97 the line was 22 ft)
-  const midSeason = d3.min(data.zones.filter((d) => d.season >= STANDARD_LINE), (d) => d.season);
-  const midFirst = data.zoneShare(midSeason, "MID").share;
-  const midLast = data.zoneShare(last.season, "MID").share;
+  const { first: first3pa, last, midSeason, midFirst, midLast } = shiftNumbers(data);
   const [ledA, ledB] = document.querySelectorAll(".hero-stats .led");
   const [noteA, noteB] = document.querySelectorAll(".hero-stats p");
   noteA.textContent = `threes per team-game, up from ${first3pa.fg3a_pg.toFixed(1)} in ${fmtSeason(first3pa.season)}`;

@@ -65,8 +65,9 @@
 .lower-third-tag { font: 700 10px/1 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--three); margin: 0 0 8px; }
 .lower-third-quote { margin: 0; font-size: 15px; font-style: italic; }
 .lower-third-who { margin: 8px 0 0; font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+.hero .ribbon { bottom: 0; }      /* a courtside board in front of the floor (and Curry's feet) */
 .scroll-cue {
-  position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 2;
+  position: absolute; left: 50%; bottom: 68px; transform: translateX(-50%); z-index: 2;
   display: flex; align-items: center; gap: 10px; text-decoration: none;
   font: 600 11px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2);
 }
@@ -82,15 +83,18 @@
 .chapter-card .chapter-title { font-size: clamp(72px, 13vw, 250px); }
 .chapter-lead { max-width: 640px; font-size: 20px; color: var(--ink-2); margin: 28px 0 0; }
 .chapter-card > * { position: relative; z-index: 1; }   /* text above the court motif */
+/* The circle and the number drift and turn with the scroll through CSS variables (parallaxCards in motion.js) */
 .chapter-card::after {           /* center circle: the 12 ft ring, the 4 ft ring and the half-court line through them */
-  content: ""; position: absolute; right: -14vw; top: 50%; width: 52vw; aspect-ratio: 1; transform: translateY(-50%);
+  content: ""; position: absolute; right: -14vw; top: 50%; width: 52vw; aspect-ratio: 1;
+  transform: translateY(-50%) translateY(var(--circle-y, 0px)) rotate(var(--circle-turn, 0deg));
   border: 1px solid var(--line); border-radius: 50%; pointer-events: none;
   background:
     radial-gradient(circle closest-side, transparent calc(33.3% - 1px), var(--line) calc(33.3% - 1px) 33.3%, transparent 33.3%),
     linear-gradient(var(--line), var(--line)) 50% 50% / 100% 1px no-repeat;
 }
 .chapter-card[data-q]::before {  /* the quarter, as a giant outlined jersey number in the circle */
-  content: attr(data-q); position: absolute; right: 12vw; top: 50%; transform: translate(50%, -50%); pointer-events: none;
+  content: attr(data-q); position: absolute; right: 12vw; top: 50%; pointer-events: none; opacity: var(--num-o, 1);
+  transform: translate(50%, -50%) translateY(var(--num-y, 0px)) scale(var(--num-scale, 1));
   font: 900 34vw/0.8 var(--display); color: transparent; -webkit-text-stroke: 1.5px rgba(242, 238, 230, 0.08);
 }
 
@@ -167,11 +171,28 @@
 .steps { position: relative; z-index: 3; margin-top: -100vh; padding-bottom: 20vh; pointer-events: none; }
 .step { min-height: 100vh; display: flex; align-items: center; padding-left: 5vw; }
 .step-card {
-  pointer-events: auto; width: min(400px, 90vw); padding: 24px 26px; border-radius: 18px;
+  position: relative; pointer-events: auto; width: min(400px, 90vw); padding: 24px 26px; border-radius: 18px;
   background: rgba(18, 21, 28, 0.84); backdrop-filter: blur(12px); border: 1px solid var(--line);
   opacity: 0.25; transform: translateY(18px); transition: opacity 0.5s, transform 0.7s var(--ease-out);
 }
 .step.is-active .step-card { opacity: 1; transform: none; }
+/* Each time a card becomes active, a light runs once around its edge: a conic gradient turned by --trace,
+   masked down to the border. Invisible at both ends, so a paused or skipped animation leaves nothing. */
+@property --trace { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.step-card::before {
+  content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px; pointer-events: none; opacity: 0;
+  background: conic-gradient(from var(--trace), transparent 0 72%, rgba(236, 94, 34, 0.9) 94%, #ffd2bf 97%, transparent 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+.step.is-active .step-card::before { animation: trace 1.8s var(--ease-out); }
+@keyframes trace {
+  0% { --trace: 0deg; opacity: 0; }
+  12%, 75% { opacity: 1; }
+  100% { --trace: 360deg; opacity: 0; }
+}
+.step-card strong { font-variant-numeric: tabular-nums; }   /* figures count up without jitter */
 .step-card .step-num { font: 600 11px var(--mono); letter-spacing: 0.14em; color: var(--three); text-transform: uppercase; margin: 0 0 10px; }
 .step-card h3 { font: 900 38px/0.92 var(--display); text-transform: uppercase; margin: 0 0 14px; }
 .step-card p { color: var(--ink-2); margin: 0 0 10px; font-size: 16px; }
@@ -254,6 +275,7 @@
 /* --- Halftime (placeholder) ------------------------------------------------- */
 .halftime { position: relative; min-height: 100vh; padding: 18vh 6vw 14vh; border-top: 1px solid var(--line);
   background: radial-gradient(ellipse at 20% 0%, rgba(61, 143, 240, 0.08), transparent 60%); }
+.halftime .ribbon { top: calc(var(--hud-h) + 10px); }   /* the arena's ribbon board, with the first half's numbers */
 .halftime .chapter-title { font-size: clamp(60px, 9vw, 160px); max-width: 1100px; }
 .placeholder-card {
   position: relative; margin-top: 56px; padding: 28px; border-radius: 20px; border: 1.5px dashed rgba(242, 238, 230, 0.22);
@@ -335,10 +357,27 @@
   background: linear-gradient(90deg, var(--three), var(--two)); -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 0 16px rgba(236, 94, 34, 0.35));
 }
+/* Radar (js/viz/radar.js), drawn like a center circle: the floor's edge is the 100th percentile, the dashed
+   ring the league median. The two shapes add up like light where they overlap. */
+.duel .floor { fill: url(#duel-floor); stroke: var(--court); stroke-width: 1.25; }
 .duel .ring { fill: none; stroke: var(--grid); }
-.duel .spoke { stroke: var(--grid); }
-.duel .axis-name { font: 800 15px var(--display); text-transform: uppercase; fill: var(--ink); }
-.duel .shape { stroke-width: 2.5; stroke-linejoin: round; }
+.duel .ring.median { stroke: rgba(242, 238, 230, 0.3); stroke-dasharray: 2 5; }
+.duel .spoke { stroke: var(--grid); transition: stroke 0.25s; }
+.duel .spoke.on { stroke: rgba(242, 238, 230, 0.55); }
+.duel .spoke-end { fill: var(--court); }
+.duel .median-label { font: 600 9px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; fill: var(--muted);
+  text-anchor: middle; paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
+.duel .ring-label { font: 500 10px var(--mono); fill: var(--muted); }
+.duel .axis-name { font: 800 15px var(--display); text-transform: uppercase; fill: var(--ink); transition: opacity 0.25s; }
+.duel .focused .axis-name:not(.on), .duel .focused .dots circle:not(.on) { opacity: 0.35; }
+.duel .sweep path { fill: var(--ink); }
+.duel .sweep .beam { stroke: var(--ink); stroke-opacity: 0.6; stroke-width: 1.5; }
+.duel .shape { mix-blend-mode: screen; }
+.duel .shape .glow { fill: none; stroke-width: 6; opacity: 0.5; }
+.duel .shape .area { stroke-width: 2.5; stroke-linejoin: round; }
+.duel .dots circle { stroke: var(--bg); stroke-width: 2; transition: opacity 0.25s; }
+.duel .pings circle { fill: none; stroke-width: 1.5; }
+.duel .hit path { fill: transparent; }
 .mvp-head { display: flex; align-items: center; gap: 16px; }
 .mvp-row { display: flex; gap: 14px; margin-top: 24px; overflow: hidden; }
 .mvp-ghost {
@@ -363,6 +402,9 @@
 .final-board.buzzer::before { background: var(--buzzer); box-shadow: 0 0 14px var(--buzzer), 0 0 42px rgba(255, 59, 48, 0.45);
   animation: buzzer 0.3s linear 3; }
 @keyframes buzzer { 0%, 49% { opacity: 1; } 50%, 100% { opacity: 0.2; } }
+/* At the buzzer the edges of the screen flash red with the backboard light (js/viz/scoreboard.js) */
+.buzzer-flash { position: fixed; inset: 0; z-index: 85; pointer-events: none; opacity: 0;
+  box-shadow: inset 0 0 140px rgba(255, 59, 48, 0.5), inset 0 0 14px rgba(255, 59, 48, 0.75); }
 .final-panel { padding: 18px 20px; border-radius: 12px; background: #0f1218; border: 1px solid rgba(242, 238, 230, 0.05); }
 .final-panel .lbl { font: 700 12px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); display: flex; align-items: center; gap: 8px; }
 .final-panel .led { display: block; font-size: clamp(48px, 7vw, 96px); margin: 10px 0 12px; }
@@ -376,10 +418,10 @@
 .final-cols p, .final-cols li { color: var(--ink-2); font-size: 15px; }
 .final-cols ul { padding-left: 1.1em; margin: 0; }
 .final-cols a { color: var(--three); }
-/* Starting five: the team on jerseys, names underneath */
+/* Starting lineup: the team on jerseys, names underneath */
 .lineup { margin-top: 72px; max-width: 1100px; }
 .lineup h3 { margin-bottom: 22px; }
-.starting-five { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 2.5vw; }
+.starting-five { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2.5vw; }
 .starting-five li { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; color: var(--ink); font-size: 15px; }
 .starting-five li > span { display: none; }   /* the number is on the jersey */
 .starting-five .jersey { width: min(150px, 100%); height: auto; filter: drop-shadow(0 16px 22px rgba(0, 0, 0, 0.45));
@@ -398,6 +440,11 @@
   .hero-stats { gap: 24px; }
   .hero-stats .led { font-size: 34px; }
   .lower-third { display: none; }
+  .ribbon { height: 36px; }
+  .ribbon-item { gap: 9px; padding: 0 18px; }
+  .ribbon-item b { font-size: 16px; }
+  .ribbon-item small { font-size: 10px; }
+  .scroll-cue { bottom: 52px; }
   .court3d { width: 150vw; }
   .hero-player { right: -4vw; height: 56vh; }
   .hero-player .cutout { opacity: 0.6; }
@@ -422,7 +469,7 @@
   .stage-legend { display: none; }
   .players-court { grid-template-columns: 1fr; }
   .final-board, .final-cols { grid-template-columns: 1fr; }
-  .starting-five { grid-template-columns: repeat(3, 1fr); row-gap: 28px; }
+  .starting-five { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
   .ghost-glyphs { grid-template-columns: repeat(2, 1fr); }
   .seg { max-width: 100%; overflow-x: auto; }
   .q1-top { right: 4vw; }
