@@ -1,10 +1,14 @@
-"""Cached wrappers around the nba_api endpoints this project uses.
+"""Cached wrappers around the nba_api endpoints this project uses, plus the Basketball-Reference download.
 
 Each successful request is saved to data/raw/<dataset>/<key>.csv, so an
 interrupted download resumes where it stopped and later runs never re-hit
 stats.nba.com.
 """
+import io
+import shutil
 import time
+import urllib.request
+import zipfile
 
 import pandas as pd
 from nba_api.stats.endpoints import (
@@ -23,23 +27,46 @@ SHOT_COLUMNS = [
 ]
 
 
-def _cached(dataset: str, key: str, request) -> None:
-    path = C.RAW_DIR / dataset / f"{key}.csv"
-    if path.exists():
-        return
+def _retry(label: str, request):
     for attempt in range(1, C.MAX_RETRIES + 1):
         try:
-            df = request()
-            break
+            return request()
         except Exception as exc:  # timeouts, throttling, truncated JSON
             if attempt == C.MAX_RETRIES:
                 raise
             wait = 10 * 2 ** (attempt - 1)
-            print(f"    {dataset}/{key}: {type(exc).__name__}; retry {attempt} in {wait}s")
+            print(f"    {label}: {type(exc).__name__}; retry {attempt} in {wait}s")
             time.sleep(wait)
+
+
+def _cached(dataset: str, key: str, request) -> None:
+    path = C.RAW_DIR / dataset / f"{key}.csv"
+    if path.exists():
+        return
+    df = _retry(f"{dataset}/{key}", request)
     path.parent.mkdir(parents=True, exist_ok=True)
     df.to_csv(path, index=False)
     time.sleep(C.REQUEST_PAUSE)
+
+
+def bref_tables() -> None:
+    """Basketball-Reference team, player and award tables (Kaggle, version C.BREF_VERSION), unzipped
+    into data/raw/bref/v<version>/. Public dataset, so no Kaggle account is needed."""
+    out = C.RAW_DIR / "bref" / f"v{C.BREF_VERSION}"
+    if any(out.glob("*.csv")):
+        return
+    url = (f"https://www.kaggle.com/api/v1/datasets/download/{C.BREF_DATASET}"
+           f"?datasetVersionNumber={C.BREF_VERSION}")
+
+    def download() -> bytes:
+        with urllib.request.urlopen(url, timeout=C.REQUEST_TIMEOUT) as r:
+            return r.read()
+
+    archive = zipfile.ZipFile(io.BytesIO(_retry(f"bref/v{C.BREF_VERSION}", download)))
+    tmp = out.with_name(out.name + ".part")  # unzip next to it, then rename: never a half-written folder
+    shutil.rmtree(tmp, ignore_errors=True)
+    archive.extractall(tmp)
+    tmp.rename(out)
 
 
 def team_game_logs(season: int) -> None:
@@ -64,6 +91,13 @@ def shot_chart(season: int) -> None:
                     context_measure_simple="FGA",  # default "PTS" returns made shots only
                     timeout=C.REQUEST_TIMEOUT,
                 ).get_data_frames()[0].reindex(columns=SHOT_COLUMNS))
+
+
+def missing_shot_charts() -> list:
+    """Shot-chart files shot_chart() would still request, as "<season>_<team>" (no network needed)."""
+    keys = [f"{C.season_str(season)}_{team['abbreviation']}"
+            for season in C.SHOT_CHART_SEASONS for team in static_teams.get_teams()]
+    return [key for key in keys if not (C.RAW_DIR / "shot_chart" / f"{key}.csv").exists()]
 
 
 def player_totals(season: int) -> None:

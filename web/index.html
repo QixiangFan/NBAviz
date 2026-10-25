@@ -72,7 +72,7 @@
         <em>taking</em> more threes no longer separates the winners. <em>Making</em> them does.</p>
       <div class="hero-stats">
         <div><span class="led">37.0</span>
-          <p>threes per team-game, up from 3.3 in 1985-86</p></div>
+          <p>threes per team-game, up from 2.8 in 1979-80</p></div>
         <div><span class="led">10.1%</span>
           <p>of shots from mid-range, down from 36.8% in 1997-98</p></div>
       </div>
@@ -189,7 +189,7 @@
     <p class="final-sub" id="final-sub">How closely each stat tracks winning, 2025-26 (correlation with win %)</p>
     <div class="final-board" id="final-board"></div>
     <ol class="takeaways">
-      <li><strong>The three-point revolution is real.</strong> Attempts per team-game rose about elevenfold since 1985-86, and
+      <li><strong>The three-point revolution is real.</strong> Attempts per team-game rose about thirteenfold since 1979-80, and
         the mid-range share of shots fell from 37% in 1997-98 to 10% in 2025-26.</li>
       <li><strong>Taking more threes is no longer linked to winning more.</strong> Volume’s link to winning faded once every
         team shot threes. Accuracy and overall efficiency track win % far more closely, and accuracy’s link keeps rising.</li>
@@ -201,12 +201,13 @@
         <ul>
           <li>Regular season only. With 23–30 teams a season, single-season correlations are noisy.</li>
           <li>Correlation, not causation. Rule changes appear because they happened alongside the trend.</li>
-          <li>3-point attempts were not logged for every game before 1985-86. Shot locations start in 1996-97.</li>
+          <li>Shot locations start in 1996-97, so the shot charts cover a shorter span than the team and league stats.</li>
         </ul>
       </div>
       <div>
         <h3>Data &amp; methods</h3>
-        <p>NBA.com stats through <code>nba_api</code>, cleaned by <code>build_clean_data.py</code>. The clean tables, data
+        <p>Team and league season stats: Basketball-Reference (Kaggle dataset by Sumitro Datta). Shot locations and player
+          stats: NBA.com through <code>nba_api</code>. Both are cleaned by <code>build_clean_data.py</code>. The clean tables, data
           dictionary, cleaning rules and validation checks are in <a href="../data/clean/README.md">data/clean/</a>.
           Correlations compare each team only with its own season’s league (z-scores). Player photos and current logos:
           NBA.com. Older logos: SportsLogos.net.</p>

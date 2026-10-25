@@ -1,12 +1,10 @@
-"""Turn the raw CSV cache into tidy analysis tables. Never touches the network."""
+"""Turn the raw CSV cache (NBA.com and Basketball-Reference) into tidy analysis tables. Never touches the network."""
 from functools import lru_cache
 
 import numpy as np
 import pandas as pd
 
 from . import config as C
-
-BOX_STATS = ["pts", "fgm", "fga", "fg3m", "fg3a", "ftm", "fta", "oreb", "dreb", "tov", "min"]
 
 
 def _files(dataset: str, group: str, seasons=None) -> list:
@@ -33,97 +31,103 @@ def _read(dataset: str, group: str, seasons=None, **read_kw) -> pd.DataFrame:
     return pd.concat([f for f in frames if not f.empty], ignore_index=True)
 
 
-# Season-level stats, and the box-score columns every game must report for the stat to be trusted.
-# NBA.com's logs leave FGA blank before 1981-82 and 3PA, turnovers and rebounds blank for most games
-# before 1985-86; summing the few games that have them gives 3P% above 100% and a pace of 1.
-STAT_INPUTS = {
-    "fg3m_pg": ["fg3m"], "fg3a_pg": ["fg3a"], "fg3_pct": ["fg3m", "fg3a"],
-    "fg3a_rate": ["fga", "fg3a"], "efg": ["fgm", "fga", "fg3m"], "opp_efg": ["fgm", "fga", "fg3m"],
-    "pace": ["fga", "fta", "oreb", "tov"], "ortg": ["fga", "fta", "oreb", "tov"],
-    "drtg": ["fga", "fta", "oreb", "tov"], "net_rtg": ["fga", "fta", "oreb", "tov"],
-    "tov_pct": ["fga", "fta", "tov"], "opp_tov_pct": ["fga", "fta", "tov"],
-    "orb_pct": ["oreb", "dreb"], "opp_orb_pct": ["oreb", "dreb"],
-    "ft_rate": ["ftm", "fga"], "opp_ft_rate": ["ftm", "fga"],
-}
-
-
-def _blank_incomplete(table: pd.DataFrame, games: pd.DataFrame) -> pd.DataFrame:
-    """Set each stat in STAT_INPUTS to NaN in seasons where too few games report its inputs."""
-    for stat, inputs in STAT_INPUTS.items():
-        if stat in table:
-            share = games[inputs].notna().all(axis=1).groupby(games["season"]).mean()
-            complete = table["season"].map(share >= C.COMPLETE_SHARE).fillna(False).astype(bool)
-            table.loc[~complete, stat] = np.nan
-    return table
-
-
-# --- Team games ------------------------------------------------------------
+# --- Basketball-Reference ----------------------------------------------------
 
 @lru_cache
-def team_games() -> pd.DataFrame:
-    """One row per team per game, with the opponent's box score alongside."""
-    df = _read("team_game_logs", "gamelogs").rename(columns=str.lower)
-    df = df[df["wl"].notna()]  # cancelled games are listed with no result and 0 points (BOS-IND, 2013-04-16)
-    df = df.rename(columns={"team_abbreviation": "team"})
-    df["win"] = (df["wl"] == "W").astype(int)
+def bref(table: str) -> pd.DataFrame:
+    """One Basketball-Reference table (e.g. "Team Summaries"), NBA rows only (no ABA or BAA), with
+    `season` turned into the starting year used everywhere else. "NA" cells become NaN."""
+    path = C.RAW_DIR / "bref" / f"v{C.BREF_VERSION}" / f"{table}.csv"
+    if not path.exists():
+        raise FileNotFoundError(f"{path} is missing. Run: python collect_data.py bref")
+    df = pd.read_csv(path)
+    if "lg" in df:
+        df = df[df["lg"] == "NBA"].drop(columns="lg")
+    df["season"] = df["season"] - 1
+    return df.reset_index(drop=True)
 
-    opp = df[["season", "game_id", "team_id", "team"] + BOX_STATS]
-    opp = opp.rename(columns={c: f"opp_{c}" for c in ["team_id", "team"] + BOX_STATS})
-    g = df.merge(opp, on=["season", "game_id"])
-    g = g[g["team_id"] != g["opp_team_id"]].copy()
 
-    # Team logs report minutes as the sum over five players (240 per regulation game).
-    g["game_min"] = np.where(g["min"] > 150, g["min"] / 5, g["min"])
-    g["game_min"] = g["game_min"].fillna(48.0)
-    for side in ("", "opp_"):
-        g[f"{side}poss"] = (g[f"{side}fga"] - g[f"{side}oreb"] + g[f"{side}tov"]
-                            + 0.44 * g[f"{side}fta"])
-    return g.reset_index(drop=True)
+def bref_combined(table: str) -> pd.DataFrame:
+    """A player table with one row per player-season. Basketball-Reference lists a traded player once
+    per team plus a combined 2TM/3TM row (TOT before 2024-25); keep the combined row, and set `team` to
+    the teams in the order played (e.g. "PHO/DAL") and `last_team` to the final one."""
+    df = bref(table)
+    combined = df["team"].str.fullmatch(r"\dTM|TOT")
+    stints = df[~combined].groupby(["season", "player_id"], sort=False)["team"]
+    df = df[combined | ~df.duplicated(["season", "player_id"], keep=False)].copy()
+    keys = pd.MultiIndex.from_frame(df[["season", "player_id"]])
+    df["team"] = stints.agg("/".join).reindex(keys).to_numpy()
+    df["last_team"] = stints.last().reindex(keys).to_numpy()
+    return df.reset_index(drop=True)
+
+
+# --- Teams -----------------------------------------------------------------
+# Team and league season stats come from Basketball-Reference, whose totals are complete from 1979-80
+# (NBA.com's game logs leave 3PA blank for most games before 1985-86). The NBA.com game logs give each
+# team-season its franchise id and abbreviation, which the logos and the player tables use.
+
+TEAM_ALIASES = {"LA Clippers": "Los Angeles Clippers"}  # NBA.com's name from 2015-16 -> Basketball-Reference's
+RATINGS = {"o_rtg": "ortg", "d_rtg": "drtg", "n_rtg": "net_rtg", "pace": "pace", "srs": "srs", "mov": "mov",
+           "ts_percent": "ts_pct", "age": "age"}
+
+
+def _shooting(d: pd.DataFrame, games: str) -> pd.DataFrame:
+    """Per-game and rate stats from Basketball-Reference season totals."""
+    d["ppg"] = d["pts"] / d[games]
+    d["fg3m_pg"] = d["x3p"] / d[games]
+    d["fg3a_pg"] = d["x3pa"] / d[games]
+    d["fg3a_rate"] = d["x3pa"] / d["fga"]
+    d["fg3_pct"] = d["x3p"] / d["x3pa"]
+    d["efg"] = (d["fg"] + 0.5 * d["x3p"]) / d["fga"]
+    return d
+
+
+@lru_cache
+def team_records() -> pd.DataFrame:
+    """NBA.com franchise id, abbreviation, name, games and wins per team-season, from the game logs.
+    Games listed with no result are left out (one cancelled game: BOS-IND, 2013-04-16)."""
+    g = _read("team_game_logs", "gamelogs", seasons=range(C.GAMELOG_FIRST_SEASON, C.LAST_SEASON + 1),
+              usecols=["GAME_ID", "TEAM_ID", "TEAM_ABBREVIATION", "TEAM_NAME", "WL"])
+    g = g[g["WL"].notna()]
+    r = g.groupby(["season", "TEAM_ID"]).agg(
+        team=("TEAM_ABBREVIATION", "last"), team_name=("TEAM_NAME", "last"),
+        games=("WL", "size"), wins=("WL", lambda wl: int((wl == "W").sum())))
+    return r.reset_index().rename(columns={"TEAM_ID": "team_id"})
+
+
+@lru_cache
+def team_join() -> pd.DataFrame:
+    """Basketball-Reference team-seasons since 1979-80, outer-joined with team_records on season and team
+    name. `_merge` is "both" for every row when the join is complete."""
+    b = bref("Team Totals")
+    b = b[(b["season"] >= C.THREE_POINT_LINE_SEASON) & (b["team"] != "League Average")]
+    b = b.merge(bref("Team Summaries")[["season", "team", "w", "l", *RATINGS]], on=["season", "team"])
+    b = _shooting(b, "g").rename(columns={"team": "bref_team", "abbreviation": "bref_abbr", "g": "games",
+                                          "w": "wins", "l": "losses", **RATINGS})
+    n = team_records().rename(columns={"games": "nba_games", "wins": "nba_wins"})
+    n["bref_team"] = n["team_name"].replace(TEAM_ALIASES)
+    return b.merge(n, on=["season", "bref_team"], how="outer", indicator=True)
 
 
 @lru_cache
 def team_seasons() -> pd.DataFrame:
-    """Season totals and rate stats per team, including Dean Oliver's four factors for both sides."""
-    g = team_games()
-    cols = BOX_STATS + [f"opp_{c}" for c in BOX_STATS] + ["poss", "opp_poss", "game_min", "win"]
-    t = g.groupby(["season", "team_id"])[cols].sum(min_count=1)
-    t["games"] = g.groupby(["season", "team_id"]).size()
-    t["team"] = g.groupby(["season", "team_id"])["team"].last()
-    t["team_name"] = g.groupby(["season", "team_id"])["team_name"].last()
-    t = t.reset_index()
-
-    t["win_pct"] = t["win"] / t["games"]
-    t["fg3a_rate"] = t["fg3a"] / t["fga"]
-    t["fg3_pct"] = t["fg3m"] / t["fg3a"]
-    t["ortg"] = 100 * t["pts"] / t["poss"]
-    t["drtg"] = 100 * t["opp_pts"] / t["opp_poss"]
-    t["net_rtg"] = t["ortg"] - t["drtg"]
-    t["pace"] = 48 * (t["poss"] + t["opp_poss"]) / 2 / t["game_min"]
-    for side, other in (("", "opp_"), ("opp_", "")):
-        t[f"{side}efg"] = (t[f"{side}fgm"] + 0.5 * t[f"{side}fg3m"]) / t[f"{side}fga"]
-        t[f"{side}tov_pct"] = t[f"{side}tov"] / (t[f"{side}fga"] + 0.44 * t[f"{side}fta"] + t[f"{side}tov"])
-        t[f"{side}orb_pct"] = t[f"{side}oreb"] / (t[f"{side}oreb"] + t[f"{other}dreb"])
-        t[f"{side}ft_rate"] = t[f"{side}ftm"] / t[f"{side}fga"]
-    t["fg3a_pg"] = t["fg3a"] / t["games"]
-    return _blank_incomplete(t, g)
+    """Basketball-Reference season totals, rates and ratings per team, with NBA.com's id and abbreviation."""
+    t = team_join()
+    t = t[t["_merge"] == "both"].drop(columns="_merge")
+    t = t.astype({c: int for c in ["team_id", "games", "wins", "losses", "nba_games", "nba_wins"]})
+    t["win_pct"] = t["wins"] / t["games"]
+    return t.reset_index(drop=True)
 
 
 @lru_cache
 def league_seasons() -> pd.DataFrame:
-    """League-wide per-team-game averages and rates by season."""
-    g = team_games()
-    s = g.groupby("season")[BOX_STATS + ["opp_dreb", "poss", "game_min"]].sum(min_count=1)
-    s["team_games"] = g.groupby("season").size()
-    s["ppg"] = s["pts"] / s["team_games"]
-    s["fg3m_pg"] = s["fg3m"] / s["team_games"]
-    s["fg3a_pg"] = s["fg3a"] / s["team_games"]
-    s["fg3_pct"] = s["fg3m"] / s["fg3a"]
-    s["fg3a_rate"] = s["fg3a"] / s["fga"]
-    s["efg"] = (s["fgm"] + 0.5 * s["fg3m"]) / s["fga"]
-    s["pace"] = 48 * s["poss"] / s["game_min"]
-    s["ortg"] = 100 * s["pts"] / s["poss"]
-    s["orb_pct"] = s["oreb"] / (s["oreb"] + s["opp_dreb"])
-    return _blank_incomplete(s.reset_index(), g)
+    """Every team's totals summed per season, as per-team-game rates, with pace, offensive rating and
+    true shooting % from Basketball-Reference's League Average row."""
+    s = team_seasons().groupby("season")[["games", "pts", "fg", "fga", "x3p", "x3pa"]].sum()
+    s = _shooting(s, "games").rename(columns={"games": "team_games"})
+    avg = bref("Team Summaries")
+    avg = avg[avg["team"] == "League Average"].set_index("season")[["pace", "o_rtg", "ts_percent"]]
+    return s.join(avg.rename(columns=RATINGS)).reset_index()
 
 
 # --- Shots -----------------------------------------------------------------

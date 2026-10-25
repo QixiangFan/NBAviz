@@ -112,7 +112,7 @@ export function initTeams(data) {
       gGrid.transition(t).call(d3.axisLeft(y).ticks(6).tickSize(-iw).tickFormat(""));
       gY.transition(t).call(d3.axisLeft(y).ticks(6).tickFormat(r2).tickSize(0).tickPadding(10));
       gX.attr("transform", `translate(0,${ih})`).transition(t)
-        .call(d3.axisBottom(x).tickValues(d3.range(1985, last + 1, iw < 560 ? 10 : 5)).tickFormat(fmtSeason).tickSizeOuter(0));
+        .call(d3.axisBottom(x).tickValues(d3.range(Math.ceil(seasons[0] / 5) * 5, last + 1, iw < 560 ? 10 : 5)).tickFormat(fmtSeason).tickSizeOuter(0));
       xTitle.attr("x", iw / 2).attr("y", ih + 48).text("Season");
       yTitle.attr("transform", `translate(-44,${ih / 2}) rotate(-90)`).text("Correlation with win % (r)");
       gRef.selectAll("line").data([[0, iw, y(0), y(0)]]).join("line")
@@ -381,7 +381,7 @@ export function initTeams(data) {
       h("p", null, "eFG% counts every shot and gives threes 1.5× credit. ", b(`r = ${r2(rOf(last, EFF.key))}`), ", the closest link of the three.")] },
     { num: "Step 6", title: "It wasn’t always like this", body: [
       h("p", null, "Every season since ", fmtSeason(seasons[0]), ". Volume’s link to winning peaked at ", b(`r = ${r2(rOf(peak, VOL.key))}`), " in ", fmtSeason(peak), ", when only some teams leaned on threes. Once everyone did, it faded to ", b(r2(vol)), "."),
-      h("p", null, "Accuracy went the other way: r = ", r2(rEra(1985, 1999, ACC.key)), " in 1985–2000, ", r2(rEra(2020, last, ACC.key)), " since 2020.")] },
+      h("p", null, "Accuracy went the other way: r = ", r2(rEra(seasons[0], 1999, ACC.key)), ` in ${seasons[0]}–2000, `, r2(rEra(2020, last, ACC.key)), " since 2020.")] },
     { num: "Step 7", title: "Four kinds of teams", body: [
       h("p", null, "All ", d3.format(",")(nAll), " team-seasons since ", fmtSeason(seasons[0]), ", split by whether they shot more threes than average and whether they made more. Bright dots had winning records."),
       h("p", null, "Accurate, low-volume teams won ", b(pct(quad("low", "high").win_pct)), ". High-volume, inaccurate teams won ", b(pct(quad("high", "low").win_pct)), ".")] },

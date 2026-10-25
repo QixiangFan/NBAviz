@@ -1,4 +1,6 @@
-"""Step 1: download everything the project needs from stats.nba.com into data/raw/.
+"""Step 1: download everything the project needs into data/raw/: the Basketball-Reference tables
+from Kaggle (group "bref", one ~11 MB zip; team and league stats) and stats.nba.com through nba_api
+(game logs for team ids, shot charts, players, bios).
 
     python collect_data.py                 # all groups (~1,040 requests; 30-60 min the first time)
     python collect_data.py gamelogs shots  # only some groups
@@ -21,6 +23,7 @@ GROUPS = {
     "players": (fetch.player_totals, detail_seasons),
     "bio": (fetch.player_bio, detail_seasons),
     "shots": (fetch.shot_chart, C.SHOT_CHART_SEASONS),
+    "bref": (fetch.bref_tables, None),  # one download covering every season
 }
 
 
@@ -33,11 +36,11 @@ def main(selected):
     for name in selected or GROUPS:
         func, seasons = GROUPS[name]
         print(f"[{name}]")
-        for season in seasons:
-            label = C.season_str(season)
+        for season in seasons or [None]:
+            label = f"{C.BREF_DATASET} v{C.BREF_VERSION}" if season is None else C.season_str(season)
             print(f"  {label}", flush=True)
             try:
-                func(season)
+                func() if season is None else func(season)
             except Exception as exc:
                 failures.append(f"{name} {label}: {exc!r}")
                 traceback.print_exc(limit=1)

@@ -199,7 +199,7 @@ export function initPlayers(data) {
 
 /** Halftime placeholder: empty radar glyphs, one per era. */
 export function initHalftime() {
-  const eras = ["1985–2000", "2000–2012", "2012–2020", "2020–2026"];
+  const eras = ["1979–2000", "2000–2012", "2012–2020", "2020–2026"];
   d3.select("#half-glyphs").selectAll("svg").data(eras).join("svg").attr("viewBox", "0 0 160 170").each(function (era) {
     const g = d3.select(this).append("g").attr("transform", "translate(80,78)");
     for (const v of [0.4, 0.7, 1]) {

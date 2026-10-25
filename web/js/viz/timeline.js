@@ -33,7 +33,7 @@ export function initTimeline(data) {
   segmented(document.getElementById("q1-metric"), METRICS.map((m) => ({ value: m.key, label: m.label })), metric.key,
     (k) => { const prev = metric; metric = METRICS.find((m) => m.key === k); morph(prev); }, "Timeline metric");
   document.getElementById("q1-note").textContent =
-    "3-point attempts were not logged for every game before 1985-86, so attempts, share and accuracy start there.";
+    `Season totals from Basketball-Reference, ${fmtSeason(first)} to ${fmtSeason(last)}.`;
 
   const cells = d3.select("#q1-board").selectAll("div").data(BOARD).join("div")
     .attr("class", (d) => `cell${d[0] === "season" ? " wide" : ""}`);
