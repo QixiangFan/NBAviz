@@ -1,0 +1,1851 @@
+season,season_label,player,bref_id,nba_player_id,all_star_team,replaced
+1950,1950-51,Alex Groza,grozaal01,,West,False
+1950,1950-51,Andy Phillip,phillan01,,East,False
+1950,1950-51,Bob Cousy,cousybo01,,East,False
+1950,1950-51,Bob Davies,daviebo01,,West,False
+1950,1950-51,Dick McGuire,mcguidi01,,East,False
+1950,1950-51,Dike Eddleman,eddledi01,,West,False
+1950,1950-51,Dolph Schayes,schaydo01,,East,False
+1950,1950-51,Ed Macauley,macaued01,,East,False
+1950,1950-51,Frankie Brian,brianfr01,,West,False
+1950,1950-51,Fred Schaus,schaufr01,,West,False
+1950,1950-51,George Mikan,mikange01,,West,False
+1950,1950-51,Harry Gallatin,gallaha01,,East,False
+1950,1950-51,Jim Pollard,pollaji01,,West,False
+1950,1950-51,Joe Fulks,fulksjo01,,East,False
+1950,1950-51,Larry Foust,foustla01,,West,False
+1950,1950-51,Paul Arizin,arizipa01,,East,False
+1950,1950-51,Ralph Beard,beardra01,,West,False
+1950,1950-51,Red Rocha,rochare01,,East,False
+1950,1950-51,Vern Mikkelsen,mikkeve01,,West,False
+1950,1950-51,Vince Boryla,borylvi01,,East,False
+1951,1951-52,Andy Phillip,phillan01,,East,False
+1951,1951-52,Arnie Risen,risenar01,,West,True
+1951,1951-52,Bob Cousy,cousybo01,,East,False
+1951,1951-52,Bob Davies,daviebo01,,West,False
+1951,1951-52,Bobby Wanzer,wanzebo01,,West,False
+1951,1951-52,Dick McGuire,mcguidi01,,East,False
+1951,1951-52,Dike Eddleman,eddledi01,,West,False
+1951,1951-52,Dolph Schayes,schaydo01,,East,True
+1951,1951-52,Ed Macauley,macaued01,,East,False
+1951,1951-52,Frankie Brian,brianfr01,,West,False
+1951,1951-52,Fred Scolari,scolafr01,,East,False
+1951,1951-52,George Mikan,mikange01,,West,False
+1951,1951-52,Harry Gallatin,gallaha01,,East,True
+1951,1951-52,Jim Pollard,pollaji01,,West,False
+1951,1951-52,Joe Fulks,fulksjo01,,East,False
+1951,1951-52,Larry Foust,foustla01,,West,True
+1951,1951-52,Leo Barnhorst,barnhle01,,West,False
+1951,1951-52,Max Zaslofsky,zasloma01,,East,False
+1951,1951-52,Paul Arizin,arizipa01,,East,False
+1951,1951-52,Paul Walther,walthpa01,,West,False
+1951,1951-52,Red Rocha,rochare01,,East,False
+1951,1951-52,Vern Mikkelsen,mikkeve01,,West,False
+1952,1952-53,Andy Phillip,phillan01,,West,False
+1952,1952-53,Arnie Risen,risenar01,,West,False
+1952,1952-53,Bill Gabor,gaborbi01,,East,True
+1952,1952-53,Bill Sharman,sharmbi01,,East,False
+1952,1952-53,Bob Cousy,cousybo01,,East,False
+1952,1952-53,Bob Davies,daviebo01,,West,False
+1952,1952-53,Bobby Wanzer,wanzebo01,,West,False
+1952,1952-53,Carl Braun,braunca01,,East,False
+1952,1952-53,Dolph Schayes,schaydo01,,East,False
+1952,1952-53,Don Barksdale,barksdo01,,East,False
+1952,1952-53,Ed Macauley,macaued01,,East,False
+1952,1952-53,Fred Scolari,scolafr01,,East,True
+1952,1952-53,George Mikan,mikange01,,West,False
+1952,1952-53,Harry Gallatin,gallaha01,,East,False
+1952,1952-53,Larry Foust,foustla01,,West,False
+1952,1952-53,Leo Barnhorst,barnhle01,,West,False
+1952,1952-53,Mel Hutchins,hutchme01,,West,False
+1952,1952-53,Neil Johnston,johnsne01,,East,False
+1952,1952-53,Paul Seymour,seymopa01,,East,False
+1952,1952-53,Slater Martin,martisl01,,West,False
+1952,1952-53,Vern Mikkelsen,mikkeve01,,West,False
+1953,1953-54,Andy Phillip,phillan01,,West,True
+1953,1953-54,Arnie Risen,risenar01,,West,False
+1953,1953-54,Bill Sharman,sharmbi01,,East,False
+1953,1953-54,Bob Cousy,cousybo01,,East,False
+1953,1953-54,Bob Davies,daviebo01,,West,False
+1953,1953-54,Bobby Wanzer,wanzebo01,,West,False
+1953,1953-54,Carl Braun,braunca01,,East,False
+1953,1953-54,Dick McGuire,mcguidi01,,East,False
+1953,1953-54,Dolph Schayes,schaydo01,,East,False
+1953,1953-54,Don Sunderlage,sundedo01,,West,False
+1953,1953-54,Ed Macauley,macaued01,,East,False
+1953,1953-54,George Mikan,mikange01,,West,False
+1953,1953-54,Harry Gallatin,gallaha01,,East,False
+1953,1953-54,Jack Molinas,molinja01,,West,True
+1953,1953-54,Jim Pollard,pollaji01,,West,False
+1953,1953-54,Larry Foust,foustla01,,West,False
+1953,1953-54,Mel Hutchins,hutchme01,,West,False
+1953,1953-54,Neil Johnston,johnsne01,,East,False
+1953,1953-54,Paul Seymour,seymopa01,,East,False
+1953,1953-54,Ray Felix,felixra01,,East,False
+1953,1953-54,Slater Martin,martisl01,,West,False
+1954,1954-55,Andy Phillip,phillan01,,West,False
+1954,1954-55,Arnie Risen,risenar01,,West,True
+1954,1954-55,Bill Sharman,sharmbi01,,East,False
+1954,1954-55,Bob Cousy,cousybo01,,East,False
+1954,1954-55,Bob Pettit,pettibo01,,West,False
+1954,1954-55,Bobby Wanzer,wanzebo01,,West,False
+1954,1954-55,Carl Braun,braunca01,,East,False
+1954,1954-55,Dick McGuire,mcguidi01,,East,False
+1954,1954-55,Dolph Schayes,schaydo01,,East,False
+1954,1954-55,Ed Macauley,macaued01,,East,False
+1954,1954-55,Frank Selvy,selvyfr01,,West,False
+1954,1954-55,George Yardley,yardlge01,,West,False
+1954,1954-55,Harry Gallatin,gallaha01,,East,False
+1954,1954-55,Jack Coleman,colemja01,,West,True
+1954,1954-55,Jim Pollard,pollaji01,,West,False
+1954,1954-55,Larry Foust,foustla01,,West,False
+1954,1954-55,Neil Johnston,johnsne01,,East,False
+1954,1954-55,Paul Arizin,arizipa01,,East,False
+1954,1954-55,Paul Seymour,seymopa01,,East,False
+1954,1954-55,Slater Martin,martisl01,,West,False
+1954,1954-55,Vern Mikkelsen,mikkeve01,,West,False
+1955,1955-56,Bill Sharman,sharmbi01,,East,False
+1955,1955-56,Bob Cousy,cousybo01,,East,False
+1955,1955-56,Bob Harrison,harribo02,,West,False
+1955,1955-56,Bob Pettit,pettibo01,,West,False
+1955,1955-56,Bobby Wanzer,wanzebo01,,West,False
+1955,1955-56,Carl Braun,braunca01,,East,True
+1955,1955-56,Clyde Lovellette,lovelcl01,,West,False
+1955,1955-56,Dick McGuire,mcguidi01,,East,False
+1955,1955-56,Dolph Schayes,schaydo01,,East,False
+1955,1955-56,Ed Macauley,macaued01,,East,False
+1955,1955-56,George Yardley,yardlge01,,West,False
+1955,1955-56,Harry Gallatin,gallaha01,,East,False
+1955,1955-56,Jack George,georgja01,,East,False
+1955,1955-56,Larry Foust,foustla01,,West,False
+1955,1955-56,Maurice Stokes,stokema01,,West,False
+1955,1955-56,Mel Hutchins,hutchme01,,West,False
+1955,1955-56,Neil Johnston,johnsne01,,East,False
+1955,1955-56,Paul Arizin,arizipa01,,East,False
+1955,1955-56,Red Kerr,kerrre01,,East,True
+1955,1955-56,Slater Martin,martisl01,,West,False
+1955,1955-56,Vern Mikkelsen,mikkeve01,,West,False
+1956,1956-57,Bill Sharman,sharmbi01,,East,False
+1956,1956-57,Bob Cousy,cousybo01,,East,False
+1956,1956-57,Bob Pettit,pettibo01,,West,False
+1956,1956-57,Carl Braun,braunca01,,East,False
+1956,1956-57,Clyde Lovellette,lovelcl01,,West,True
+1956,1956-57,Dick Garmaker,garmadi01,,West,False
+1956,1956-57,Dolph Schayes,schaydo01,,East,False
+1956,1956-57,Ed Macauley,macaued01,,West,False
+1956,1956-57,George Yardley,yardlge01,,West,False
+1956,1956-57,Harry Gallatin,gallaha01,,East,False
+1956,1956-57,Jack George,georgja01,,East,False
+1956,1956-57,Jack Twyman,twymaja01,,West,False
+1956,1956-57,Maurice Stokes,stokema01,,West,False
+1956,1956-57,Mel Hutchins,hutchme01,,West,False
+1956,1956-57,Nat Clifton,cliftna01,,East,False
+1956,1956-57,Neil Johnston,johnsne01,,East,False
+1956,1956-57,Paul Arizin,arizipa01,,East,False
+1956,1956-57,Richie Regan,reganri01,,West,False
+1956,1956-57,Slater Martin,martisl01,,West,False
+1956,1956-57,Tom Heinsohn,heinsto01,,East,False
+1956,1956-57,Vern Mikkelsen,mikkeve01,,West,True
+1957,1957-58,Bill Russell,russebi01,,East,False
+1957,1957-58,Bill Sharman,sharmbi01,,East,False
+1957,1957-58,Bob Cousy,cousybo01,,East,False
+1957,1957-58,Bob Pettit,pettibo01,,West,False
+1957,1957-58,Cliff Hagan,hagancl01,,West,True
+1957,1957-58,Dick Garmaker,garmadi01,,West,False
+1957,1957-58,Dick McGuire,mcguidi01,,West,False
+1957,1957-58,Dolph Schayes,schaydo01,,East,False
+1957,1957-58,Gene Shue,shuege01,,West,False
+1957,1957-58,George Yardley,yardlge01,,West,False
+1957,1957-58,Jack Twyman,twymaja01,,West,False
+1957,1957-58,Kenny Sears,searske01,,East,False
+1957,1957-58,Larry Costello,costela01,,East,False
+1957,1957-58,Larry Foust,foustla01,,West,False
+1957,1957-58,Maurice Stokes,stokema01,,West,False
+1957,1957-58,Neil Johnston,johnsne01,,East,False
+1957,1957-58,Paul Arizin,arizipa01,,East,False
+1957,1957-58,Richie Guerin,gueriri01,,East,False
+1957,1957-58,Slater Martin,martisl01,,West,False
+1957,1957-58,Willie Naulls,naullwi01,,East,False
+1958,1958-59,Bill Russell,russebi01,,East,False
+1958,1958-59,Bill Sharman,sharmbi01,,East,False
+1958,1958-59,Bob Cousy,cousybo01,,East,False
+1958,1958-59,Bob Pettit,pettibo01,,West,False
+1958,1958-59,Cliff Hagan,hagancl01,,West,False
+1958,1958-59,Dick Garmaker,garmadi01,,West,False
+1958,1958-59,Dick McGuire,mcguidi01,,West,False
+1958,1958-59,Dolph Schayes,schaydo01,,East,False
+1958,1958-59,Elgin Baylor,bayloel01,,West,False
+1958,1958-59,Gene Shue,shuege01,,West,False
+1958,1958-59,George Yardley,yardlge01,,West,False
+1958,1958-59,Jack Twyman,twymaja01,,West,False
+1958,1958-59,Kenny Sears,searske01,,East,False
+1958,1958-59,Larry Costello,costela01,,East,False
+1958,1958-59,Larry Foust,foustla01,,West,False
+1958,1958-59,Paul Arizin,arizipa01,,East,False
+1958,1958-59,Red Kerr,kerrre01,,East,False
+1958,1958-59,Richie Guerin,gueriri01,,East,False
+1958,1958-59,Slater Martin,martisl01,,West,False
+1958,1958-59,Woody Sauldsberry,sauldwo01,,East,False
+1959,1959-60,Bill Russell,russebi01,,East,False
+1959,1959-60,Bill Sharman,sharmbi01,,East,False
+1959,1959-60,Bob Cousy,cousybo01,,East,False
+1959,1959-60,Bob Pettit,pettibo01,,West,False
+1959,1959-60,Chuck Noble,noblech01,,West,False
+1959,1959-60,Cliff Hagan,hagancl01,,West,False
+1959,1959-60,Clyde Lovellette,lovelcl01,,West,False
+1959,1959-60,Dick Garmaker,garmadi01,,West,False
+1959,1959-60,Dolph Schayes,schaydo01,,East,False
+1959,1959-60,Elgin Baylor,bayloel01,,West,False
+1959,1959-60,Gene Shue,shuege01,,West,False
+1959,1959-60,George Yardley,yardlge01,,East,False
+1959,1959-60,Hot Rod Hundley,hundlho01,,West,False
+1959,1959-60,Jack Twyman,twymaja01,,West,False
+1959,1959-60,Larry Costello,costela01,,East,False
+1959,1959-60,Paul Arizin,arizipa01,,East,True
+1959,1959-60,Richie Guerin,gueriri01,,East,False
+1959,1959-60,Tom Gola,golato01,,East,True
+1959,1959-60,Walter Dukes,dukeswa01,,West,False
+1959,1959-60,Willie Naulls,naullwi01,,East,False
+1959,1959-60,Wilt Chamberlain,chambwi01,,East,False
+1960,1960-61,Bailey Howell,howelba01,,West,False
+1960,1960-61,Bill Russell,russebi01,,East,False
+1960,1960-61,Bob Cousy,cousybo01,,East,False
+1960,1960-61,Bob Pettit,pettibo01,,West,False
+1960,1960-61,Cliff Hagan,hagancl01,,West,False
+1960,1960-61,Clyde Lovellette,lovelcl01,,West,False
+1960,1960-61,Dolph Schayes,schaydo01,,East,False
+1960,1960-61,Elgin Baylor,bayloel01,,West,False
+1960,1960-61,Gene Shue,shuege01,,West,False
+1960,1960-61,Hal Greer,greerha01,,East,False
+1960,1960-61,Hot Rod Hundley,hundlho01,,West,False
+1960,1960-61,Jerry West,westje01,,West,False
+1960,1960-61,Larry Costello,costela01,,East,False
+1960,1960-61,Oscar Robertson,roberos01,,West,False
+1960,1960-61,Paul Arizin,arizipa01,,East,False
+1960,1960-61,Richie Guerin,gueriri01,,East,False
+1960,1960-61,Tom Gola,golato01,,East,False
+1960,1960-61,Tom Heinsohn,heinsto01,,East,False
+1960,1960-61,Walter Dukes,dukeswa01,,West,False
+1960,1960-61,Wayne Embry,embrywa01,,West,False
+1960,1960-61,Willie Naulls,naullwi01,,East,False
+1960,1960-61,Wilt Chamberlain,chambwi01,,East,False
+1961,1961-62,Bailey Howell,howelba01,,West,False
+1961,1961-62,Bill Russell,russebi01,,East,False
+1961,1961-62,Bob Cousy,cousybo01,,East,False
+1961,1961-62,Bob Pettit,pettibo01,,West,False
+1961,1961-62,Cliff Hagan,hagancl01,,West,False
+1961,1961-62,Dolph Schayes,schaydo01,,East,False
+1961,1961-62,Elgin Baylor,bayloel01,,West,False
+1961,1961-62,Frank Selvy,selvyfr01,,West,False
+1961,1961-62,Gene Shue,shuege01,,West,False
+1961,1961-62,Hal Greer,greerha01,,East,False
+1961,1961-62,Jack Twyman,twymaja01,,West,False
+1961,1961-62,Jerry West,westje01,,West,False
+1961,1961-62,Johnny Green,greenjo01,,East,True
+1961,1961-62,Larry Costello,costela01,,East,True
+1961,1961-62,Oscar Robertson,roberos01,,West,False
+1961,1961-62,Paul Arizin,arizipa01,,East,False
+1961,1961-62,Richie Guerin,gueriri01,,East,False
+1961,1961-62,Rudy LaRusso,larusru01,,West,True
+1961,1961-62,Sam Jones,jonessa01,,East,True
+1961,1961-62,Tom Gola,golato01,,East,True
+1961,1961-62,Tom Heinsohn,heinsto01,,East,False
+1961,1961-62,Walt Bellamy,bellawa01,,West,False
+1961,1961-62,Wayne Embry,embrywa01,,West,False
+1961,1961-62,Willie Naulls,naullwi01,,East,False
+1961,1961-62,Wilt Chamberlain,chambwi01,,East,False
+1962,1962-63,Bailey Howell,howelba01,,West,False
+1962,1962-63,Bill Russell,russebi01,,East,False
+1962,1962-63,Bob Cousy,cousybo01,,East,False
+1962,1962-63,Bob Pettit,pettibo01,,West,False
+1962,1962-63,Don Ohl,ohldo01,,West,False
+1962,1962-63,Elgin Baylor,bayloel01,,West,False
+1962,1962-63,Guy Rodgers,rodgegu01,,West,False
+1962,1962-63,Hal Greer,greerha01,,East,False
+1962,1962-63,Jack Twyman,twymaja01,,East,False
+1962,1962-63,Jerry West,westje01,,West,False
+1962,1962-63,Johnny Green,greenjo01,,East,False
+1962,1962-63,Lee Shaffer,shaffle01,,East,False
+1962,1962-63,Lenny Wilkens,wilkele01,,West,False
+1962,1962-63,Oscar Robertson,roberos01,,East,False
+1962,1962-63,Red Kerr,kerrre01,,East,False
+1962,1962-63,Richie Guerin,gueriri01,,East,False
+1962,1962-63,Rudy LaRusso,larusru01,,West,False
+1962,1962-63,Terry Dischinger,dischte01,,West,False
+1962,1962-63,Tom Gola,golato01,,East,False
+1962,1962-63,Tom Heinsohn,heinsto01,,East,False
+1962,1962-63,Tom Meschery,meschto01,,West,False
+1962,1962-63,Walt Bellamy,bellawa01,,West,False
+1962,1962-63,Wayne Embry,embrywa01,,East,True
+1962,1962-63,Wilt Chamberlain,chambwi01,,West,False
+1963,1963-64,Bailey Howell,howelba01,,West,False
+1963,1963-64,Bill Russell,russebi01,,East,False
+1963,1963-64,Bob Pettit,pettibo01,,West,False
+1963,1963-64,Chet Walker,walkech01,,East,False
+1963,1963-64,Don Ohl,ohldo01,,West,False
+1963,1963-64,Elgin Baylor,bayloel01,,West,False
+1963,1963-64,Guy Rodgers,rodgegu01,,West,False
+1963,1963-64,Hal Greer,greerha01,,East,False
+1963,1963-64,Jerry Lucas,lucasje01,,East,False
+1963,1963-64,Jerry West,westje01,,West,False
+1963,1963-64,Len Chappell,chapple01,,East,False
+1963,1963-64,Lenny Wilkens,wilkele01,,West,False
+1963,1963-64,Oscar Robertson,roberos01,,East,False
+1963,1963-64,Sam Jones,jonessa01,,East,False
+1963,1963-64,Terry Dischinger,dischte01,,West,False
+1963,1963-64,Tom Gola,golato01,,East,False
+1963,1963-64,Tom Heinsohn,heinsto01,,East,False
+1963,1963-64,Walt Bellamy,bellawa01,,West,False
+1963,1963-64,Wayne Embry,embrywa01,,East,False
+1963,1963-64,Wilt Chamberlain,chambwi01,,West,False
+1964,1964-65,Bill Russell,russebi01,,East,False
+1964,1964-65,Bob Pettit,pettibo01,,West,False
+1964,1964-65,Don Ohl,ohldo01,,West,False
+1964,1964-65,Elgin Baylor,bayloel01,,West,False
+1964,1964-65,Gus Johnson,johnsgu01,,West,False
+1964,1964-65,Hal Greer,greerha01,,East,False
+1964,1964-65,Jerry Lucas,lucasje01,,East,False
+1964,1964-65,Jerry West,westje01,,West,False
+1964,1964-65,Johnny Green,greenjo01,,East,True
+1964,1964-65,Larry Costello,costela01,,East,False
+1964,1964-65,Lenny Wilkens,wilkele01,,West,False
+1964,1964-65,Luke Jackson,jackslu01,,East,False
+1964,1964-65,Nate Thurmond,thurmna01,,West,False
+1964,1964-65,Oscar Robertson,roberos01,,East,False
+1964,1964-65,Sam Jones,jonessa01,,East,False
+1964,1964-65,Terry Dischinger,dischte01,,West,False
+1964,1964-65,Tom Heinsohn,heinsto01,,East,True
+1964,1964-65,Walt Bellamy,bellawa01,,West,False
+1964,1964-65,Wayne Embry,embrywa01,,East,False
+1964,1964-65,Willis Reed,reedwi01,,East,False
+1964,1964-65,Wilt Chamberlain,chambwi01,,West,False
+1965,1965-66,Adrian Smith,smithad01,,East,False
+1965,1965-66,Bailey Howell,howelba01,,West,False
+1965,1965-66,Bill Russell,russebi01,,East,False
+1965,1965-66,Chet Walker,walkech01,,East,False
+1965,1965-66,Dave DeBusschere,debusda01,,West,False
+1965,1965-66,Don Ohl,ohldo01,,West,False
+1965,1965-66,Eddie Miles,milesed01,,West,False
+1965,1965-66,Guy Rodgers,rodgegu01,,West,False
+1965,1965-66,Hal Greer,greerha01,,East,False
+1965,1965-66,Jerry Lucas,lucasje01,,East,False
+1965,1965-66,Jerry West,westje01,,West,False
+1965,1965-66,John Havlicek,havlijo01,,East,False
+1965,1965-66,Nate Thurmond,thurmna01,,West,False
+1965,1965-66,Oscar Robertson,roberos01,,East,False
+1965,1965-66,Rick Barry,barryri01,,West,False
+1965,1965-66,Rudy LaRusso,larusru01,,West,False
+1965,1965-66,Sam Jones,jonessa01,,East,False
+1965,1965-66,Willis Reed,reedwi01,,East,False
+1965,1965-66,Wilt Chamberlain,chambwi01,,East,False
+1965,1965-66,Zelmo Beaty,beatyze01,,West,False
+1966,1966-67,Bailey Howell,howelba01,,East,False
+1966,1966-67,Bill Bridges,bridgbi01,,West,False
+1966,1966-67,Bill Russell,russebi01,,East,False
+1966,1966-67,Chet Walker,walkech01,,East,False
+1966,1966-67,Darrall Imhoff,imhofda01,,West,False
+1966,1966-67,Dave DeBusschere,debusda01,,West,False
+1966,1966-67,Don Ohl,ohldo01,,East,False
+1966,1966-67,Elgin Baylor,bayloel01,,West,False
+1966,1966-67,Guy Rodgers,rodgegu01,,West,False
+1966,1966-67,Hal Greer,greerha01,,East,False
+1966,1966-67,Jerry Lucas,lucasje01,,East,False
+1966,1966-67,Jerry Sloan,sloanje01,,West,False
+1966,1966-67,Jerry West,westje01,,West,False
+1966,1966-67,John Havlicek,havlijo01,,East,False
+1966,1966-67,Lenny Wilkens,wilkele01,,West,False
+1966,1966-67,Nate Thurmond,thurmna01,,West,False
+1966,1966-67,Oscar Robertson,roberos01,,East,False
+1966,1966-67,Rick Barry,barryri01,,West,False
+1966,1966-67,Willis Reed,reedwi01,,East,False
+1966,1966-67,Wilt Chamberlain,chambwi01,,East,False
+1967,1967-68,Archie Clark,clarkar01,,West,False
+1967,1967-68,Bill Bridges,bridgbi01,,West,False
+1967,1967-68,Bill Russell,russebi01,,East,False
+1967,1967-68,Bob Boozer,boozebo01,,West,False
+1967,1967-68,Clyde Lee,leecl01,,West,True
+1967,1967-68,Dave Bing,bingda01,,East,False
+1967,1967-68,Dave DeBusschere,debusda01,,East,False
+1967,1967-68,Dick Barnett,barnedi01,,East,False
+1967,1967-68,Don Kojis,kojisdo01,,West,False
+1967,1967-68,Elgin Baylor,bayloel01,,West,False
+1967,1967-68,Gus Johnson,johnsgu01,,East,False
+1967,1967-68,Hal Greer,greerha01,,East,False
+1967,1967-68,Jerry Lucas,lucasje01,,East,False
+1967,1967-68,Jerry West,westje01,,West,False
+1967,1967-68,Jim King,kingji01,,West,False
+1967,1967-68,John Havlicek,havlijo01,,East,False
+1967,1967-68,Lenny Wilkens,wilkele01,,West,False
+1967,1967-68,Nate Thurmond,thurmna01,,West,True
+1967,1967-68,Oscar Robertson,roberos01,,East,False
+1967,1967-68,Rudy LaRusso,larusru01,,West,False
+1967,1967-68,Sam Jones,jonessa01,,East,False
+1967,1967-68,Walt Hazzard,abdulma01,,West,False
+1967,1967-68,Willis Reed,reedwi01,,East,False
+1967,1967-68,Wilt Chamberlain,chambwi01,,East,False
+1967,1967-68,Zelmo Beaty,beatyze01,,West,False
+1968,1968-69,Bill Russell,russebi01,,East,False
+1968,1968-69,Billy Cunningham,cunnibi01,,East,False
+1968,1968-69,Dave Bing,bingda01,,East,False
+1968,1968-69,Dick Van Arsdale,vanardi01,,West,False
+1968,1968-69,Don Kojis,kojisdo01,,West,False
+1968,1968-69,Earl Monroe,monroea01,,East,False
+1968,1968-69,Elgin Baylor,bayloel01,,West,False
+1968,1968-69,Elvin Hayes,hayesel01,,West,False
+1968,1968-69,Gail Goodrich,goodrga01,,West,True
+1968,1968-69,Gus Johnson,johnsgu01,,East,False
+1968,1968-69,Hal Greer,greerha01,,East,False
+1968,1968-69,Jeff Mullins,mullije01,,West,False
+1968,1968-69,Jerry Lucas,lucasje01,,East,False
+1968,1968-69,Jerry Sloan,sloanje01,,West,False
+1968,1968-69,Jerry West,westje01,,West,True
+1968,1968-69,Joe Caldwell,caldwjo01,,West,False
+1968,1968-69,John Havlicek,havlijo01,,East,False
+1968,1968-69,Jon McGlocklin,mcglojo01,,East,False
+1968,1968-69,Lenny Wilkens,wilkele01,,West,False
+1968,1968-69,Lou Hudson,hudsolo01,,West,False
+1968,1968-69,Oscar Robertson,roberos01,,East,False
+1968,1968-69,Rudy LaRusso,larusru01,,West,False
+1968,1968-69,Wes Unseld,unselwe01,,East,False
+1968,1968-69,Willis Reed,reedwi01,,East,False
+1968,1968-69,Wilt Chamberlain,chambwi01,,West,False
+1969,1969-70,Bill Bridges,bridgbi01,,West,False
+1969,1969-70,Billy Cunningham,cunnibi01,,East,False
+1969,1969-70,Bob Rule,rulebo01,,West,True
+1969,1969-70,Chet Walker,walkech01,,West,False
+1969,1969-70,Connie Hawkins,hawkico01,,West,False
+1969,1969-70,Dave DeBusschere,debusda01,,East,False
+1969,1969-70,Dick Van Arsdale,vanardi01,,West,False
+1969,1969-70,Elgin Baylor,bayloel01,,West,False
+1969,1969-70,Elvin Hayes,hayesel01,,West,False
+1969,1969-70,Flynn Robinson,robinfl01,,East,False
+1969,1969-70,Gus Johnson,johnsgu01,,East,False
+1969,1969-70,Hal Greer,greerha01,,East,False
+1969,1969-70,Jeff Mullins,mullije01,,West,False
+1969,1969-70,Jerry West,westje01,,West,False
+1969,1969-70,Jimmy Walker,walkeji01,,East,False
+1969,1969-70,Joe Caldwell,caldwjo01,,West,False
+1969,1969-70,John Havlicek,havlijo01,,East,False
+1969,1969-70,Kareem Abdul-Jabbar,abdulka01,,East,False
+1969,1969-70,Lenny Wilkens,wilkele01,,West,False
+1969,1969-70,Lou Hudson,hudsolo01,,West,False
+1969,1969-70,Nate Thurmond,thurmna01,,West,True
+1969,1969-70,Oscar Robertson,roberos01,,East,False
+1969,1969-70,Tom Van Arsdale,vanarto01,,East,False
+1969,1969-70,Walt Frazier,fraziwa01,,East,False
+1969,1969-70,Willis Reed,reedwi01,,East,False
+1970,1970-71,Billy Cunningham,cunnibi01,,East,False
+1970,1970-71,Bob Kauffman,kauffbo01,,East,False
+1970,1970-71,Bob Love,lovebo01,,West,False
+1970,1970-71,Chet Walker,walkech01,,West,False
+1970,1970-71,Connie Hawkins,hawkico01,,West,False
+1970,1970-71,Dave Bing,bingda01,,West,False
+1970,1970-71,Dave DeBusschere,debusda01,,East,False
+1970,1970-71,Dick Van Arsdale,vanardi01,,West,False
+1970,1970-71,Earl Monroe,monroea01,,East,False
+1970,1970-71,Elvin Hayes,hayesel01,,West,False
+1970,1970-71,Geoff Petrie,petrige01,,West,False
+1970,1970-71,Gus Johnson,johnsgu01,,East,False
+1970,1970-71,Jeff Mullins,mullije01,,West,False
+1970,1970-71,Jerry Lucas,lucasje01,,West,False
+1970,1970-71,Jerry West,westje01,,West,False
+1970,1970-71,Jo Jo White,whitejo01,,East,False
+1970,1970-71,John Havlicek,havlijo01,,East,False
+1970,1970-71,John Johnson,johnsjo01,,East,False
+1970,1970-71,Johnny Green,greenjo01,,East,False
+1970,1970-71,Kareem Abdul-Jabbar,abdulka01,,West,False
+1970,1970-71,Lenny Wilkens,wilkele01,,West,False
+1970,1970-71,Lou Hudson,hudsolo01,,East,False
+1970,1970-71,Oscar Robertson,roberos01,,West,False
+1970,1970-71,Tom Van Arsdale,vanarto01,,East,False
+1970,1970-71,Walt Frazier,fraziwa01,,East,False
+1970,1970-71,Wes Unseld,unselwe01,,East,False
+1970,1970-71,Willis Reed,reedwi01,,East,False
+1970,1970-71,Wilt Chamberlain,chambwi01,,West,False
+1971,1971-72,Archie Clark,clarkar01,,East,False
+1971,1971-72,Billy Cunningham,cunnibi01,,East,False
+1971,1971-72,Bob Kauffman,kauffbo01,,East,False
+1971,1971-72,Bob Lanier,laniebo01,,West,False
+1971,1971-72,Bob Love,lovebo01,,West,False
+1971,1971-72,Butch Beard,beardbu01,,East,False
+1971,1971-72,Cazzie Russell,russeca01,,West,False
+1971,1971-72,Connie Hawkins,hawkico01,,West,False
+1971,1971-72,Dave Cowens,cowenda01,,East,False
+1971,1971-72,Dave DeBusschere,debusda01,,East,False
+1971,1971-72,Elvin Hayes,hayesel01,,West,False
+1971,1971-72,Gail Goodrich,goodrga01,,West,False
+1971,1971-72,Jack Marin,marinja01,,East,False
+1971,1971-72,Jerry West,westje01,,West,False
+1971,1971-72,Jimmy Walker,walkeji01,,West,False
+1971,1971-72,Jo Jo White,whitejo01,,East,False
+1971,1971-72,John Havlicek,havlijo01,,East,False
+1971,1971-72,John Johnson,johnsjo01,,East,False
+1971,1971-72,Kareem Abdul-Jabbar,abdulka01,,West,False
+1971,1971-72,Lou Hudson,hudsolo01,,East,False
+1971,1971-72,Oscar Robertson,roberos01,,West,False
+1971,1971-72,Paul Silas,silaspa01,,West,False
+1971,1971-72,Sidney Wicks,wickssi01,,West,False
+1971,1971-72,Spencer Haywood,haywosp01,,West,False
+1971,1971-72,Tom Van Arsdale,vanarto01,,East,False
+1971,1971-72,Walt Frazier,fraziwa01,,East,False
+1971,1971-72,Wes Unseld,unselwe01,,East,False
+1971,1971-72,Wilt Chamberlain,chambwi01,,West,False
+1972,1972-73,Bill Bradley,bradlbi01,,East,False
+1972,1972-73,Bob Dandridge,dandrbo01,,West,False
+1972,1972-73,Bob Kauffman,kauffbo01,,East,False
+1972,1972-73,Bob Lanier,laniebo01,,West,False
+1972,1972-73,Bob Love,lovebo01,,West,True
+1972,1972-73,Charlie Scott,scottch01,,West,False
+1972,1972-73,Chet Walker,walkech01,,West,False
+1972,1972-73,Connie Hawkins,hawkico01,,West,True
+1972,1972-73,Dave Bing,bingda01,,West,False
+1972,1972-73,Dave Cowens,cowenda01,,East,False
+1972,1972-73,Dave DeBusschere,debusda01,,East,False
+1972,1972-73,Elvin Hayes,hayesel01,,East,False
+1972,1972-73,Gail Goodrich,goodrga01,,West,False
+1972,1972-73,Jack Marin,marinja01,,East,False
+1972,1972-73,Jerry West,westje01,,West,False
+1972,1972-73,Jo Jo White,whitejo01,,East,False
+1972,1972-73,John Block,blockjo01,,East,False
+1972,1972-73,John Havlicek,havlijo01,,East,False
+1972,1972-73,Kareem Abdul-Jabbar,abdulka01,,West,True
+1972,1972-73,Lenny Wilkens,wilkele01,,East,False
+1972,1972-73,Lou Hudson,hudsolo01,,East,False
+1972,1972-73,Nate Thurmond,thurmna01,,West,False
+1972,1972-73,Pete Maravich,maravpe01,,East,False
+1972,1972-73,Rick Barry,barryri01,,West,True
+1972,1972-73,Sidney Wicks,wickssi01,,West,False
+1972,1972-73,Spencer Haywood,haywosp01,,West,False
+1972,1972-73,Tiny Archibald,architi01,,West,False
+1972,1972-73,Walt Frazier,fraziwa01,,East,False
+1972,1972-73,Wes Unseld,unselwe01,,East,False
+1972,1972-73,Wilt Chamberlain,chambwi01,,West,False
+1973,1973-74,Austin Carr,carrau01,,East,False
+1973,1973-74,Bob Lanier,laniebo01,,West,False
+1973,1973-74,Bob McAdoo,mcadobo01,,East,False
+1973,1973-74,Charlie Scott,scottch01,,West,True
+1973,1973-74,Chet Walker,walkech01,,West,False
+1973,1973-74,Dave Bing,bingda01,,West,False
+1973,1973-74,Dave Cowens,cowenda01,,East,False
+1973,1973-74,Dave DeBusschere,debusda01,,East,False
+1973,1973-74,Elvin Hayes,hayesel01,,East,False
+1973,1973-74,Gail Goodrich,goodrga01,,West,False
+1973,1973-74,Geoff Petrie,petrige01,,West,False
+1973,1973-74,Jerry West,westje01,,West,True
+1973,1973-74,Jo Jo White,whitejo01,,East,False
+1973,1973-74,John Havlicek,havlijo01,,East,False
+1973,1973-74,Kareem Abdul-Jabbar,abdulka01,,West,False
+1973,1973-74,Lou Hudson,hudsolo01,,East,False
+1973,1973-74,Nate Thurmond,thurmna01,,West,False
+1973,1973-74,Norm Van Lier,vanlino01,,West,False
+1973,1973-74,Pete Maravich,maravpe01,,East,False
+1973,1973-74,Phil Chenier,cheniph01,,East,False
+1973,1973-74,Rick Barry,barryri01,,West,False
+1973,1973-74,Rudy Tomjanovich,tomjaru01,,East,False
+1973,1973-74,Sidney Wicks,wickssi01,,West,False
+1973,1973-74,Spencer Haywood,haywosp01,,West,False
+1973,1973-74,Walt Frazier,fraziwa01,,East,False
+1974,1974-75,Bob Dandridge,dandrbo01,,West,False
+1974,1974-75,Bob Lanier,laniebo01,,West,False
+1974,1974-75,Bob McAdoo,mcadobo01,,East,False
+1974,1974-75,Charlie Scott,scottch01,,West,False
+1974,1974-75,Dave Bing,bingda01,,West,False
+1974,1974-75,Dave Cowens,cowenda01,,East,False
+1974,1974-75,Earl Monroe,monroea01,,East,False
+1974,1974-75,Elvin Hayes,hayesel01,,East,False
+1974,1974-75,Gail Goodrich,goodrga01,,West,False
+1974,1974-75,Jim Price,priceji01,,West,False
+1974,1974-75,Jo Jo White,whitejo01,,East,False
+1974,1974-75,John Havlicek,havlijo01,,East,False
+1974,1974-75,Kareem Abdul-Jabbar,abdulka01,,West,False
+1974,1974-75,Paul Silas,silaspa01,,East,False
+1974,1974-75,Phil Chenier,cheniph01,,East,False
+1974,1974-75,Rick Barry,barryri01,,West,False
+1974,1974-75,Rudy Tomjanovich,tomjaru01,,East,False
+1974,1974-75,Sam Lacey,laceysa01,,West,False
+1974,1974-75,Sidney Wicks,wickssi01,,West,False
+1974,1974-75,Spencer Haywood,haywosp01,,West,False
+1974,1974-75,Steve Mix,mixst01,,East,False
+1974,1974-75,Tiny Archibald,architi01,,West,False
+1974,1974-75,Walt Frazier,fraziwa01,,East,False
+1974,1974-75,Wes Unseld,unselwe01,,East,False
+1975,1975-76,Alvan Adams,adamsal01,,West,False
+1975,1975-76,Bob Dandridge,dandrbo01,,West,False
+1975,1975-76,Bob McAdoo,mcadobo01,,East,False
+1975,1975-76,Brian Winters,wintebr01,,West,False
+1975,1975-76,Curtis Rowe,rowecu01,,West,False
+1975,1975-76,Dave Bing,bingda01,,East,False
+1975,1975-76,Dave Cowens,cowenda01,,East,False
+1975,1975-76,Doug Collins,collido01,,East,False
+1975,1975-76,Elvin Hayes,hayesel01,,East,False
+1975,1975-76,Fred Brown,brownfr01,,West,False
+1975,1975-76,George McGinnis,mcginge01,,East,False
+1975,1975-76,Jamaal Wilkes,wilkeja01,,West,False
+1975,1975-76,Jo Jo White,whitejo01,,East,False
+1975,1975-76,John Drew,drewjo01,,East,False
+1975,1975-76,John Havlicek,havlijo01,,East,False
+1975,1975-76,Kareem Abdul-Jabbar,abdulka01,,West,False
+1975,1975-76,Norm Van Lier,vanlino01,,West,False
+1975,1975-76,Phil Smith,smithph01,,West,False
+1975,1975-76,Randy Smith,smithra01,,East,False
+1975,1975-76,Rick Barry,barryri01,,West,False
+1975,1975-76,Rudy Tomjanovich,tomjaru01,,East,False
+1975,1975-76,Scott Wedman,wedmasc01,,West,False
+1975,1975-76,Tiny Archibald,architi01,,West,False
+1975,1975-76,Walt Frazier,fraziwa01,,East,False
+1976,1976-77,Bill Walton,waltobi01,,West,True
+1976,1976-77,Billy Knight,knighbi01,,West,False
+1976,1976-77,Bob Lanier,laniebo01,,West,False
+1976,1976-77,Bob McAdoo,mcadobo01,,East,False
+1976,1976-77,Bobby Jones,jonesbo01,,West,False
+1976,1976-77,Dan Issel,isselda01,,West,False
+1976,1976-77,Dave Cowens,cowenda01,,East,True
+1976,1976-77,David Thompson,thompda01,,West,False
+1976,1976-77,Don Buse,busedo01,,West,True
+1976,1976-77,Doug Collins,collido01,,East,False
+1976,1976-77,Earl Monroe,monroea01,,East,False
+1976,1976-77,Elvin Hayes,hayesel01,,East,False
+1976,1976-77,George Gervin,gervige01,,East,False
+1976,1976-77,George McGinnis,mcginge01,,East,False
+1976,1976-77,Jo Jo White,whitejo01,,East,False
+1976,1976-77,John Havlicek,havlijo01,,East,False
+1976,1976-77,Julius Erving,ervinju01,,East,False
+1976,1976-77,Kareem Abdul-Jabbar,abdulka01,,West,False
+1976,1976-77,Maurice Lucas,lucasma01,,West,False
+1976,1976-77,Norm Van Lier,vanlino01,,West,False
+1976,1976-77,Paul Westphal,westppa01,,West,False
+1976,1976-77,Pete Maravich,maravpe01,,East,False
+1976,1976-77,Phil Chenier,cheniph01,,East,True
+1976,1976-77,Phil Smith,smithph01,,West,False
+1976,1976-77,Rick Barry,barryri01,,West,False
+1976,1976-77,Rudy Tomjanovich,tomjaru01,,East,False
+1977,1977-78,Artis Gilmore,gilmoar01,,West,False
+1977,1977-78,Bill Walton,waltobi01,,West,False
+1977,1977-78,Billy Knight,knighbi01,,East,True
+1977,1977-78,Bob Lanier,laniebo01,,West,False
+1977,1977-78,Bob McAdoo,mcadobo01,,East,False
+1977,1977-78,Bobby Jones,jonesbo01,,West,False
+1977,1977-78,Brian Winters,wintebr01,,West,False
+1977,1977-78,Dave Cowens,cowenda01,,East,False
+1977,1977-78,David Thompson,thompda01,,West,False
+1977,1977-78,Doug Collins,collido01,,East,False
+1977,1977-78,Elvin Hayes,hayesel01,,East,True
+1977,1977-78,George Gervin,gervige01,,East,False
+1977,1977-78,John Havlicek,havlijo01,,East,True
+1977,1977-78,Julius Erving,ervinju01,,East,False
+1977,1977-78,Larry Kenon,kenonla01,,East,False
+1977,1977-78,Lionel Hollins,hollili01,,West,False
+1977,1977-78,Maurice Lucas,lucasma01,,West,False
+1977,1977-78,Moses Malone,malonmo01,,East,False
+1977,1977-78,Paul Westphal,westppa01,,West,False
+1977,1977-78,Pete Maravich,maravpe01,,East,True
+1977,1977-78,Randy Smith,smithra01,,East,False
+1977,1977-78,Rick Barry,barryri01,,West,False
+1977,1977-78,Truck Robinson,robintr01,,East,False
+1977,1977-78,Walter Davis,daviswa03,,West,False
+1978,1978-79,Artis Gilmore,gilmoar01,,West,False
+1978,1978-79,Bob Dandridge,dandrbo01,,East,False
+1978,1978-79,Bob Lanier,laniebo01,,East,False
+1978,1978-79,Calvin Murphy,murphca01,,East,False
+1978,1978-79,Campy Russell,russeca02,,East,False
+1978,1978-79,David Thompson,thompda01,,West,False
+1978,1978-79,Dennis Johnson,johnsde01,,West,False
+1978,1978-79,Doug Collins,collido01,,East,True
+1978,1978-79,Elvin Hayes,hayesel01,,East,False
+1978,1978-79,George Gervin,gervige01,,East,False
+1978,1978-79,George McGinnis,mcginge01,,West,False
+1978,1978-79,Jack Sikma,sikmaja01,,West,False
+1978,1978-79,Julius Erving,ervinju01,,East,False
+1978,1978-79,Kareem Abdul-Jabbar,abdulka01,,West,False
+1978,1978-79,Larry Kenon,kenonla01,,East,False
+1978,1978-79,Marques Johnson,johnsma01,,West,False
+1978,1978-79,Maurice Lucas,lucasma01,,West,False
+1978,1978-79,Moses Malone,malonmo01,,East,False
+1978,1978-79,Otis Birdsong,birdsot01,,West,False
+1978,1978-79,Paul Westphal,westppa01,,West,False
+1978,1978-79,Pete Maravich,maravpe01,,East,False
+1978,1978-79,Rudy Tomjanovich,tomjaru01,,East,False
+1978,1978-79,Walter Davis,daviswa03,,West,False
+1979,1979-80,Adrian Dantley,dantlad01,,West,False
+1979,1979-80,Bill Cartwright,cartwbi01,,East,True
+1979,1979-80,Dan Roundfield,roundda01,,East,False
+1979,1979-80,Dave Cowens,cowenda01,,East,True
+1979,1979-80,Dennis Johnson,johnsde01,,West,False
+1979,1979-80,Eddie Johnson,johnsed02,,East,False
+1979,1979-80,Elvin Hayes,hayesel01,,East,False
+1979,1979-80,George Gervin,gervige01,,East,False
+1979,1979-80,Jack Sikma,sikmaja01,,West,False
+1979,1979-80,John Drew,drewjo01,,East,False
+1979,1979-80,Julius Erving,ervinju01,,East,False
+1979,1979-80,Kareem Abdul-Jabbar,abdulka01,,West,False
+1979,1979-80,Kermit Washington,washike01,,West,True
+1979,1979-80,Larry Bird,birdla01,,East,False
+1979,1979-80,Magic Johnson,johnsma02,,West,False
+1979,1979-80,Marques Johnson,johnsma01,,West,False
+1979,1979-80,Michael Ray Richardson,richami01,,East,False
+1979,1979-80,Moses Malone,malonmo01,,East,False
+1979,1979-80,Otis Birdsong,birdsot01,,West,False
+1979,1979-80,Paul Westphal,westppa01,,West,False
+1979,1979-80,Scott Wedman,wedmasc01,,West,True
+1979,1979-80,Tiny Archibald,architi01,,East,False
+1979,1979-80,Walter Davis,daviswa03,,West,False
+1979,1979-80,World B. Free,freewo01,,West,False
+1980,1980-81,Adrian Dantley,dantlad01,,West,False
+1980,1980-81,Artis Gilmore,gilmoar01,,East,False
+1980,1980-81,Bobby Jones,jonesbo01,,East,False
+1980,1980-81,Dan Roundfield,roundda01,,East,True
+1980,1980-81,Dennis Johnson,johnsde01,,West,False
+1980,1980-81,Eddie Johnson,johnsed02,,East,False
+1980,1980-81,George Gervin,gervige01,,West,False
+1980,1980-81,Jack Sikma,sikmaja01,,West,False
+1980,1980-81,Jamaal Wilkes,wilkeja01,,West,False
+1980,1980-81,Julius Erving,ervinju01,,East,False
+1980,1980-81,Kareem Abdul-Jabbar,abdulka01,,West,False
+1980,1980-81,Larry Bird,birdla01,,East,False
+1980,1980-81,Marques Johnson,johnsma01,,East,False
+1980,1980-81,Michael Ray Richardson,richami01,,East,False
+1980,1980-81,Mike Mitchell,mitchmi01,,East,True
+1980,1980-81,Moses Malone,malonmo01,,West,False
+1980,1980-81,Otis Birdsong,birdsot01,,West,False
+1980,1980-81,Paul Westphal,westppa01,,West,False
+1980,1980-81,Reggie Theus,theusre01,,East,False
+1980,1980-81,Robert Parish,parisro01,305,East,False
+1980,1980-81,Tiny Archibald,architi01,,East,False
+1980,1980-81,Truck Robinson,robintr01,,West,False
+1980,1980-81,Walter Davis,daviswa03,,West,False
+1981,1981-82,Adrian Dantley,dantlad01,,West,False
+1981,1981-82,Alex English,englial01,,West,False
+1981,1981-82,Artis Gilmore,gilmoar01,,East,False
+1981,1981-82,Bernard King,kingbe01,,West,False
+1981,1981-82,Bob Lanier,laniebo01,,East,False
+1981,1981-82,Bobby Jones,jonesbo01,,East,False
+1981,1981-82,Buck Williams,willibu01,433,East,False
+1981,1981-82,Dan Roundfield,roundda01,,East,True
+1981,1981-82,Dennis Johnson,johnsde01,,West,False
+1981,1981-82,George Gervin,gervige01,,West,False
+1981,1981-82,Gus Williams,willigu01,,West,False
+1981,1981-82,Isiah Thomas,thomais01,,East,False
+1981,1981-82,Jack Sikma,sikmaja01,,West,False
+1981,1981-82,Julius Erving,ervinju01,,East,False
+1981,1981-82,Kareem Abdul-Jabbar,abdulka01,,West,False
+1981,1981-82,Kelly Tripucka,tripuke01,,East,True
+1981,1981-82,Larry Bird,birdla01,,East,False
+1981,1981-82,Lonnie Shelton,sheltlo01,,West,False
+1981,1981-82,Magic Johnson,johnsma02,,West,False
+1981,1981-82,Michael Ray Richardson,richami01,,East,False
+1981,1981-82,Moses Malone,malonmo01,,West,False
+1981,1981-82,Norm Nixon,nixonno01,,West,False
+1981,1981-82,Robert Parish,parisro01,305,East,False
+1981,1981-82,Sidney Moncrief,moncrsi01,,East,False
+1981,1981-82,Tiny Archibald,architi01,,East,False
+1982,1982-83,Alex English,englial01,,West,False
+1982,1982-83,Andrew Toney,toneyan01,,East,False
+1982,1982-83,Artis Gilmore,gilmoar01,,West,False
+1982,1982-83,Bill Laimbeer,laimbbi01,,East,False
+1982,1982-83,Buck Williams,willibu01,433,East,False
+1982,1982-83,David Thompson,thompda01,,West,False
+1982,1982-83,George Gervin,gervige01,,West,False
+1982,1982-83,Gus Williams,willigu01,,West,False
+1982,1982-83,Isiah Thomas,thomais01,,East,False
+1982,1982-83,Jack Sikma,sikmaja01,,West,False
+1982,1982-83,Jamaal Wilkes,wilkeja01,,West,False
+1982,1982-83,Jim Paxson,paxsoji02,,West,False
+1982,1982-83,Julius Erving,ervinju01,,East,False
+1982,1982-83,Kareem Abdul-Jabbar,abdulka01,,West,False
+1982,1982-83,Kiki Vandeweghe,vandeki01,,West,False
+1982,1982-83,Larry Bird,birdla01,,East,False
+1982,1982-83,Magic Johnson,johnsma02,,West,False
+1982,1982-83,Marques Johnson,johnsma01,,East,False
+1982,1982-83,Maurice Cheeks,cheekma01,,East,False
+1982,1982-83,Maurice Lucas,lucasma01,,West,False
+1982,1982-83,Moses Malone,malonmo01,,East,False
+1982,1982-83,Reggie Theus,theusre01,,East,False
+1982,1982-83,Robert Parish,parisro01,305,East,False
+1982,1982-83,Sidney Moncrief,moncrsi01,,East,False
+1983,1983-84,Adrian Dantley,dantlad01,,West,False
+1983,1983-84,Alex English,englial01,,West,False
+1983,1983-84,Andrew Toney,toneyan01,,East,False
+1983,1983-84,Bernard King,kingbe01,,East,False
+1983,1983-84,Bill Laimbeer,laimbbi01,,East,True
+1983,1983-84,George Gervin,gervige01,,West,False
+1983,1983-84,Isiah Thomas,thomais01,,East,False
+1983,1983-84,Jack Sikma,sikmaja01,,West,False
+1983,1983-84,Jeff Ruland,rulanje01,,East,False
+1983,1983-84,Jim Paxson,paxsoji02,,West,False
+1983,1983-84,Julius Erving,ervinju01,,East,False
+1983,1983-84,Kareem Abdul-Jabbar,abdulka01,,West,False
+1983,1983-84,Kelly Tripucka,tripuke01,,East,False
+1983,1983-84,Kevin McHale,mchalke01,,East,False
+1983,1983-84,Kiki Vandeweghe,vandeki01,,West,False
+1983,1983-84,Larry Bird,birdla01,,East,False
+1983,1983-84,Magic Johnson,johnsma02,,West,False
+1983,1983-84,Mark Aguirre,aguirma01,,West,False
+1983,1983-84,Moses Malone,malonmo01,,East,True
+1983,1983-84,Otis Birdsong,birdsot01,,East,False
+1983,1983-84,Ralph Sampson,sampsra01,,West,False
+1983,1983-84,Rickey Green,greenri01,,West,False
+1983,1983-84,Robert Parish,parisro01,305,East,False
+1983,1983-84,Sidney Moncrief,moncrsi01,,East,False
+1983,1983-84,Walter Davis,daviswa03,,West,False
+1984,1984-85,Adrian Dantley,dantlad01,,West,False
+1984,1984-85,Alex English,englial01,,West,False
+1984,1984-85,Bernard King,kingbe01,,East,False
+1984,1984-85,Bill Laimbeer,laimbbi01,,East,True
+1984,1984-85,Calvin Natt,nattca01,,West,False
+1984,1984-85,Dennis Johnson,johnsde01,,East,False
+1984,1984-85,George Gervin,gervige01,,West,False
+1984,1984-85,Hakeem Olajuwon,olajuha01,165,West,False
+1984,1984-85,Isiah Thomas,thomais01,,East,False
+1984,1984-85,Jack Sikma,sikmaja01,,West,False
+1984,1984-85,Jeff Ruland,rulanje01,,East,True
+1984,1984-85,Julius Erving,ervinju01,,East,False
+1984,1984-85,Kareem Abdul-Jabbar,abdulka01,,West,False
+1984,1984-85,Larry Bird,birdla01,,East,False
+1984,1984-85,Larry Nance,nancela01,,West,False
+1984,1984-85,Magic Johnson,johnsma02,,West,False
+1984,1984-85,Michael Jordan,jordami01,893,East,False
+1984,1984-85,Michael Ray Richardson,richami01,,East,False
+1984,1984-85,Moses Malone,malonmo01,,East,False
+1984,1984-85,Norm Nixon,nixonno01,,West,False
+1984,1984-85,Ralph Sampson,sampsra01,,West,False
+1984,1984-85,Robert Parish,parisro01,305,East,False
+1984,1984-85,Rolando Blackman,blackro01,,West,False
+1984,1984-85,Sidney Moncrief,moncrsi01,,East,False
+1984,1984-85,Terry Cummings,cummite01,187,East,False
+1985,1985-86,Adrian Dantley,dantlad01,,West,False
+1985,1985-86,Alex English,englial01,,West,False
+1985,1985-86,Alvin Robertson,roberal01,,West,False
+1985,1985-86,Artis Gilmore,gilmoar01,,West,False
+1985,1985-86,Buck Williams,willibu01,433,East,False
+1985,1985-86,Clyde Drexler,drexlcl01,17,West,False
+1985,1985-86,Dominique Wilkins,wilkido01,1122,East,False
+1985,1985-86,Hakeem Olajuwon,olajuha01,165,West,False
+1985,1985-86,Isiah Thomas,thomais01,,East,False
+1985,1985-86,James Worthy,worthja01,,West,False
+1985,1985-86,Jeff Malone,malonje01,,East,False
+1985,1985-86,Julius Erving,ervinju01,,East,False
+1985,1985-86,Kareem Abdul-Jabbar,abdulka01,,West,False
+1985,1985-86,Kevin McHale,mchalke01,,East,False
+1985,1985-86,Larry Bird,birdla01,,East,False
+1985,1985-86,Magic Johnson,johnsma02,,West,False
+1985,1985-86,Marques Johnson,johnsma01,,West,False
+1985,1985-86,Maurice Cheeks,cheekma01,,East,False
+1985,1985-86,Michael Jordan,jordami01,893,East,True
+1985,1985-86,Moses Malone,malonmo01,,East,False
+1985,1985-86,Patrick Ewing,ewingpa01,121,East,True
+1985,1985-86,Ralph Sampson,sampsra01,,West,False
+1985,1985-86,Robert Parish,parisro01,305,East,False
+1985,1985-86,Rolando Blackman,blackro01,,West,False
+1985,1985-86,Sidney Moncrief,moncrsi01,,East,False
+1986,1986-87,Alex English,englial01,,West,False
+1986,1986-87,Alvin Robertson,roberal01,,West,False
+1986,1986-87,Bill Laimbeer,laimbbi01,,East,False
+1986,1986-87,Charles Barkley,barklch01,787,East,False
+1986,1986-87,Dominique Wilkins,wilkido01,1122,East,False
+1986,1986-87,Hakeem Olajuwon,olajuha01,165,West,False
+1986,1986-87,Isiah Thomas,thomais01,,East,False
+1986,1986-87,James Worthy,worthja01,,West,False
+1986,1986-87,Jeff Malone,malonje01,,East,False
+1986,1986-87,Joe Barry Carroll,carrojo01,,West,False
+1986,1986-87,Julius Erving,ervinju01,,East,False
+1986,1986-87,Kareem Abdul-Jabbar,abdulka01,,West,False
+1986,1986-87,Kevin McHale,mchalke01,,East,False
+1986,1986-87,Larry Bird,birdla01,,East,False
+1986,1986-87,Magic Johnson,johnsma02,,West,False
+1986,1986-87,Mark Aguirre,aguirma01,,West,False
+1986,1986-87,Maurice Cheeks,cheekma01,,East,False
+1986,1986-87,Michael Jordan,jordami01,893,East,False
+1986,1986-87,Moses Malone,malonmo01,,East,False
+1986,1986-87,Ralph Sampson,sampsra01,,West,True
+1986,1986-87,Robert Parish,parisro01,305,East,False
+1986,1986-87,Rolando Blackman,blackro01,,West,False
+1986,1986-87,Sleepy Floyd,floydsl01,,West,False
+1986,1986-87,Tom Chambers,chambto01,1472,West,True
+1986,1986-87,Walter Davis,daviswa03,,West,False
+1987,1987-88,Alex English,englial01,,West,False
+1987,1987-88,Alvin Robertson,roberal01,,West,False
+1987,1987-88,Brad Daugherty,daughbr01,,East,False
+1987,1987-88,Charles Barkley,barklch01,787,East,False
+1987,1987-88,Clyde Drexler,drexlcl01,17,West,False
+1987,1987-88,Danny Ainge,aingeda01,,East,False
+1987,1987-88,Doc Rivers,riverdo01,,East,False
+1987,1987-88,Dominique Wilkins,wilkido01,1122,East,False
+1987,1987-88,Fat Lever,leverfa01,,West,False
+1987,1987-88,Hakeem Olajuwon,olajuha01,165,West,False
+1987,1987-88,Isiah Thomas,thomais01,,East,False
+1987,1987-88,James Donaldson,donalja01,,West,True
+1987,1987-88,James Worthy,worthja01,,West,False
+1987,1987-88,Kareem Abdul-Jabbar,abdulka01,,West,False
+1987,1987-88,Karl Malone,malonka01,252,West,False
+1987,1987-88,Kevin McHale,mchalke01,,East,False
+1987,1987-88,Larry Bird,birdla01,,East,False
+1987,1987-88,Magic Johnson,johnsma02,,West,False
+1987,1987-88,Mark Aguirre,aguirma01,,West,False
+1987,1987-88,Maurice Cheeks,cheekma01,,East,False
+1987,1987-88,Michael Jordan,jordami01,893,East,False
+1987,1987-88,Moses Malone,malonmo01,,East,False
+1987,1987-88,Patrick Ewing,ewingpa01,121,East,False
+1987,1987-88,Steve Johnson,johnsst03,,West,True
+1987,1987-88,Xavier McDaniel,mcdanxa01,1365,West,False
+1988,1988-89,Alex English,englial01,,West,False
+1988,1988-89,Brad Daugherty,daughbr01,,East,False
+1988,1988-89,Charles Barkley,barklch01,787,East,False
+1988,1988-89,Chris Mullin,mullich01,904,West,False
+1988,1988-89,Clyde Drexler,drexlcl01,17,West,False
+1988,1988-89,Dale Ellis,ellisda01,107,West,False
+1988,1988-89,Dominique Wilkins,wilkido01,1122,East,False
+1988,1988-89,Hakeem Olajuwon,olajuha01,165,West,False
+1988,1988-89,Isiah Thomas,thomais01,,East,False
+1988,1988-89,James Worthy,worthja01,,West,False
+1988,1988-89,John Stockton,stockjo01,304,West,False
+1988,1988-89,Kareem Abdul-Jabbar,abdulka01,,West,True
+1988,1988-89,Karl Malone,malonka01,252,West,False
+1988,1988-89,Kevin Duckworth,duckwke01,404,West,False
+1988,1988-89,Kevin McHale,mchalke01,,East,False
+1988,1988-89,Larry Nance,nancela01,,East,False
+1988,1988-89,Magic Johnson,johnsma02,,West,True
+1988,1988-89,Mark Eaton,eatonma01,,West,False
+1988,1988-89,Mark Jackson,jacksma01,349,East,False
+1988,1988-89,Mark Price,pricema01,899,East,False
+1988,1988-89,Michael Jordan,jordami01,893,East,False
+1988,1988-89,Moses Malone,malonmo01,,East,False
+1988,1988-89,Patrick Ewing,ewingpa01,121,East,False
+1988,1988-89,Terry Cummings,cummite01,187,East,False
+1988,1988-89,Tom Chambers,chambto01,1472,West,False
+1989,1989-90,A.C. Green,greenac01,920,West,False
+1989,1989-90,Charles Barkley,barklch01,787,East,False
+1989,1989-90,Chris Mullin,mullich01,904,West,False
+1989,1989-90,Clyde Drexler,drexlcl01,17,West,False
+1989,1989-90,David Robinson,robinda01,764,West,False
+1989,1989-90,Dennis Rodman,rodmade01,23,East,False
+1989,1989-90,Dominique Wilkins,wilkido01,1122,East,False
+1989,1989-90,Fat Lever,leverfa01,,West,False
+1989,1989-90,Hakeem Olajuwon,olajuha01,165,West,False
+1989,1989-90,Isiah Thomas,thomais01,,East,False
+1989,1989-90,James Worthy,worthja01,,West,False
+1989,1989-90,Joe Dumars,dumarjo01,247,East,False
+1989,1989-90,John Stockton,stockjo01,304,West,False
+1989,1989-90,Karl Malone,malonka01,252,West,True
+1989,1989-90,Kevin Johnson,johnske02,134,West,False
+1989,1989-90,Kevin McHale,mchalke01,,East,False
+1989,1989-90,Larry Bird,birdla01,,East,False
+1989,1989-90,Magic Johnson,johnsma02,,West,False
+1989,1989-90,Michael Jordan,jordami01,893,East,False
+1989,1989-90,Patrick Ewing,ewingpa01,121,East,False
+1989,1989-90,Reggie Miller,millere01,397,East,False
+1989,1989-90,Robert Parish,parisro01,305,East,False
+1989,1989-90,Rolando Blackman,blackro01,,West,True
+1989,1989-90,Scottie Pippen,pippesc01,937,East,False
+1989,1989-90,Tom Chambers,chambto01,1472,West,False
+1990,1990-91,Alvin Robertson,roberal01,,East,False
+1990,1990-91,Bernard King,kingbe01,,East,False
+1990,1990-91,Brad Daugherty,daughbr01,,East,False
+1990,1990-91,Charles Barkley,barklch01,787,East,False
+1990,1990-91,Chris Mullin,mullich01,904,West,False
+1990,1990-91,Clyde Drexler,drexlcl01,17,West,False
+1990,1990-91,David Robinson,robinda01,764,West,False
+1990,1990-91,Dominique Wilkins,wilkido01,1122,East,False
+1990,1990-91,Hersey Hawkins,hawkihe01,765,East,True
+1990,1990-91,Isiah Thomas,thomais01,,East,True
+1990,1990-91,James Worthy,worthja01,,West,False
+1990,1990-91,Joe Dumars,dumarjo01,247,East,False
+1990,1990-91,John Stockton,stockjo01,304,West,False
+1990,1990-91,Karl Malone,malonka01,252,West,False
+1990,1990-91,Kevin Duckworth,duckwke01,404,West,False
+1990,1990-91,Kevin Johnson,johnske02,134,West,False
+1990,1990-91,Kevin McHale,mchalke01,,East,False
+1990,1990-91,Larry Bird,birdla01,,East,True
+1990,1990-91,Magic Johnson,johnsma02,,West,False
+1990,1990-91,Michael Jordan,jordami01,893,East,False
+1990,1990-91,Patrick Ewing,ewingpa01,121,East,False
+1990,1990-91,Ricky Pierce,piercri01,894,East,False
+1990,1990-91,Robert Parish,parisro01,305,East,False
+1990,1990-91,Terry Porter,portete01,345,West,False
+1990,1990-91,Tim Hardaway,hardati01,896,West,False
+1990,1990-91,Tom Chambers,chambto01,1472,West,False
+1991,1991-92,Brad Daugherty,daughbr01,,East,False
+1991,1991-92,Charles Barkley,barklch01,787,East,False
+1991,1991-92,Chris Mullin,mullich01,904,West,False
+1991,1991-92,Clyde Drexler,drexlcl01,17,West,False
+1991,1991-92,Dan Majerle,majerda01,105,West,False
+1991,1991-92,David Robinson,robinda01,764,West,False
+1991,1991-92,Dennis Rodman,rodmade01,23,East,False
+1991,1991-92,Dikembe Mutombo,mutomdi01,87,West,False
+1991,1991-92,Dominique Wilkins,wilkido01,1122,East,True
+1991,1991-92,Hakeem Olajuwon,olajuha01,165,West,False
+1991,1991-92,Isiah Thomas,thomais01,,East,False
+1991,1991-92,James Worthy,worthja01,,West,False
+1991,1991-92,Jeff Hornacek,hornaje01,204,West,False
+1991,1991-92,Joe Dumars,dumarjo01,247,East,False
+1991,1991-92,John Stockton,stockjo01,304,West,False
+1991,1991-92,Karl Malone,malonka01,252,West,False
+1991,1991-92,Kevin Willis,willike02,788,East,True
+1991,1991-92,Larry Bird,birdla01,,East,True
+1991,1991-92,Magic Johnson,johnsma02,,West,False
+1991,1991-92,Mark Price,pricema01,899,East,False
+1991,1991-92,Michael Adams,adamsmi01,,East,True
+1991,1991-92,Michael Jordan,jordami01,893,East,False
+1991,1991-92,Otis Thorpe,thorpot01,901,West,False
+1991,1991-92,Patrick Ewing,ewingpa01,121,East,False
+1991,1991-92,Reggie Lewis,lewisre01,,East,False
+1991,1991-92,Scottie Pippen,pippesc01,937,East,False
+1991,1991-92,Tim Hardaway,hardati01,896,West,False
+1992,1992-93,Brad Daugherty,daughbr01,,East,False
+1992,1992-93,Charles Barkley,barklch01,787,West,False
+1992,1992-93,Chris Mullin,mullich01,904,West,True
+1992,1992-93,Clyde Drexler,drexlcl01,17,West,False
+1992,1992-93,Dan Majerle,majerda01,105,West,False
+1992,1992-93,Danny Manning,mannida01,330,West,False
+1992,1992-93,David Robinson,robinda01,764,West,False
+1992,1992-93,Detlef Schrempf,schrede01,96,East,False
+1992,1992-93,Dominique Wilkins,wilkido01,1122,East,False
+1992,1992-93,Hakeem Olajuwon,olajuha01,165,West,False
+1992,1992-93,Isiah Thomas,thomais01,,East,False
+1992,1992-93,Joe Dumars,dumarjo01,247,East,False
+1992,1992-93,John Stockton,stockjo01,304,West,False
+1992,1992-93,Karl Malone,malonka01,252,West,False
+1992,1992-93,Larry Johnson,johnsla02,913,East,False
+1992,1992-93,Larry Nance,nancela01,,East,False
+1992,1992-93,Mark Price,pricema01,899,East,False
+1992,1992-93,Michael Jordan,jordami01,893,East,False
+1992,1992-93,Mitch Richmond,richmmi01,782,West,True
+1992,1992-93,Patrick Ewing,ewingpa01,121,East,False
+1992,1992-93,Scottie Pippen,pippesc01,937,East,False
+1992,1992-93,Sean Elliott,elliose01,251,West,False
+1992,1992-93,Shaquille O'Neal,onealsh01,406,East,False
+1992,1992-93,Shawn Kemp,kempsh01,431,West,False
+1992,1992-93,Terry Porter,portete01,345,West,True
+1992,1992-93,Tim Hardaway,hardati01,896,West,False
+1993,1993-94,Alonzo Mourning,mournal01,297,East,True
+1993,1993-94,B.J. Armstrong,armstbj01,769,East,False
+1993,1993-94,Charles Barkley,barklch01,787,West,True
+1993,1993-94,Charles Oakley,oaklech01,891,East,True
+1993,1993-94,Clifford Robinson,robincl02,361,West,False
+1993,1993-94,Clyde Drexler,drexlcl01,17,West,False
+1993,1993-94,Danny Manning,mannida01,330,West,False
+1993,1993-94,David Robinson,robinda01,764,West,False
+1993,1993-94,Derrick Coleman,colemde01,934,East,False
+1993,1993-94,Dominique Wilkins,wilkido01,1122,East,False
+1993,1993-94,Gary Payton,paytoga01,56,West,True
+1993,1993-94,Hakeem Olajuwon,olajuha01,165,West,False
+1993,1993-94,Horace Grant,grantho01,270,East,False
+1993,1993-94,John Starks,starkjo01,317,East,False
+1993,1993-94,John Stockton,stockjo01,304,West,False
+1993,1993-94,Karl Malone,malonka01,252,West,False
+1993,1993-94,Kenny Anderson,anderke01,72,East,False
+1993,1993-94,Kevin Johnson,johnske02,134,West,False
+1993,1993-94,Latrell Sprewell,sprewla01,84,West,False
+1993,1993-94,Mark Price,pricema01,899,East,False
+1993,1993-94,Mitch Richmond,richmmi01,782,West,False
+1993,1993-94,Mookie Blaylock,blaylmo01,302,East,False
+1993,1993-94,Patrick Ewing,ewingpa01,121,East,False
+1993,1993-94,Scottie Pippen,pippesc01,937,East,False
+1993,1993-94,Shaquille O'Neal,onealsh01,406,East,False
+1993,1993-94,Shawn Kemp,kempsh01,431,West,False
+1994,1994-95,Alonzo Mourning,mournal01,297,East,False
+1994,1994-95,Anfernee Hardaway,hardaan01,358,East,False
+1994,1994-95,Cedric Ceballos,cebalce01,76,West,True
+1994,1994-95,Charles Barkley,barklch01,787,West,False
+1994,1994-95,Dan Majerle,majerda01,105,West,False
+1994,1994-95,Dana Barros,barroda01,344,East,False
+1994,1994-95,David Robinson,robinda01,764,West,False
+1994,1994-95,Detlef Schrempf,schrede01,96,West,False
+1994,1994-95,Dikembe Mutombo,mutomdi01,87,West,True
+1994,1994-95,Gary Payton,paytoga01,56,West,False
+1994,1994-95,Grant Hill,hillgr01,255,East,False
+1994,1994-95,Hakeem Olajuwon,olajuha01,165,West,False
+1994,1994-95,Joe Dumars,dumarjo01,247,East,False
+1994,1994-95,John Stockton,stockjo01,304,West,False
+1994,1994-95,Karl Malone,malonka01,252,West,False
+1994,1994-95,Larry Johnson,johnsla02,913,East,False
+1994,1994-95,Latrell Sprewell,sprewla01,84,West,False
+1994,1994-95,Mitch Richmond,richmmi01,782,West,False
+1994,1994-95,Patrick Ewing,ewingpa01,121,East,False
+1994,1994-95,Reggie Miller,millere01,397,East,False
+1994,1994-95,Scottie Pippen,pippesc01,937,East,False
+1994,1994-95,Shaquille O'Neal,onealsh01,406,East,False
+1994,1994-95,Shawn Kemp,kempsh01,431,West,False
+1994,1994-95,Tyrone Hill,hillty01,238,East,False
+1994,1994-95,Vin Baker,bakervi01,452,East,False
+1995,1995-96,Alonzo Mourning,mournal01,297,East,False
+1995,1995-96,Anfernee Hardaway,hardaan01,358,East,False
+1995,1995-96,Charles Barkley,barklch01,787,West,False
+1995,1995-96,Clyde Drexler,drexlcl01,17,West,False
+1995,1995-96,David Robinson,robinda01,764,West,False
+1995,1995-96,Dikembe Mutombo,mutomdi01,87,West,False
+1995,1995-96,Gary Payton,paytoga01,56,West,False
+1995,1995-96,Glen Rice,ricegl01,779,East,False
+1995,1995-96,Grant Hill,hillgr01,255,East,False
+1995,1995-96,Hakeem Olajuwon,olajuha01,165,West,False
+1995,1995-96,Jason Kidd,kiddja01,467,West,False
+1995,1995-96,John Stockton,stockjo01,304,West,False
+1995,1995-96,Juwan Howard,howarju01,436,East,False
+1995,1995-96,Karl Malone,malonka01,252,West,False
+1995,1995-96,Michael Jordan,jordami01,893,East,False
+1995,1995-96,Mitch Richmond,richmmi01,782,West,False
+1995,1995-96,Patrick Ewing,ewingpa01,121,East,False
+1995,1995-96,Reggie Miller,millere01,397,East,False
+1995,1995-96,Scottie Pippen,pippesc01,937,East,False
+1995,1995-96,Sean Elliott,elliose01,251,West,False
+1995,1995-96,Shaquille O'Neal,onealsh01,406,East,False
+1995,1995-96,Shawn Kemp,kempsh01,431,West,False
+1995,1995-96,Terrell Brandon,brandte01,210,East,False
+1995,1995-96,Vin Baker,bakervi01,452,East,False
+1996,1996-97,Alonzo Mourning,mournal01,297,East,True
+1996,1996-97,Anfernee Hardaway,hardaan01,358,East,False
+1996,1996-97,Charles Barkley,barklch01,787,West,True
+1996,1996-97,Chris Gatling,gatlich01,423,West,True
+1996,1996-97,Chris Webber,webbech01,185,East,True
+1996,1996-97,Christian Laettner,laettch01,363,East,False
+1996,1996-97,Clyde Drexler,drexlcl01,17,West,True
+1996,1996-97,Detlef Schrempf ,schrede01,96,West,True
+1996,1996-97,Dikembe Mutombo,mutomdi01,87,East,False
+1996,1996-97,Eddie Jones,jonesed02,224,West,False
+1996,1996-97,Gary Payton,paytoga01,56,West,False
+1996,1996-97,Glen Rice,ricegl01,779,East,False
+1996,1996-97,Grant Hill,hillgr01,255,East,False
+1996,1996-97,Hakeem Olajuwon,olajuha01,165,West,False
+1996,1996-97,Joe Dumars,dumarjo01,247,East,True
+1996,1996-97,John Stockton,stockjo01,304,West,False
+1996,1996-97,Karl Malone,malonka01,252,West,False
+1996,1996-97,Kevin Garnett,garneke01,708,West,True
+1996,1996-97,Latrell Sprewell,sprewla01,84,West,False
+1996,1996-97,Michael Jordan,jordami01,893,East,False
+1996,1996-97,Mitch Richmond,richmmi01,782,West,False
+1996,1996-97,Patrick Ewing,ewingpa01,121,East,True
+1996,1996-97,Scottie Pippen,pippesc01,937,East,False
+1996,1996-97,Shaquille O'Neal,onealsh01,406,West,True
+1996,1996-97,Shawn Kemp,kempsh01,431,West,False
+1996,1996-97,Terrell Brandon,brandte01,210,East,False
+1996,1996-97,Tim Hardaway,hardati01,896,East,False
+1996,1996-97,Tom Gugliotta,guglito01,339,West,False
+1996,1996-97,Vin Baker,bakervi01,452,East,False
+1997,1997-98,Anfernee Hardaway,hardaan01,358,East,False
+1997,1997-98,Antoine Walker,walkean02,952,East,False
+1997,1997-98,David Robinson,robinda01,764,West,False
+1997,1997-98,Dikembe Mutombo,mutomdi01,87,East,False
+1997,1997-98,Eddie Jones,jonesed02,224,West,False
+1997,1997-98,Gary Payton,paytoga01,56,West,False
+1997,1997-98,Glen Rice,ricegl01,779,East,False
+1997,1997-98,Grant Hill,hillgr01,255,East,False
+1997,1997-98,Jason Kidd,kiddja01,467,West,False
+1997,1997-98,Jayson Williams,willija01,420,East,False
+1997,1997-98,Karl Malone,malonka01,252,West,False
+1997,1997-98,Kevin Garnett,garneke01,708,West,False
+1997,1997-98,Kobe Bryant,bryanko01,977,West,False
+1997,1997-98,Michael Jordan,jordami01,893,East,False
+1997,1997-98,Mitch Richmond,richmmi01,782,West,False
+1997,1997-98,Nick Van Exel,vanexni01,89,West,False
+1997,1997-98,Reggie Miller,millere01,397,East,False
+1997,1997-98,Rik Smits,smitsri01,22,East,False
+1997,1997-98,Shaquille O'Neal,onealsh01,406,West,False
+1997,1997-98,Shawn Kemp,kempsh01,431,East,False
+1997,1997-98,Steve Smith,smithst01,120,East,False
+1997,1997-98,Tim Duncan,duncati01,1495,West,False
+1997,1997-98,Tim Hardaway,hardati01,896,East,False
+1997,1997-98,Vin Baker,bakervi01,452,West,False
+1999,1999-00,Allan Houston,houstal01,275,East,False
+1999,1999-00,Allen Iverson,iversal01,947,East,False
+1999,1999-00,Alonzo Mourning,mournal01,297,East,False
+1999,1999-00,Chris Webber,webbech01,185,West,False
+1999,1999-00,Dale Davis,davisda01,905,East,False
+1999,1999-00,David Robinson,robinda01,764,West,False
+1999,1999-00,Dikembe Mutombo,mutomdi01,87,East,False
+1999,1999-00,Eddie Jones,jonesed02,224,East,False
+1999,1999-00,Gary Payton,paytoga01,56,West,False
+1999,1999-00,Glenn Robinson,robingl01,299,East,False
+1999,1999-00,Grant Hill,hillgr01,255,East,False
+1999,1999-00,Jason Kidd,kiddja01,467,West,False
+1999,1999-00,Jerry Stackhouse,stackje01,711,East,False
+1999,1999-00,John Stockton,stockjo01,304,West,False
+1999,1999-00,Karl Malone,malonka01,252,West,False
+1999,1999-00,Kevin Garnett,garneke01,708,West,False
+1999,1999-00,Kobe Bryant,bryanko01,977,West,False
+1999,1999-00,Michael Finley,finlemi01,714,West,False
+1999,1999-00,Rasheed Wallace,wallara01,739,West,False
+1999,1999-00,Ray Allen,allenra02,951,East,False
+1999,1999-00,Reggie Miller,millere01,397,East,False
+1999,1999-00,Shaquille O'Neal,onealsh01,406,West,False
+1999,1999-00,Tim Duncan,duncati01,1495,West,False
+1999,1999-00,Vince Carter,cartevi01,1713,East,False
+2000,2000-01,Allan Houston,houstal01,275,East,False
+2000,2000-01,Allen Iverson,iversal01,947,East,False
+2000,2000-01,Alonzo Mourning,mournal01,297,East,True
+2000,2000-01,Anthony Mason,masonan01,193,East,False
+2000,2000-01,Antonio Davis,davisan01,213,East,True
+2000,2000-01,Antonio McDyess,mcdyean01,686,West,False
+2000,2000-01,Chris Webber,webbech01,185,West,False
+2000,2000-01,David Robinson,robinda01,764,West,False
+2000,2000-01,Dikembe Mutombo,mutomdi01,87,East,True
+2000,2000-01,Gary Payton,paytoga01,56,West,False
+2000,2000-01,Glenn Robinson,robingl01,299,East,False
+2000,2000-01,Grant Hill,hillgr01,255,East,True
+2000,2000-01,Jason Kidd,kiddja01,467,West,False
+2000,2000-01,Jerry Stackhouse,stackje01,711,East,False
+2000,2000-01,Karl Malone,malonka01,252,West,False
+2000,2000-01,Kevin Garnett,garneke01,708,West,False
+2000,2000-01,Kobe Bryant,bryanko01,977,West,False
+2000,2000-01,Latrell Sprewell,sprewla01,84,East,True
+2000,2000-01,Michael Finley,finlemi01,714,West,False
+2000,2000-01,Rasheed Wallace,wallara01,739,West,False
+2000,2000-01,Ray Allen,allenra02,951,East,False
+2000,2000-01,Shaquille O'Neal,onealsh01,406,West,True
+2000,2000-01,Stephon Marbury,marbust01,950,East,False
+2000,2000-01,Theo Ratliff,ratlith01,689,East,True
+2000,2000-01,Tim Duncan,duncati01,1495,West,False
+2000,2000-01,Tracy McGrady,mcgratr01,1503,East,False
+2000,2000-01,Vince Carter,cartevi01,1713,East,False
+2000,2000-01,Vlade Divac,divacvl01,124,West,True
+2001,2001-02,Allen Iverson,iversal01,947,East,False
+2001,2001-02,Alonzo Mourning,mournal01,297,East,False
+2001,2001-02,Antoine Walker,walkean02,952,East,False
+2001,2001-02,Baron Davis,davisba01,1884,East,True
+2001,2001-02,Chris Webber,webbech01,185,West,False
+2001,2001-02,Dikembe Mutombo,mutomdi01,87,East,False
+2001,2001-02,Dirk Nowitzki,nowitdi01,1717,West,False
+2001,2001-02,Elton Brand,brandel01,1882,West,True
+2001,2001-02,Gary Payton,paytoga01,56,West,False
+2001,2001-02,Jason Kidd,kiddja01,467,East,False
+2001,2001-02,Jermaine O'Neal,onealje01,979,East,False
+2001,2001-02,Karl Malone,malonka01,252,West,True
+2001,2001-02,Kevin Garnett,garneke01,708,West,False
+2001,2001-02,Kobe Bryant,bryanko01,977,West,False
+2001,2001-02,Michael Jordan,jordami01,893,East,False
+2001,2001-02,Paul Pierce,piercpa01,1718,East,False
+2001,2001-02,Peja Stojaković,stojape01,978,West,False
+2001,2001-02,Ray Allen,allenra02,951,East,False
+2001,2001-02,Shaquille O'Neal,onealsh01,406,West,True
+2001,2001-02,Shareef Abdur-Rahim,abdursh01,949,East,False
+2001,2001-02,Steve Francis,francst01,1883,West,False
+2001,2001-02,Steve Nash,nashst01,959,West,False
+2001,2001-02,Tim Duncan,duncati01,1495,West,False
+2001,2001-02,Tracy McGrady,mcgratr01,1503,East,False
+2001,2001-02,Vince Carter,cartevi01,1713,East,True
+2001,2001-02,Wally Szczerbiak,szczewa02,1887,West,False
+2002,2002-03,Allen Iverson,iversal01,947,East,False
+2002,2002-03,Antoine Walker,walkean02,952,East,False
+2002,2002-03,Ben Wallace,wallabe01,1112,East,False
+2002,2002-03,Brad Miller,millebr01,1802,East,False
+2002,2002-03,Chris Webber,webbech01,185,West,True
+2002,2002-03,Dirk Nowitzki,nowitdi01,1717,West,False
+2002,2002-03,Gary Payton,paytoga01,56,West,False
+2002,2002-03,Jamal Mashburn,mashbja01,469,East,False
+2002,2002-03,Jason Kidd,kiddja01,467,East,False
+2002,2002-03,Jermaine O'Neal,onealje01,979,East,False
+2002,2002-03,Kevin Garnett,garneke01,708,West,False
+2002,2002-03,Kobe Bryant,bryanko01,977,West,False
+2002,2002-03,Michael Jordan,jordami01,893,East,False
+2002,2002-03,Paul Pierce,piercpa01,1718,East,False
+2002,2002-03,Peja Stojaković,stojape01,978,West,True
+2002,2002-03,Shaquille O'Neal,onealsh01,406,West,False
+2002,2002-03,Shawn Marion,mariosh01,1890,West,False
+2002,2002-03,Stephon Marbury,marbust01,950,West,False
+2002,2002-03,Steve Francis,francst01,1883,West,False
+2002,2002-03,Steve Nash,nashst01,959,West,False
+2002,2002-03,Tim Duncan,duncati01,1495,West,False
+2002,2002-03,Tracy McGrady,mcgratr01,1503,East,False
+2002,2002-03,Vince Carter,cartevi01,1713,East,False
+2002,2002-03,Yao Ming,mingya01,2397,West,False
+2002,2002-03,Zydrunas Ilgauskas,ilgauzy01,980,East,False
+2003,2003-04,Allen Iverson,iversal01,947,East,False
+2003,2003-04,Andrei Kirilenko,kirilan01,1905,West,False
+2003,2003-04,Baron Davis,davisba01,1884,East,False
+2003,2003-04,Ben Wallace,wallabe01,1112,East,False
+2003,2003-04,Brad Miller,millebr01,1802,West,False
+2003,2003-04,Dirk Nowitzki,nowitdi01,1717,West,False
+2003,2003-04,Jamaal Magloire,magloja01,2048,East,False
+2003,2003-04,Jason Kidd,kiddja01,467,East,False
+2003,2003-04,Jermaine O'Neal,onealje01,979,East,False
+2003,2003-04,Kenyon Martin,martike01,2030,East,False
+2003,2003-04,Kevin Garnett,garneke01,708,West,False
+2003,2003-04,Kobe Bryant,bryanko01,977,West,False
+2003,2003-04,Metta World Peace,artesro01,1897,East,False
+2003,2003-04,Michael Redd,reddmi01,2072,East,False
+2003,2003-04,Paul Pierce,piercpa01,1718,East,False
+2003,2003-04,Peja Stojaković,stojape01,978,West,False
+2003,2003-04,Ray Allen,allenra02,951,West,False
+2003,2003-04,Sam Cassell,cassesa01,208,West,False
+2003,2003-04,Shaquille O'Neal,onealsh01,406,West,False
+2003,2003-04,Steve Francis,francst01,1883,West,False
+2003,2003-04,Tim Duncan,duncati01,1495,West,False
+2003,2003-04,Tracy McGrady,mcgratr01,1503,East,False
+2003,2003-04,Vince Carter,cartevi01,1713,East,False
+2003,2003-04,Yao Ming,mingya01,2397,West,False
+2004,2004-05,Allen Iverson,iversal01,947,East,False
+2004,2004-05,Amar'e Stoudemire,stoudam01,2405,West,False
+2004,2004-05,Antawn Jamison,jamisan01,1712,East,False
+2004,2004-05,Ben Wallace,wallabe01,1112,East,False
+2004,2004-05,Dirk Nowitzki,nowitdi01,1717,West,False
+2004,2004-05,Dwyane Wade,wadedw01,2548,East,False
+2004,2004-05,Gilbert Arenas,arenagi01,2240,East,False
+2004,2004-05,Grant Hill,hillgr01,255,East,False
+2004,2004-05,Jermaine O'Neal,onealje01,979,East,False
+2004,2004-05,Kevin Garnett,garneke01,708,West,False
+2004,2004-05,Kobe Bryant,bryanko01,977,West,False
+2004,2004-05,LeBron James,jamesle01,2544,East,False
+2004,2004-05,Manu Ginóbili,ginobma01,1938,West,False
+2004,2004-05,Paul Pierce,piercpa01,1718,East,False
+2004,2004-05,Rashard Lewis,lewisra02,1740,West,False
+2004,2004-05,Ray Allen,allenra02,951,West,False
+2004,2004-05,Shaquille O'Neal,onealsh01,406,East,False
+2004,2004-05,Shawn Marion,mariosh01,1890,West,False
+2004,2004-05,Steve Nash,nashst01,959,West,False
+2004,2004-05,Tim Duncan,duncati01,1495,West,False
+2004,2004-05,Tracy McGrady,mcgratr01,1503,West,False
+2004,2004-05,Vince Carter,cartevi01,1713,East,False
+2004,2004-05,Yao Ming,mingya01,2397,West,False
+2004,2004-05,Zydrunas Ilgauskas,ilgauzy01,980,East,False
+2005,2005-06,Allen Iverson,iversal01,947,East,False
+2005,2005-06,Ben Wallace,wallabe01,1112,East,False
+2005,2005-06,Chauncey Billups,billuch01,1497,East,False
+2005,2005-06,Chris Bosh,boshch01,2547,East,False
+2005,2005-06,Dirk Nowitzki,nowitdi01,1717,West,False
+2005,2005-06,Dwyane Wade,wadedw01,2548,East,False
+2005,2005-06,Elton Brand,brandel01,1882,West,False
+2005,2005-06,Gilbert Arenas,arenagi01,2240,East,True
+2005,2005-06,Jermaine O'Neal,onealje01,979,East,True
+2005,2005-06,Kevin Garnett,garneke01,708,West,False
+2005,2005-06,Kobe Bryant,bryanko01,977,West,False
+2005,2005-06,LeBron James,jamesle01,2544,East,False
+2005,2005-06,Pau Gasol,gasolpa01,2200,West,False
+2005,2005-06,Paul Pierce,piercpa01,1718,East,False
+2005,2005-06,Rasheed Wallace,wallara01,739,East,False
+2005,2005-06,Ray Allen,allenra02,951,West,False
+2005,2005-06,Richard Hamilton,hamilri01,1888,East,False
+2005,2005-06,Shaquille O'Neal,onealsh01,406,East,False
+2005,2005-06,Shawn Marion,mariosh01,1890,West,False
+2005,2005-06,Steve Nash,nashst01,959,West,False
+2005,2005-06,Tim Duncan,duncati01,1495,West,False
+2005,2005-06,Tony Parker,parketo01,2225,West,False
+2005,2005-06,Tracy McGrady,mcgratr01,1503,West,False
+2005,2005-06,Vince Carter,cartevi01,1713,East,False
+2005,2005-06,Yao Ming,mingya01,2397,West,False
+2006,2006-07,Allen Iverson,iversal01,947,West,True
+2006,2006-07,Amar'e Stoudemire,stoudam01,2405,West,False
+2006,2006-07,Carlos Boozer,boozeca01,2430,West,True
+2006,2006-07,Carmelo Anthony,anthoca01,2546,West,True
+2006,2006-07,Caron Butler,butleca01,2406,East,False
+2006,2006-07,Chauncey Billups,billuch01,1497,East,False
+2006,2006-07,Chris Bosh,boshch01,2547,East,False
+2006,2006-07,Dirk Nowitzki,nowitdi01,1717,West,False
+2006,2006-07,Dwight Howard,howardw01,2730,East,False
+2006,2006-07,Dwyane Wade,wadedw01,2548,East,False
+2006,2006-07,Gilbert Arenas,arenagi01,2240,East,False
+2006,2006-07,Jason Kidd,kiddja01,467,East,True
+2006,2006-07,Jermaine O'Neal,onealje01,979,East,False
+2006,2006-07,Joe Johnson,johnsjo02,2207,East,True
+2006,2006-07,Josh Howard,howarjo01,2572,West,True
+2006,2006-07,Kevin Garnett,garneke01,708,West,False
+2006,2006-07,Kobe Bryant,bryanko01,977,West,False
+2006,2006-07,LeBron James,jamesle01,2544,East,False
+2006,2006-07,Mehmet Okur ,okurme01,2246,West,True
+2006,2006-07,Ray Allen,allenra02,951,West,True
+2006,2006-07,Richard Hamilton,hamilri01,1888,East,False
+2006,2006-07,Shaquille O'Neal,onealsh01,406,East,False
+2006,2006-07,Shawn Marion,mariosh01,1890,West,False
+2006,2006-07,Steve Nash,nashst01,959,West,True
+2006,2006-07,Tim Duncan,duncati01,1495,West,False
+2006,2006-07,Tony Parker,parketo01,2225,West,False
+2006,2006-07,Tracy McGrady,mcgratr01,1503,West,False
+2006,2006-07,Vince Carter,cartevi01,1713,East,False
+2006,2006-07,Yao Ming,mingya01,2397,West,True
+2007,2007-08,Allen Iverson,iversal01,947,West,False
+2007,2007-08,Amar'e Stoudemire,stoudam01,2405,West,False
+2007,2007-08,Antawn Jamison,jamisan01,1712,East,False
+2007,2007-08,Brandon Roy,roybr01,200750,West,False
+2007,2007-08,Carlos Boozer,boozeca01,2430,West,False
+2007,2007-08,Carmelo Anthony,anthoca01,2546,West,False
+2007,2007-08,Caron Butler,butleca01,2406,East,True
+2007,2007-08,Chauncey Billups,billuch01,1497,East,False
+2007,2007-08,Chris Bosh,boshch01,2547,East,False
+2007,2007-08,Chris Paul,paulch01,101108,West,False
+2007,2007-08,David West,westda01,2561,West,False
+2007,2007-08,Dirk Nowitzki,nowitdi01,1717,West,False
+2007,2007-08,Dwight Howard,howardw01,2730,East,False
+2007,2007-08,Dwyane Wade,wadedw01,2548,East,False
+2007,2007-08,Jason Kidd,kiddja01,467,East,False
+2007,2007-08,Joe Johnson,johnsjo02,2207,East,False
+2007,2007-08,Kevin Garnett,garneke01,708,East,True
+2007,2007-08,Kobe Bryant,bryanko01,977,West,False
+2007,2007-08,LeBron James,jamesle01,2544,East,False
+2007,2007-08,Paul Pierce,piercpa01,1718,East,False
+2007,2007-08,Rasheed Wallace,wallara01,739,East,True
+2007,2007-08,Ray Allen,allenra02,951,East,True
+2007,2007-08,Richard Hamilton,hamilri01,1888,East,False
+2007,2007-08,Steve Nash,nashst01,959,West,False
+2007,2007-08,Tim Duncan,duncati01,1495,West,False
+2007,2007-08,Yao Ming,mingya01,2397,West,False
+2008,2008-09,Allen Iverson,iversal01,947,East,False
+2008,2008-09,Amar'e Stoudemire,stoudam01,2405,West,False
+2008,2008-09,Brandon Roy,roybr01,200750,West,False
+2008,2008-09,Chauncey Billups,billuch01,1497,West,False
+2008,2008-09,Chris Bosh,boshch01,2547,East,True
+2008,2008-09,Chris Paul,paulch01,101108,West,False
+2008,2008-09,Danny Granger,grangda01,101122,East,False
+2008,2008-09,David West,westda01,2561,West,False
+2008,2008-09,Devin Harris,harride01,2734,East,False
+2008,2008-09,Dirk Nowitzki,nowitdi01,1717,West,False
+2008,2008-09,Dwight Howard,howardw01,2730,East,False
+2008,2008-09,Dwyane Wade,wadedw01,2548,East,False
+2008,2008-09,Jameer Nelson,nelsoja01,2749,East,True
+2008,2008-09,Joe Johnson,johnsjo02,2207,East,False
+2008,2008-09,Kevin Garnett,garneke01,708,East,False
+2008,2008-09,Kobe Bryant,bryanko01,977,West,False
+2008,2008-09,LeBron James,jamesle01,2544,East,False
+2008,2008-09,Mo Williams,willima01,2590,East,True
+2008,2008-09,Pau Gasol,gasolpa01,2200,West,False
+2008,2008-09,Paul Pierce,piercpa01,1718,East,False
+2008,2008-09,Rashard Lewis,lewisra02,1740,East,False
+2008,2008-09,Ray Allen,allenra02,951,East,False
+2008,2008-09,Shaquille O'Neal,onealsh01,406,West,False
+2008,2008-09,Tim Duncan,duncati01,1495,West,False
+2008,2008-09,Tony Parker,parketo01,2225,West,False
+2008,2008-09,Yao Ming,mingya01,2397,West,False
+2009,2009-10,Al Horford,horfoal01,201143,East,False
+2009,2009-10,Allen Iverson,iversal01,947,East,True
+2009,2009-10,Amar'e Stoudemire,stoudam01,2405,West,False
+2009,2009-10,Brandon Roy,roybr01,200750,West,True
+2009,2009-10,Carmelo Anthony,anthoca01,2546,West,False
+2009,2009-10,Chauncey Billups,billuch01,1497,West,True
+2009,2009-10,Chris Bosh,boshch01,2547,East,False
+2009,2009-10,Chris Kaman,kamanch01,2549,West,True
+2009,2009-10,Chris Paul,paulch01,101108,West,True
+2009,2009-10,David Lee,leeda02,101135,East,True
+2009,2009-10,Deron Williams,willide01,101114,West,False
+2009,2009-10,Derrick Rose,rosede01,201565,East,False
+2009,2009-10,Dirk Nowitzki,nowitdi01,1717,West,False
+2009,2009-10,Dwight Howard,howardw01,2730,East,False
+2009,2009-10,Dwyane Wade,wadedw01,2548,East,False
+2009,2009-10,Gerald Wallace,wallage01,2222,East,False
+2009,2009-10,Jason Kidd,kiddja01,467,West,True
+2009,2009-10,Joe Johnson,johnsjo02,2207,East,False
+2009,2009-10,Kevin Durant,duranke01,201142,West,False
+2009,2009-10,Kevin Garnett,garneke01,708,East,False
+2009,2009-10,Kobe Bryant,bryanko01,977,West,True
+2009,2009-10,LeBron James,jamesle01,2544,East,False
+2009,2009-10,Pau Gasol,gasolpa01,2200,West,False
+2009,2009-10,Paul Pierce,piercpa01,1718,East,False
+2009,2009-10,Rajon Rondo,rondora01,200765,East,False
+2009,2009-10,Steve Nash,nashst01,959,West,False
+2009,2009-10,Tim Duncan,duncati01,1495,West,False
+2009,2009-10,Zach Randolph,randoza01,2216,West,False
+2010,2010-11,Al Horford,horfoal01,201143,East,False
+2010,2010-11,Amar'e Stoudemire,stoudam01,2405,East,False
+2010,2010-11,Blake Griffin,griffbl01,201933,West,False
+2010,2010-11,Carmelo Anthony,anthoca01,2546,West,False
+2010,2010-11,Chris Bosh,boshch01,2547,East,False
+2010,2010-11,Chris Paul,paulch01,101108,West,False
+2010,2010-11,Deron Williams,willide01,101114,West,False
+2010,2010-11,Derrick Rose,rosede01,201565,East,False
+2010,2010-11,Dirk Nowitzki,nowitdi01,1717,West,False
+2010,2010-11,Dwight Howard,howardw01,2730,East,False
+2010,2010-11,Dwyane Wade,wadedw01,2548,East,False
+2010,2010-11,Joe Johnson,johnsjo02,2207,East,False
+2010,2010-11,Kevin Durant,duranke01,201142,West,False
+2010,2010-11,Kevin Garnett,garneke01,708,East,False
+2010,2010-11,Kevin Love,loveke01,201567,West,True
+2010,2010-11,Kobe Bryant,bryanko01,977,West,False
+2010,2010-11,LeBron James,jamesle01,2544,East,False
+2010,2010-11,Manu Ginóbili,ginobma01,1938,West,False
+2010,2010-11,Pau Gasol,gasolpa01,2200,West,False
+2010,2010-11,Paul Pierce,piercpa01,1718,East,False
+2010,2010-11,Rajon Rondo,rondora01,200765,East,False
+2010,2010-11,Ray Allen,allenra02,951,East,False
+2010,2010-11,Russell Westbrook,westbru01,201566,West,False
+2010,2010-11,Tim Duncan,duncati01,1495,West,False
+2010,2010-11,Yao Ming,mingya01,2397,West,True
+2011,2011-12,Andre Iguodala,iguodan01,2738,East,False
+2011,2011-12,Andrew Bynum,bynuman01,101115,West,False
+2011,2011-12,Blake Griffin,griffbl01,201933,West,False
+2011,2011-12,Carmelo Anthony,anthoca01,2546,East,False
+2011,2011-12,Chris Bosh,boshch01,2547,East,False
+2011,2011-12,Chris Paul,paulch01,101108,West,False
+2011,2011-12,Deron Williams,willide01,101114,East,False
+2011,2011-12,Derrick Rose,rosede01,201565,East,False
+2011,2011-12,Dirk Nowitzki,nowitdi01,1717,West,False
+2011,2011-12,Dwight Howard,howardw01,2730,East,False
+2011,2011-12,Dwyane Wade,wadedw01,2548,East,False
+2011,2011-12,Joe Johnson,johnsjo02,2207,East,True
+2011,2011-12,Kevin Durant,duranke01,201142,West,False
+2011,2011-12,Kevin Love,loveke01,201567,West,False
+2011,2011-12,Kobe Bryant,bryanko01,977,West,False
+2011,2011-12,LaMarcus Aldridge,aldrila01,200746,West,False
+2011,2011-12,LeBron James,jamesle01,2544,East,False
+2011,2011-12,Luol Deng,denglu01,2736,East,False
+2011,2011-12,Marc Gasol,gasolma01,201188,West,False
+2011,2011-12,Paul Pierce,piercpa01,1718,East,False
+2011,2011-12,Rajon Rondo,rondora01,200765,East,True
+2011,2011-12,Roy Hibbert,hibbero01,201579,East,False
+2011,2011-12,Russell Westbrook,westbru01,201566,West,False
+2011,2011-12,Steve Nash,nashst01,959,West,False
+2011,2011-12,Tony Parker,parketo01,2225,West,False
+2012,2012-13,Blake Griffin,griffbl01,201933,West,False
+2012,2012-13,Brook Lopez,lopezbr01,201572,East,True
+2012,2012-13,Carmelo Anthony,anthoca01,2546,East,False
+2012,2012-13,Chris Bosh,boshch01,2547,East,False
+2012,2012-13,Chris Paul,paulch01,101108,West,False
+2012,2012-13,David Lee,leeda02,101135,West,False
+2012,2012-13,Dwight Howard,howardw01,2730,West,False
+2012,2012-13,Dwyane Wade,wadedw01,2548,East,False
+2012,2012-13,James Harden,hardeja01,201935,West,False
+2012,2012-13,Joakim Noah,noahjo01,201149,East,False
+2012,2012-13,Jrue Holiday,holidjr01,201950,East,False
+2012,2012-13,Kevin Durant,duranke01,201142,West,False
+2012,2012-13,Kevin Garnett,garneke01,708,East,False
+2012,2012-13,Kobe Bryant,bryanko01,977,West,False
+2012,2012-13,Kyrie Irving,irvinky01,202681,East,False
+2012,2012-13,LaMarcus Aldridge,aldrila01,200746,West,False
+2012,2012-13,LeBron James,jamesle01,2544,East,False
+2012,2012-13,Luol Deng,denglu01,2736,East,False
+2012,2012-13,Paul George,georgpa01,202331,East,False
+2012,2012-13,Rajon Rondo,rondora01,200765,East,True
+2012,2012-13,Russell Westbrook,westbru01,201566,West,False
+2012,2012-13,Tim Duncan,duncati01,1495,West,False
+2012,2012-13,Tony Parker,parketo01,2225,West,False
+2012,2012-13,Tyson Chandler,chandty01,2199,East,False
+2012,2012-13,Zach Randolph,randoza01,2216,West,False
+2013,2013-14,Anthony Davis,davisan02,203076,West,False
+2013,2013-14,Blake Griffin,griffbl01,201933,West,False
+2013,2013-14,Carmelo Anthony,anthoca01,2546,East,False
+2013,2013-14,Chris Bosh,boshch01,2547,East,False
+2013,2013-14,Chris Paul,paulch01,101108,West,False
+2013,2013-14,Damian Lillard,lillada01,203081,West,False
+2013,2013-14,DeMar DeRozan,derozde01,201942,East,False
+2013,2013-14,Dirk Nowitzki,nowitdi01,1717,West,False
+2013,2013-14,Dwight Howard,howardw01,2730,West,False
+2013,2013-14,Dwyane Wade,wadedw01,2548,East,False
+2013,2013-14,James Harden,hardeja01,201935,West,False
+2013,2013-14,Joakim Noah,noahjo01,201149,East,False
+2013,2013-14,Joe Johnson,johnsjo02,2207,East,False
+2013,2013-14,John Wall,walljo01,202322,East,False
+2013,2013-14,Kevin Durant,duranke01,201142,West,False
+2013,2013-14,Kevin Love,loveke01,201567,West,False
+2013,2013-14,Kobe Bryant,bryanko01,977,West,True
+2013,2013-14,Kyrie Irving,irvinky01,202681,East,False
+2013,2013-14,LaMarcus Aldridge,aldrila01,200746,West,False
+2013,2013-14,LeBron James,jamesle01,2544,East,False
+2013,2013-14,Paul George,georgpa01,202331,East,False
+2013,2013-14,Paul Millsap,millspa01,200794,East,False
+2013,2013-14,Roy Hibbert,hibbero01,201579,East,False
+2013,2013-14,Stephen Curry,curryst01,201939,West,False
+2013,2013-14,Tony Parker,parketo01,2225,West,False
+2014,2014-15,Al Horford,horfoal01,201143,East,False
+2014,2014-15,Anthony Davis,davisan02,203076,West,True
+2014,2014-15,Blake Griffin,griffbl01,201933,West,True
+2014,2014-15,Carmelo Anthony,anthoca01,2546,East,False
+2014,2014-15,Chris Bosh,boshch01,2547,East,False
+2014,2014-15,Chris Paul,paulch01,101108,West,False
+2014,2014-15,Damian Lillard,lillada01,203081,West,False
+2014,2014-15,DeMarcus Cousins,couside01,202326,West,False
+2014,2014-15,Dirk Nowitzki,nowitdi01,1717,West,False
+2014,2014-15,Dwyane Wade,wadedw01,2548,East,True
+2014,2014-15,James Harden,hardeja01,201935,West,False
+2014,2014-15,Jeff Teague,teaguje01,201952,East,False
+2014,2014-15,Jimmy Butler,butleji01,202710,East,False
+2014,2014-15,John Wall,walljo01,202322,East,False
+2014,2014-15,Kevin Durant,duranke01,201142,West,False
+2014,2014-15,Klay Thompson,thompkl01,202691,West,False
+2014,2014-15,Kobe Bryant,bryanko01,977,West,True
+2014,2014-15,Kyle Korver,korveky01,2594,East,False
+2014,2014-15,Kyle Lowry,lowryky01,200768,East,False
+2014,2014-15,Kyrie Irving,irvinky01,202681,East,False
+2014,2014-15,LaMarcus Aldridge,aldrila01,200746,West,False
+2014,2014-15,LeBron James,jamesle01,2544,East,False
+2014,2014-15,Marc Gasol,gasolma01,201188,West,False
+2014,2014-15,Pau Gasol,gasolpa01,2200,East,False
+2014,2014-15,Paul Millsap,millspa01,200794,East,False
+2014,2014-15,Russell Westbrook,westbru01,201566,West,False
+2014,2014-15,Stephen Curry,curryst01,201939,West,False
+2014,2014-15,Tim Duncan,duncati01,1495,West,False
+2015,2015-16,Al Horford,horfoal01,201143,East,False
+2015,2015-16,Andre Drummond,drumman01,203083,East,False
+2015,2015-16,Anthony Davis,davisan02,203076,West,False
+2015,2015-16,Carmelo Anthony,anthoca01,2546,East,False
+2015,2015-16,Chris Bosh,boshch01,2547,East,True
+2015,2015-16,Chris Paul,paulch01,101108,West,False
+2015,2015-16,DeMar DeRozan,derozde01,201942,East,False
+2015,2015-16,DeMarcus Cousins,couside01,202326,West,False
+2015,2015-16,Draymond Green,greendr01,203110,West,False
+2015,2015-16,Dwyane Wade,wadedw01,2548,East,False
+2015,2015-16,Isaiah Thomas,thomais02,202738,East,False
+2015,2015-16,James Harden,hardeja01,201935,West,False
+2015,2015-16,Jimmy Butler,butleji01,202710,East,True
+2015,2015-16,John Wall,walljo01,202322,East,False
+2015,2015-16,Kawhi Leonard,leonaka01,202695,West,False
+2015,2015-16,Kevin Durant,duranke01,201142,West,False
+2015,2015-16,Klay Thompson,thompkl01,202691,West,False
+2015,2015-16,Kobe Bryant,bryanko01,977,West,False
+2015,2015-16,Kyle Lowry,lowryky01,200768,East,False
+2015,2015-16,LaMarcus Aldridge,aldrila01,200746,West,False
+2015,2015-16,LeBron James,jamesle01,2544,East,False
+2015,2015-16,Pau Gasol,gasolpa01,2200,East,False
+2015,2015-16,Paul George,georgpa01,202331,East,False
+2015,2015-16,Paul Millsap,millspa01,200794,East,False
+2015,2015-16,Russell Westbrook,westbru01,201566,West,False
+2015,2015-16,Stephen Curry,curryst01,201939,West,False
+2016,2016-17,Anthony Davis,davisan02,203076,West,False
+2016,2016-17,Carmelo Anthony,anthoca01,2546,East,False
+2016,2016-17,DeAndre Jordan,jordade01,201599,West,False
+2016,2016-17,DeMar DeRozan,derozde01,201942,East,False
+2016,2016-17,DeMarcus Cousins,couside01,202326,West,False
+2016,2016-17,Draymond Green,greendr01,203110,West,False
+2016,2016-17,Giannis Antetokounmpo,antetgi01,203507,East,False
+2016,2016-17,Gordon Hayward,haywago01,202330,West,False
+2016,2016-17,Isaiah Thomas,thomais02,202738,East,False
+2016,2016-17,James Harden,hardeja01,201935,West,False
+2016,2016-17,Jimmy Butler,butleji01,202710,East,False
+2016,2016-17,John Wall,walljo01,202322,East,False
+2016,2016-17,Kawhi Leonard,leonaka01,202695,West,False
+2016,2016-17,Kemba Walker,walkeke02,202689,East,False
+2016,2016-17,Kevin Durant,duranke01,201142,West,False
+2016,2016-17,Kevin Love,loveke01,201567,East,True
+2016,2016-17,Klay Thompson,thompkl01,202691,West,False
+2016,2016-17,Kyle Lowry,lowryky01,200768,East,False
+2016,2016-17,Kyrie Irving,irvinky01,202681,East,False
+2016,2016-17,LeBron James,jamesle01,2544,East,False
+2016,2016-17,Marc Gasol,gasolma01,201188,West,False
+2016,2016-17,Paul George,georgpa01,202331,East,False
+2016,2016-17,Paul Millsap,millspa01,200794,East,False
+2016,2016-17,Russell Westbrook,westbru01,201566,West,False
+2016,2016-17,Stephen Curry,curryst01,201939,West,False
+2017,2017-18,Al Horford,horfoal01,201143,Team Stephen,False
+2017,2017-18,Andre Drummond,drumman01,203083,Team LeBron,False
+2017,2017-18,Anthony Davis,davisan02,203076,Team LeBron,False
+2017,2017-18,Bradley Beal,bealbr01,203078,Team LeBron,False
+2017,2017-18,Damian Lillard,lillada01,203081,Team Stephen,False
+2017,2017-18,DeMar DeRozan,derozde01,201942,Team Stephen,False
+2017,2017-18,DeMarcus Cousins,couside01,202326,Team LeBron,True
+2017,2017-18,Draymond Green,greendr01,203110,Team Stephen,False
+2017,2017-18,Giannis Antetokounmpo,antetgi01,203507,Team Stephen,False
+2017,2017-18,Goran Dragić,dragigo01,201609,Team LeBron,False
+2017,2017-18,James Harden,hardeja01,201935,Team Stephen,False
+2017,2017-18,Jimmy Butler,butleji01,202710,Team Stephen,True
+2017,2017-18,Joel Embiid,embiijo01,203954,Team Stephen,False
+2017,2017-18,John Wall,walljo01,202322,Team LeBron,True
+2017,2017-18,Karl-Anthony Towns,townska01,1626157,Team Stephen,False
+2017,2017-18,Kemba Walker,walkeke02,202689,Team LeBron,False
+2017,2017-18,Kevin Durant,duranke01,201142,Team LeBron,False
+2017,2017-18,Kevin Love,loveke01,201567,Team LeBron,True
+2017,2017-18,Klay Thompson,thompkl01,202691,Team Stephen,False
+2017,2017-18,Kristaps Porziņģis,porzikr01,204001,Team LeBron,True
+2017,2017-18,Kyle Lowry,lowryky01,200768,Team Stephen,False
+2017,2017-18,Kyrie Irving,irvinky01,202681,Team LeBron,False
+2017,2017-18,LaMarcus Aldridge,aldrila01,200746,Team LeBron,False
+2017,2017-18,LeBron James,jamesle01,2544,Team LeBron,False
+2017,2017-18,Paul George,georgpa01,202331,Team LeBron,False
+2017,2017-18,Russell Westbrook,westbru01,201566,Team LeBron,False
+2017,2017-18,Stephen Curry,curryst01,201939,Team Stephen,False
+2017,2017-18,Victor Oladipo,oladivi01,203506,Team LeBron,False
+2018,2018-19,Anthony Davis,davisan02,203076,Team LeBron,False
+2018,2018-19,Ben Simmons,simmobe01,1627732,Team LeBron,False
+2018,2018-19,Blake Griffin,griffbl01,201933,Team Giannis,False
+2018,2018-19,Bradley Beal,bealbr01,203078,Team LeBron,False
+2018,2018-19,D'Angelo Russell,russeda01,1626156,Team Giannis,False
+2018,2018-19,Damian Lillard,lillada01,203081,Team LeBron,False
+2018,2018-19,Dirk Nowitzki,nowitdi01,1717,Team Giannis,False
+2018,2018-19,Dwyane Wade,wadedw01,2548,Team LeBron,False
+2018,2018-19,Giannis Antetokounmpo,antetgi01,203507,Team Giannis,False
+2018,2018-19,James Harden,hardeja01,201935,Team LeBron,False
+2018,2018-19,Joel Embiid,embiijo01,203954,Team Giannis,False
+2018,2018-19,Karl-Anthony Towns,townska01,1626157,Team LeBron,False
+2018,2018-19,Kawhi Leonard,leonaka01,202695,Team LeBron,False
+2018,2018-19,Kemba Walker,walkeke02,202689,Team Giannis,False
+2018,2018-19,Kevin Durant,duranke01,201142,Team LeBron,False
+2018,2018-19,Khris Middleton,middlkh01,203114,Team Giannis,False
+2018,2018-19,Klay Thompson,thompkl01,202691,Team LeBron,False
+2018,2018-19,Kyle Lowry,lowryky01,200768,Team Giannis,False
+2018,2018-19,Kyrie Irving,irvinky01,202681,Team LeBron,False
+2018,2018-19,LaMarcus Aldridge,aldrila01,200746,Team LeBron,False
+2018,2018-19,LeBron James,jamesle01,2544,Team LeBron,False
+2018,2018-19,Nikola Jokić,jokicni01,203999,Team Giannis,False
+2018,2018-19,Nikola Vučević,vucevni01,202696,Team Giannis,False
+2018,2018-19,Paul George,georgpa01,202331,Team Giannis,False
+2018,2018-19,Russell Westbrook,westbru01,201566,Team Giannis,False
+2018,2018-19,Stephen Curry,curryst01,201939,Team Giannis,False
+2018,2018-19,Victor Oladipo,oladivi01,203506,Team Giannis,True
+2019,2019-20,Anthony Davis,davisan02,203076,Team LeBron,False
+2019,2019-20,Bam Adebayo,adebaba01,1628389,Team Giannis,False
+2019,2019-20,Ben Simmons,simmobe01,1627732,Team LeBron,False
+2019,2019-20,Brandon Ingram,ingrabr01,1627742,Team Giannis,False
+2019,2019-20,Chris Paul,paulch01,101108,Team LeBron,False
+2019,2019-20,Damian Lillard,lillada01,203081,Team LeBron,True
+2019,2019-20,Devin Booker,bookede01,1626164,Team LeBron,False
+2019,2019-20,Domantas Sabonis,sabondo01,1627734,Team LeBron,False
+2019,2019-20,Donovan Mitchell,mitchdo01,1628378,Team Giannis,False
+2019,2019-20,Giannis Antetokounmpo,antetgi01,203507,Team Giannis,False
+2019,2019-20,James Harden,hardeja01,201935,Team LeBron,False
+2019,2019-20,Jayson Tatum,tatumja01,1628369,Team LeBron,False
+2019,2019-20,Jimmy Butler,butleji01,202710,Team Giannis,False
+2019,2019-20,Joel Embiid,embiijo01,203954,Team Giannis,False
+2019,2019-20,Kawhi Leonard,leonaka01,202695,Team LeBron,False
+2019,2019-20,Kemba Walker,walkeke02,202689,Team Giannis,False
+2019,2019-20,Khris Middleton,middlkh01,203114,Team Giannis,False
+2019,2019-20,Kyle Lowry,lowryky01,200768,Team Giannis,False
+2019,2019-20,LeBron James,jamesle01,2544,Team LeBron,False
+2019,2019-20,Luka Dončić,doncilu01,1629029,Team LeBron,False
+2019,2019-20,Nikola Jokić,jokicni01,203999,Team LeBron,False
+2019,2019-20,Pascal Siakam,siakapa01,1627783,Team Giannis,False
+2019,2019-20,Rudy Gobert,goberru01,203497,Team Giannis,False
+2019,2019-20,Russell Westbrook,westbru01,201566,Team LeBron,False
+2019,2019-20,Trae Young,youngtr01,1629027,Team Giannis,False
+2020,2020-21,Anthony Davis,davisan02,203076,Team Durant,True
+2020,2020-21,Ben Simmons,simmobe01,1627732,Team LeBron,True
+2020,2020-21,Bradley Beal,bealbr01,203078,Team Durant,False
+2020,2020-21,Chris Paul,paulch01,101108,Team LeBron,False
+2020,2020-21,Damian Lillard,lillada01,203081,Team LeBron,False
+2020,2020-21,Devin Booker,bookede01,1626164,Team Durant,True
+2020,2020-21,Domantas Sabonis,sabondo01,1627734,Team LeBron,False
+2020,2020-21,Donovan Mitchell,mitchdo01,1628378,Team Durant,False
+2020,2020-21,Giannis Antetokounmpo,antetgi01,203507,Team LeBron,False
+2020,2020-21,James Harden,hardeja01,201935,Team Durant,False
+2020,2020-21,Jaylen Brown,brownja02,1627759,Team LeBron,False
+2020,2020-21,Jayson Tatum,tatumja01,1628369,Team Durant,False
+2020,2020-21,Joel Embiid,embiijo01,203954,Team Durant,True
+2020,2020-21,Julius Randle,randlju01,203944,Team Durant,False
+2020,2020-21,Kawhi Leonard,leonaka01,202695,Team Durant,False
+2020,2020-21,Kevin Durant,duranke01,201142,Team Durant,True
+2020,2020-21,Kyrie Irving,irvinky01,202681,Team Durant,False
+2020,2020-21,LeBron James,jamesle01,2544,Team LeBron,False
+2020,2020-21,Luka Dončić,doncilu01,1629029,Team LeBron,False
+2020,2020-21,Mike Conley,conlemi01,201144,Team Durant,False
+2020,2020-21,Nikola Jokić,jokicni01,203999,Team LeBron,False
+2020,2020-21,Nikola Vučević,vucevni01,202696,Team Durant,False
+2020,2020-21,Paul George,georgpa01,202331,Team LeBron,False
+2020,2020-21,Rudy Gobert,goberru01,203497,Team LeBron,False
+2020,2020-21,Stephen Curry,curryst01,201939,Team LeBron,False
+2020,2020-21,Zach LaVine,lavinza01,203897,Team Durant,False
+2020,2020-21,Zion Williamson,willizi01,1629627,Team Durant,False
+2021,2021-22,Andrew Wiggins,wiggian01,203952,Team Durant,False
+2021,2021-22,Chris Paul,paulch01,101108,Team LeBron,False
+2021,2021-22,Darius Garland,garlada01,1629636,Team LeBron,False
+2021,2021-22,DeMar DeRozan,derozde01,201942,Team LeBron,False
+2021,2021-22,Dejounte Murray,murrade01,1627749,Team Durant,False
+2021,2021-22,Devin Booker,bookede01,1626164,Team Durant,False
+2021,2021-22,Donovan Mitchell,mitchdo01,1628378,Team LeBron,True
+2021,2021-22,Draymond Green,greendr01,203110,Team Durant,True
+2021,2021-22,Fred VanVleet,vanvlfr01,1627832,Team LeBron,False
+2021,2021-22,Giannis Antetokounmpo,antetgi01,203507,Team LeBron,False
+2021,2021-22,Ja Morant,moranja01,1629630,Team Durant,False
+2021,2021-22,James Harden,hardeja01,201935,Team LeBron,True
+2021,2021-22,Jarrett Allen,allenja01,1628386,Team LeBron,False
+2021,2021-22,Jayson Tatum,tatumja01,1628369,Team Durant,False
+2021,2021-22,Jimmy Butler,butleji01,202710,Team LeBron,False
+2021,2021-22,Joel Embiid,embiijo01,203954,Team Durant,False
+2021,2021-22,Karl-Anthony Towns,townska01,1626157,Team Durant,False
+2021,2021-22,Kevin Durant,duranke01,201142,Team Durant,True
+2021,2021-22,Khris Middleton,middlkh01,203114,Team Durant,False
+2021,2021-22,LaMelo Ball,ballla01,1630163,Team Durant,False
+2021,2021-22,LeBron James,jamesle01,2544,Team LeBron,False
+2021,2021-22,Luka Dončić,doncilu01,1629029,Team LeBron,False
+2021,2021-22,Nikola Jokić,jokicni01,203999,Team LeBron,False
+2021,2021-22,Rudy Gobert,goberru01,203497,Team Durant,False
+2021,2021-22,Stephen Curry,curryst01,201939,Team LeBron,False
+2021,2021-22,Trae Young,youngtr01,1629027,Team Durant,False
+2021,2021-22,Zach LaVine,lavinza01,203897,Team Durant,False
+2022,2022-23,Anthony Edwards,edwaran01,1630162,LeBron,False
+2022,2022-23,Bam Adebayo,adebaba01,1628389,Giannis,False
+2022,2022-23,Damian Lillard,lillada01,203081,Giannis,False
+2022,2022-23,De'Aaron Fox,foxde01,1628368,LeBron,False
+2022,2022-23,DeMar DeRozan,derozde01,201942,Giannis,False
+2022,2022-23,Domantas Sabonis,sabondo01,1627734,Giannis,False
+2022,2022-23,Donovan Mitchell,mitchdo01,1628378,Giannis,False
+2022,2022-23,Giannis Antetokounmpo,antetgi01,203507,Giannis,False
+2022,2022-23,Ja Morant,moranja01,1629630,Giannis,False
+2022,2022-23,Jaren Jackson Jr.,jacksja02,1628991,LeBron,False
+2022,2022-23,Jaylen Brown,brownja02,1627759,LeBron,False
+2022,2022-23,Jayson Tatum,tatumja01,1628369,Giannis,False
+2022,2022-23,Joel Embiid,embiijo01,203954,LeBron,False
+2022,2022-23,Jrue Holiday,holidjr01,201950,Giannis,False
+2022,2022-23,Julius Randle,randlju01,203944,LeBron,False
+2022,2022-23,Kevin Durant,duranke01,201142,Giannis,True
+2022,2022-23,Kyrie Irving,irvinky01,202681,LeBron,False
+2022,2022-23,Lauri Markkanen,markkla01,1628374,Giannis,False
+2022,2022-23,LeBron James,jamesle01,2544,LeBron,False
+2022,2022-23,Luka Dončić,doncilu01,1629029,LeBron,False
+2022,2022-23,Nikola Jokić,jokicni01,203999,LeBron,False
+2022,2022-23,Pascal Siakam,siakapa01,1627783,Giannis,False
+2022,2022-23,Paul George,georgpa01,202331,LeBron,False
+2022,2022-23,Shai Gilgeous-Alexander,gilgesh01,1628983,Giannis,False
+2022,2022-23,Stephen Curry,curryst01,201939,LeBron,True
+2022,2022-23,Tyrese Haliburton,halibty01,1630169,LeBron,False
+2022,2022-23,Zion Williamson,willizi01,1629627,LeBron,True
+2023,2023-24,Anthony Davis,davisan02,203076,West,False
+2023,2023-24,Anthony Edwards,edwaran01,1630162,West,False
+2023,2023-24,Bam Adebayo,adebaba01,1628389,East,False
+2023,2023-24,Damian Lillard,lillada01,203081,East,False
+2023,2023-24,Devin Booker,bookede01,1626164,West,False
+2023,2023-24,Donovan Mitchell,mitchdo01,1628378,East,False
+2023,2023-24,Giannis Antetokounmpo,antetgi01,203507,East,False
+2023,2023-24,Jalen Brunson,brunsja01,1628973,East,False
+2023,2023-24,Jaylen Brown,brownja02,1627759,East,False
+2023,2023-24,Jayson Tatum,tatumja01,1628369,East,False
+2023,2023-24,Joel Embiid,embiijo01,203954,East,True
+2023,2023-24,Julius Randle,randlju01,203944,East,True
+2023,2023-24,Karl-Anthony Towns,townska01,1626157,West,False
+2023,2023-24,Kawhi Leonard,leonaka01,202695,West,False
+2023,2023-24,Kevin Durant,duranke01,201142,West,False
+2023,2023-24,LeBron James,jamesle01,2544,West,False
+2023,2023-24,Luka Dončić,doncilu01,1629029,West,False
+2023,2023-24,Nikola Jokić,jokicni01,203999,West,False
+2023,2023-24,Paolo Banchero,banchpa01,1631094,East,False
+2023,2023-24,Paul George,georgpa01,202331,West,False
+2023,2023-24,Scottie Barnes,barnesc01,1630567,East,False
+2023,2023-24,Shai Gilgeous-Alexander,gilgesh01,1628983,West,False
+2023,2023-24,Stephen Curry,curryst01,201939,West,False
+2023,2023-24,Trae Young,youngtr01,1629027,East,False
+2023,2023-24,Tyrese Haliburton,halibty01,1630169,East,False
+2023,2023-24,Tyrese Maxey,maxeyty01,1630178,East,False
+2024,2024-25,Alperen Şengün,sengual01,1630578,Team Chuck,False
+2024,2024-25,Anthony Davis,davisan02,203076,Team Shaq,True
+2024,2024-25,Anthony Edwards,edwaran01,1630162,Team Kenny,True
+2024,2024-25,Cade Cunningham,cunnica01,1630595,Team Kenny,False
+2024,2024-25,Damian Lillard,lillada01,203081,Team Shaq,False
+2024,2024-25,Darius Garland,garlada01,1629636,Team Kenny,False
+2024,2024-25,Donovan Mitchell,mitchdo01,1628378,Team Chuck,False
+2024,2024-25,Evan Mobley,mobleev01,1630596,Team Kenny,False
+2024,2024-25,Giannis Antetokounmpo,antetgi01,203507,Team Chuck,True
+2024,2024-25,Jalen Brunson,brunsja01,1628973,Team Kenny,False
+2024,2024-25,Jalen Williams,willija06,1631114,Team Kenny,False
+2024,2024-25,James Harden,hardeja01,201935,Team Shaq,False
+2024,2024-25,Jaren Jackson Jr.,jacksja02,1628991,Team Kenny,False
+2024,2024-25,Jaylen Brown,brownja02,1627759,Team Shaq,False
+2024,2024-25,Jayson Tatum,tatumja01,1628369,Team Shaq,False
+2024,2024-25,Karl-Anthony Towns,townska01,1626157,Team Chuck,False
+2024,2024-25,Kevin Durant,duranke01,201142,Team Shaq,False
+2024,2024-25,Kyrie Irving,irvinky01,202681,Team Shaq,False
+2024,2024-25,LeBron James,jamesle01,2544,Team Shaq,True
+2024,2024-25,Nikola Jokić,jokicni01,203999,Team Chuck,False
+2024,2024-25,Pascal Siakam,siakapa01,1627783,Team Chuck,False
+2024,2024-25,Shai Gilgeous-Alexander,gilgesh01,1628983,Team Chuck,False
+2024,2024-25,Stephen Curry,curryst01,201939,Team Shaq,False
+2024,2024-25,Trae Young,youngtr01,1629027,Team Chuck,False
+2024,2024-25,Tyler Herro,herroty01,1629639,Team Kenny,False
+2024,2024-25,Victor Wembanyama,wembavi01,1641705,Team Chuck,False
+2025,2025-26,Alperen Şengün,sengual01,1630578,Team World,False
+2025,2025-26,Anthony Edwards,edwaran01,1630162,Team Stars,False
+2025,2025-26,Brandon Ingram,ingrabr01,1627742,Team Stripes,False
+2025,2025-26,Cade Cunningham,cunnica01,1630595,Team Stars,False
+2025,2025-26,Chet Holmgren,holmgch01,1631096,Team Stars,False
+2025,2025-26,De'Aaron Fox,foxde01,1628368,Team Stripes,False
+2025,2025-26,Deni Avdija,avdijde01,1630166,Team World,False
+2025,2025-26,Devin Booker,bookede01,1626164,Team Stars,False
+2025,2025-26,Donovan Mitchell,mitchdo01,1628378,Team Stripes,False
+2025,2025-26,Giannis Antetokounmpo,antetgi01,203507,Team World,True
+2025,2025-26,Jalen Brunson,brunsja01,1628973,Team Stripes,False
+2025,2025-26,Jalen Duren,durenja01,1631105,Team Stars,False
+2025,2025-26,Jalen Johnson,johnsja05,1630552,Team Stars,False
+2025,2025-26,Jamal Murray,murraja01,1627750,Team World,False
+2025,2025-26,Jaylen Brown,brownja02,1627759,Team Stripes,False
+2025,2025-26,Karl-Anthony Towns,townska01,1626157,Team World,False
+2025,2025-26,Kawhi Leonard,leonaka01,202695,Team Stripes,False
+2025,2025-26,Kevin Durant,duranke01,201142,Team Stripes,False
+2025,2025-26,LeBron James,jamesle01,2544,Team Stripes,False
+2025,2025-26,Luka Dončić,doncilu01,1629029,Team World,False
+2025,2025-26,Nikola Jokić,jokicni01,203999,Team World,False
+2025,2025-26,Norman Powell,powelno01,1626181,Team World,False
+2025,2025-26,Pascal Siakam,siakapa01,1627783,Team World,False
+2025,2025-26,Scottie Barnes,barnesc01,1630567,Team Stars,False
+2025,2025-26,Shai Gilgeous-Alexander,gilgesh01,1628983,Team World,True
+2025,2025-26,Stephen Curry,curryst01,201939,Team Stripes,True
+2025,2025-26,Tyrese Maxey,maxeyty01,1630178,Team Stars,False
+2025,2025-26,Victor Wembanyama,wembavi01,1641705,Team World,False
