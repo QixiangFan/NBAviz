@@ -50,6 +50,7 @@ export function initSnap(selector) {
 
   function settle() {
     if (touching || lenis.isStopped) return;
+    if (lenis.isScrolling === "smooth") return schedule();   // wait for the glide to finish, not just the next frame
     const y = window.scrollY;
     const vh = window.innerHeight;
     const tops = [...document.querySelectorAll(selector)].map((el) => el.getBoundingClientRect().top + y).sort((a, b) => a - b);

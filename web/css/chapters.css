@@ -172,7 +172,7 @@
 .ghost-glyphs text { font: 600 11px var(--mono); fill: var(--ink-2); text-anchor: middle; }
 
 /* --- Q4: player cards -------------------------------------------------------- */
-.players { padding: 6vh 5vw 14vh; position: relative; }
+.players { padding: 6vh 5vw; position: relative; }
 .players-controls { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 28px; }
 .players-court { display: grid; grid-template-columns: minmax(250px, 1fr) minmax(320px, 1.25fr) minmax(250px, 1fr); gap: 3vw; align-items: center; }
 .player-card { perspective: 1000px; }
@@ -224,7 +224,8 @@
 .duel .spoke { stroke: var(--grid); }
 .duel .axis-name { font: 800 15px var(--display); text-transform: uppercase; fill: var(--ink); }
 .duel .shape { stroke-width: 2.5; stroke-linejoin: round; }
-.mvp-hall { margin-top: 12vh; padding-top: 32px; border-top: 1px solid var(--line); }
+.mvp { padding: 6vh 5vw 14vh; }   /* its own section so the cards above fit one screen and snap whole */
+.mvp-hall { padding-top: 32px; border-top: 1px solid var(--line); }
 .mvp-head { display: flex; align-items: center; gap: 16px; }
 .mvp-row { display: flex; gap: 14px; margin-top: 24px; overflow: hidden; }
 .mvp-ghost {
