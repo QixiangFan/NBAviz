@@ -1,7 +1,8 @@
 // 3rd quarter, the main message (sketches QF8 / KN7 / JB2 / JB4 / JB6). Each team is a ball with its logo.
 // Scroll steps move the same balls from volume to accuracy to efficiency, zoom out to every season
-// (correlation lines), pour every team-season into one cloud (volume × accuracy), then sort the cloud's
-// four corners into four groups. The last step hands over the controls.
+// (correlation lines), pour every team-season into one cloud (volume × accuracy), light up the champions
+// in it, then sort the cloud's four corners into four groups. The last step hands over the controls. The
+// reader's team (ui/team.js) is ringed in its colors throughout.
 import { season as fmtSeason } from "../data.js";
 import { dur, instant } from "../motion.js";
 import { teamColors } from "../media.js";
@@ -9,6 +10,7 @@ import { setupSteps, h, b } from "./steps.js";
 import { ballSeams } from "./court.js";
 import { segmented, slider } from "../ui/controls.js";
 import { showTip, hideTip } from "../ui/tooltip.js";
+import { getTeam, onTeam, openTeamPicker } from "../ui/team.js";
 
 export const METRICS = [
   { key: "fg3a_rate", name: "3PA rate", label: "Volume", long: "share of shots that are threes", color: "#ec5e22" },
@@ -23,6 +25,12 @@ const pct = d3.format(".1%");
 const pct0 = d3.format(".0%");
 const r2 = (v) => (v < 0 ? "−" : "") + Math.abs(v).toFixed(2);
 const ordinalLow = (k) => (k === 1 ? "lowest" : `${["", "", "second", "third", "fourth", "fifth"][k] || `${k}th`}-lowest`);
+/** A three-point crown w wide, centered on the origin: the champion's ball wears it. */
+const crown = (w) => {
+  const x = w / 2;
+  const y = w * 0.36;
+  return `M${-x},${y}L${-x},${-y / 2}L${-x / 2},${y * 0.15}L0,${-y}L${x / 2},${y * 0.15}L${x},${-y / 2}L${x},${y}Z`;
+};
 
 export function initTeams(data) {
   const teams = data.teams;
@@ -46,19 +54,28 @@ export function initTeams(data) {
   const shade = (d) => (d.win_pct >= 0.5 ? 0.9 : 0.22);
   const winners = everyTeam.filter((d) => d.win_pct >= 0.5);
   const winnersWhere = (test) => pct0(d3.mean(winners, (d) => (test(d) ? 1 : 0)));
+  // Champions turn gold from the champions step on; the reader's team is ringed in its colors
+  const champOf = new Map(data.champs.map((c) => [c.season, c.team_id]));
+  const isChamp = (d) => champOf.get(d.season) === d.team_id;
+  const champs = everyTeam.filter(isChamp);
+  const champsWhere = (test) => champs.filter(test).length;
+  let fan = getTeam();
+  const isFan = (d) => d.team_id === fan;
 
   // Logos: a team whose logo fails to load (e.g. offline) falls back to its abbreviation
   const failed = new Set();
   const logoOf = (d) => { const url = data.logo(d); return url && !failed.has(url) ? url : null; };
   now.forEach((d) => { if (logoOf(d)) new Image().src = logoOf(d); });   // fetch during the loader
 
-  // Title card: today's thirty logos drift past in three rows. Each row holds its logos twice, so
-  // sliding it by half its width loops without a seam.
-  const wall = now.map(logoOf).filter(Boolean);
+  // Title card: today's thirty logos drift past in three rows, the reader's team in color. Each row holds
+  // its logos twice, so sliding it by half its width loops without a seam.
+  const wall = now.filter(logoOf);
   d3.select("#q3-wall").selectAll("div").data(d3.range(3)).join("div").attr("class", "logo-row").each(function (k) {
     const row = wall.filter((_, i) => i % 3 === k);
-    for (const src of [...row, ...row]) this.append(h("img", { src, alt: "", decoding: "async" }));
+    for (const d of [...row, ...row]) this.append(h("img", { src: logoOf(d), alt: "", decoding: "async", "data-team": d.team_id }));
   });
+  const paintWall = () => document.querySelectorAll("#q3-wall img").forEach((img) => img.classList.toggle("fan", +img.dataset.team === fan));
+  paintWall();
 
   // --- SVG scaffold --------------------------------------------------------------------------
   const area = document.getElementById("q3-viz");
@@ -74,6 +91,7 @@ export function initTeams(data) {
   const gCorr = root.append("g").style("opacity", 0);
   const gQuads = root.append("g").style("opacity", 0);     // group labels and dividers
   const gCloud = root.append("g").attr("class", "cloud-corners").style("opacity", 0);
+  const gFan = root.append("g").attr("class", "fan-trail").style("opacity", 0);   // the reader's team, season to season
   const gDots = root.append("g").style("opacity", 0);      // every team-season: the cloud, then the groups
   const gBalls = root.append("g");
   const gAnnot = root.append("g").attr("class", "annot");
@@ -87,6 +105,21 @@ export function initTeams(data) {
   let current = null;           // the state currently on screen
   let dropped = false;          // the balls have made their entrance
   let hovered = null;           // the team-season under the pointer
+
+  // Tooltip for one team-season; metric: the stat on screen, if any
+  const teamTip = (d, metric = null) => ({
+    title: `${d.team_name} · ${fmtSeason(d.season)}`,
+    logo: logoOf(d),
+    accent: teamColors(d).accent,
+    rows: [
+      { value: pct(d.win_pct), label: `win % (${d.wins}-${d.games - d.wins})` },
+      ...METRICS.map((mm) => ({
+        value: pct(d[mm.key]), label: `${mm.name} (${d[`${mm.key}_z`] >= 0 ? "+" : "−"}${Math.abs(d[`${mm.key}_z`]).toFixed(1)} SD)`,
+        color: mm === metric ? mm.color : null,
+      })),
+    ],
+    note: [isChamp(d) && `${fmtSeason(d.season)} NBA champion`, isFan(d) && "Your team"].filter(Boolean).join(" · ") || null,
+  });
 
   // The hovered ball grows, takes its team's color as a ring and comes to the front
   function hover(d) {
@@ -182,13 +215,16 @@ export function initTeams(data) {
         const g = enter.append("g").attr("class", "ball")
           .attr("transform", (d) => `translate(${X(d)},${drop ? -R * 3 - Math.random() * ih * 0.4 : Y(d)}) scale(${drop ? 1 : 0.001})`);
         const body = g.append("g").attr("class", "ball-body");   // scaled on hover; the outer g places the ball
+        body.append("circle").attr("class", "fan-ring");
         body.append("circle").attr("class", "leather");
         body.append("path").attr("class", "seam");
         body.append("image").attr("class", "logo").on("error", function () {
           failed.add(this.getAttribute("href"));
           d3.select(this.closest("g.ball")).classed("has-logo", false);
         });
-        body.append("text");
+        body.append("text").attr("class", "abbr");
+        body.append("path").attr("class", "crown");
+        g.append("text").attr("class", "fan-tag").text("Your team");
         return g;
       },
       (update) => update,
@@ -196,16 +232,21 @@ export function initTeams(data) {
         return `${d3.select(this).attr("transform").replace(/scale\([^)]*\)/, "")} scale(0.001)`;
       }).remove(),
     );
-    balls.select("circle").attr("r", R);
-    balls.select("path").attr("d", ballSeams(R));
-    balls.select("text").text((d) => d.team);
+    balls.select(".leather").attr("r", R);
+    balls.select(".fan-ring").attr("r", R + 5);
+    balls.select(".seam").attr("d", ballSeams(R));
+    balls.select(".abbr").text((d) => d.team);
+    balls.select(".crown").attr("d", crown(R * 0.95)).attr("transform", `translate(${R * 0.62},${-R * 0.92}) rotate(20)`);
+    balls.select(".fan-tag").attr("y", R + 17);
     balls.style("--team", (d) => teamColors(d).accent).classed("hover", (d) => d === hovered);
     balls.select("image").attr("x", -R * 0.78).attr("y", -R * 0.78).attr("width", R * 1.56).attr("height", R * 1.56)
       .attr("href", logoOf);
     balls.classed("has-logo", (d) => !!logoOf(d));
     balls.classed("hot", (d) => st.highlight && d === most)
       .classed("cold", (d) => st.highlight && d === counter)
-      .classed("dim", (d) => st.highlight && d !== most && d !== counter);
+      .classed("dim", (d) => st.highlight && d !== most && d !== counter && !isFan(d))
+      .classed("champ", (d) => !!st.gold && isChamp(d))
+      .classed("fan", isFan);
     if (drop) {
       dropped = true;
       balls.transition().duration(1300).delay((_, i) => 120 + i * 35).ease(d3.easeBounceOut)
@@ -253,18 +294,7 @@ export function initTeams(data) {
       const d = rows[delaunay.find(px, py)];
       if (!d || Math.hypot(X(d) - px, Y(d) - py) > 36) { hideTip(); hover(null); return; }
       hover(d);
-      showTip(event, {
-        title: `${d.team_name} · ${fmtSeason(d.season)}`,
-        logo: logoOf(d),
-        accent: teamColors(d).accent,
-        rows: [
-          { value: pct(d.win_pct), label: `win % (${d.wins}-${d.games - d.wins})` },
-          ...METRICS.map((mm) => ({
-            value: pct(d[mm.key]), label: `${mm.name} (${d[`${mm.key}_z`] >= 0 ? "+" : "−"}${Math.abs(d[`${mm.key}_z`]).toFixed(1)} SD)`,
-            color: mm === st.metric ? mm.color : null,
-          })),
-        ],
-      });
+      showTip(event, teamTip(d, st.metric));
     }).on("pointerleave", () => { hideTip(); hover(null); });
   }
 
@@ -329,56 +359,121 @@ export function initTeams(data) {
     return [(d) => x(clampZ(d.fg3a_rate_z)), (d) => y(clampZ(d.fg3_pct_z))];
   };
 
-  // The legend is shared: above the cloud (whose x labels sit under it), under the groups
-  function dotLegend(t, y) {
-    const legend = gDots.selectAll("g.qkey").data([[0.9, "winning record"], [0.22, "losing record"]]).join((enter) => {
-      const g = enter.append("g").attr("class", "qkey").attr("transform", (_, i) => `translate(${i * 150},${y})`);
-      g.append("circle").attr("r", 4).style("fill", "var(--ink)");
+  // Dot styles. st.gold: champions in gold; st.spot (the champions step): everyone else faded; the reader's
+  // team ringed in its colors. Colors switch at once (CSS colors don't tween); opacity moves with the dots.
+  const isGold = (d, st) => !!st.gold && isChamp(d);
+  const dotOpacity = (d, st) => (st.spot && !isChamp(d) ? (isFan(d) ? 0.55 : 0.08) : isFan(d) || isGold(d, st) ? 1 : shade(d));
+  function paintDots(sel, st) {
+    sel.classed("champ", (d) => isGold(d, st)).classed("fan", isFan)
+      .style("fill", (d) => (isGold(d, st) ? "var(--gold)" : "var(--ink)"))
+      .style("stroke", (d) => (isFan(d) ? teamColors(d).accent : isGold(d, st) ? "var(--bg)" : null))
+      .style("stroke-width", (d) => (isFan(d) || isGold(d, st) ? 1.5 : null));
+    sel.filter((d) => isGold(d, st) || isFan(d)).raise();   // drawn over the rest
+  }
+
+  // The legend is shared: above the cloud (whose x labels sit under it), under the groups. Each key starts
+  // after the one before; narrow charts use the short labels.
+  function dotLegend(t, y, st) {
+    const fanRow = everyTeam.filter(isFan).at(-1);
+    const keys = [
+      ...(st.spot ? [] : [{ label: "winning record", short: "winning", opacity: 0.9 }, { label: "losing record", short: "losing", opacity: 0.22 }]),
+      ...(st.gold ? [{ label: "champion", short: "champion", fill: "var(--gold)" }] : []),
+      ...(st.spot ? [{ label: "every other team-season", short: "others", opacity: 0.22 }] : []),
+      ...(fanRow ? [{ label: `your team (${fanRow.team})`, short: fanRow.team, stroke: teamColors(fanRow).accent }] : []),
+    ];
+    const narrow = iw < 460;
+    const legend = gDots.selectAll("g.qkey").data(keys, (k) => k.label).join((enter) => {
+      const g = enter.append("g").attr("class", "qkey").attr("transform", `translate(0,${y})`);
+      g.append("circle").attr("r", 4);
       g.append("text").attr("x", 10).attr("dy", "0.35em").style("font", "500 11px var(--mono)").style("fill", "var(--ink-2)");
       return g;
     });
-    legend.transition(t).attr("transform", (_, i) => `translate(${i * 150},${y})`);
-    legend.select("circle").style("opacity", (k) => k[0]);
-    legend.select("text").text((k) => `= ${k[1]}`);
+    legend.select("circle").style("fill", (k) => k.fill || "var(--ink)").style("opacity", (k) => k.opacity ?? 1)
+      .style("stroke", (k) => k.stroke || null).style("stroke-width", (k) => (k.stroke ? 1.5 : null));
+    legend.select("text").text((k) => `= ${narrow ? k.short : k.label}`);
+    let x = 0;
+    const xs = legend.nodes().map((node) => {
+      const at = x;
+      x += 10 + node.querySelector("text").getComputedTextLength() + (narrow ? 14 : 24);
+      return at;
+    });
+    legend.transition(t).attr("transform", (_, i) => `translate(${xs[i]},${y})`);
+  }
+
+  // The reader's team, season to season: a faint line through its dots, labeled at the latest season
+  function fanTrail(t, X, Y, delay = 0) {
+    const rows = everyTeam.filter(isFan).sort((a, c) => a.season - c.season);
+    const latest = rows.at(-1);
+    gFan.transition(t).delay(instant ? 0 : delay).style("opacity", rows.length ? 1 : 0);
+    gFan.selectAll("path").data(rows.length ? [rows] : []).join("path")
+      .attr("d", d3.line().x(X).y(Y).curve(d3.curveCatmullRom.alpha(0.5)))
+      .style("stroke", latest && teamColors(latest).accent);
+    gFan.selectAll("text").data(latest ? [latest] : []).join("text")
+      .attr("x", (d) => X(d) + 9).attr("y", (d) => Y(d) - 9).text((d) => `${d.team} ${fmtSeason(d.season)}`);
+  }
+
+  // Every dot answers to the pointer: the nearest one within reach shows its numbers
+  function hoverDots(rows, X, Y) {
+    const delaunay = d3.Delaunay.from(rows, X, Y);
+    hit.style("pointer-events", "all").on("pointermove", (event) => {
+      const [px, py] = d3.pointer(event);
+      const d = rows[delaunay.find(px, py)];
+      if (!d || Math.hypot(X(d) - px, Y(d) - py) > 20) { hideTip(); return; }
+      showTip(event, teamTip(d));
+    }).on("pointerleave", hideTip);
   }
 
   // pour (arriving from the views above): the seasons pour in, oldest first. Otherwise (back from the
-  // groups, or a resize) every dot walks to its place in the cloud.
-  function cloud(t, pour) {
+  // groups, or a resize) every dot walks to its place in the cloud. In the champions step the gold dots
+  // swell one season after another, and only they (and the reader's team) answer to the pointer.
+  function cloud(t, pour, st) {
     const [X, Y] = cloudXY();
     const r = cloudR();
+    const size = (d) => (st.spot && isChamp(d) ? r * 2.2 : isFan(d) ? r * 1.6 : r);
+    const span = last - seasons[0];
     gDots.transition(t).style("opacity", 1);
     gCloud.transition(t).style("opacity", 1);
     const dots = gDots.selectAll("circle.dot").data(everyTeam, dotKey)
       .join((enter) => enter.append("circle").attr("class", "dot").attr("r", 0))
-      .style("fill", "var(--ink)").style("opacity", shade);
+      .call(paintDots, st);
     if (pour && !instant) {
-      const span = last - seasons[0];
-      dots.interrupt().attr("cx", X).attr("cy", Y).attr("r", 0)
+      dots.interrupt().attr("cx", X).attr("cy", Y).attr("r", 0).style("opacity", (d) => dotOpacity(d, st))
         .transition().delay((d) => 250 + ((d.season - seasons[0]) / span) * 1200 + Math.random() * 150)
-        .duration(500).ease(d3.easeBackOut).attr("r", r);
+        .duration(500).ease(d3.easeBackOut).attr("r", size);
     } else {
-      dots.transition(t).delay(() => (instant ? 0 : Math.random() * 300)).duration(instant ? 0 : 1100)
-        .attr("cx", X).attr("cy", Y).attr("r", r);
+      const delay = (d) => (instant ? 0 : st.spot && isChamp(d) ? 200 + ((d.season - seasons[0]) / span) * 900 : Math.random() * 300);
+      dots.transition(t).delay(delay).duration(instant ? 0 : 1100)
+        .attr("cx", X).attr("cy", Y).attr("r", size).style("opacity", (d) => dotOpacity(d, st));
     }
-    // The four corners, named as the groups they become
+    fanTrail(t, X, Y, pour ? 1700 : 0);
+    // The four corners, named as the groups they become; in the champions step, with their champions
     const short = iw < 560;
     const corners = [
-      [0, 0, "start", short ? "Fewer 3s · accurate" : "Fewer threes · more accurate"],
-      [iw, 0, "end", short ? "More 3s · accurate" : "More threes · more accurate"],
-      [0, ih, "start", short ? "Fewer 3s · inaccurate" : "Fewer threes · less accurate"],
-      [iw, ih, "end", short ? "More 3s · inaccurate" : "More threes · less accurate"],
+      [0, 0, "start", short ? "Fewer 3s · accurate" : "Fewer threes · more accurate", (d) => d.fg3a_rate_z <= 0 && d.fg3_pct_z > 0],
+      [iw, 0, "end", short ? "More 3s · accurate" : "More threes · more accurate", (d) => d.fg3a_rate_z > 0 && d.fg3_pct_z > 0],
+      [0, ih, "start", short ? "Fewer 3s · inaccurate" : "Fewer threes · less accurate", (d) => d.fg3a_rate_z <= 0 && d.fg3_pct_z <= 0],
+      [iw, ih, "end", short ? "More 3s · inaccurate" : "More threes · less accurate", (d) => d.fg3a_rate_z > 0 && d.fg3_pct_z <= 0],
     ];
-    gCloud.selectAll("text").data(corners).join("text")
-      .attr("x", (c) => c[0] + (c[2] === "start" ? 10 : -10)).attr("y", (c) => c[1] + (c[1] ? -12 : 20))
+    const cx = (c) => c[0] + (c[2] === "start" ? 10 : -10);
+    gCloud.selectAll("text.corner").data(corners).join("text").attr("class", "corner")
+      .attr("x", cx).attr("y", (c) => c[1] + (c[1] ? -12 : 20))
       .attr("text-anchor", (c) => c[2]).text((c) => c[3]);
-    dotLegend(t, -12);
+    const counts = gCloud.selectAll("text.count").data(st.spot ? corners : []).join((enter) => {
+      const text = enter.append("text").attr("class", "count");
+      text.append("tspan").attr("class", "mark").text("● ");
+      text.append("tspan").attr("class", "n");
+      return text;
+    });
+    counts.attr("x", cx).attr("y", (c) => c[1] + (c[1] ? -30 : 38)).attr("text-anchor", (c) => c[2]);
+    counts.select(".n").text((c) => `${champsWhere(c[4])} champions`);
+    dotLegend(t, -12, st);
+    hoverDots(st.spot ? everyTeam.filter((d) => isChamp(d) || isFan(d)) : everyTeam, X, Y);
   }
 
   // --- Every team-season: four groups -----------------------------------------------------------------
   // Each corner of the cloud lines up in its own quarter of the chart, best record first, so a dot
   // never leaves its corner; the best teams move first and fill the rows in reading order.
-  function quadrants(t) {
+  function quadrants(t, st) {
     const all = everyTeam;
     const blocks = [
       { volume: "low", accuracy: "high", col: 0, row: 0, name: "Fewer threes, more accurate" },
@@ -399,6 +494,7 @@ export function initTeams(data) {
       const members = all.filter((r) => (r.fg3a_rate_z > 0 ? "high" : "low") === blk.volume
         && (r.fg3_pct_z > 0 ? "high" : "low") === blk.accuracy).sort((a, c) => c.win_pct - a.win_pct);
       blk.n = members.length;
+      blk.champs = members.filter(isChamp).length;
       members.forEach((r, i) => {
         pos.set(r, [blk.col * bw + 24 + (i % cols) * d, blk.row * bh + 96 + Math.floor(i / cols) * d]);
         order.set(r, i / Math.max(1, members.length - 1));
@@ -407,23 +503,31 @@ export function initTeams(data) {
     gQuads.transition(t).style("opacity", 1);
     gDots.transition(t).style("opacity", 1);
     const [X, Y] = cloudXY();
+    const dot = Math.max(1.8, d * 0.36);
     gDots.selectAll("circle.dot").data(all, dotKey).join(
       (enter) => enter.append("circle").attr("class", "dot").attr("cx", X).attr("cy", Y).attr("r", cloudR()),   // e.g. a deep link
     )
-      .style("fill", "var(--ink)").style("opacity", shade)
+      .call(paintDots, st)
       .transition(t).delay((r) => (instant ? 0 : order.get(r) * 700)).duration(instant ? 0 : 1100)
-      .attr("cx", (r) => pos.get(r)[0]).attr("cy", (r) => pos.get(r)[1]).attr("r", Math.max(1.8, d * 0.36));
+      .attr("cx", (r) => pos.get(r)[0]).attr("cy", (r) => pos.get(r)[1]).attr("r", (r) => (isFan(r) ? dot * 1.3 : dot))
+      .style("opacity", (r) => dotOpacity(r, st));
     const labels = gQuads.selectAll("g.qlabel").data(blocks, (blk) => blk.name).join((enter) => {
       const g = enter.append("g").attr("class", "qlabel");
       g.append("text").attr("class", "quad-label");
       g.append("text").attr("class", "quad-value");
       g.append("text").attr("class", "quad-sub");
+      const champ = g.append("text").attr("class", "quad-champs");
+      champ.append("tspan").attr("class", "mark").text("● ");
+      champ.append("tspan").attr("class", "n");
       return g;
     }).attr("transform", (blk) => `translate(${blk.col * bw + 24},${blk.row * bh + 10})`);
     labels.select(".quad-label").attr("y", 16).text((blk) => blk.name);
     labels.select(".quad-value").attr("y", 58).text((blk) => pct(quad(blk.volume, blk.accuracy).win_pct));
     labels.select(".quad-sub").attr("y", 78).text((blk) => `average win % · ${blk.n} team-seasons`);
-    dotLegend(t, ih + 28);
+    labels.select(".quad-champs").attr("x", 132).attr("y", 52).style("display", st.gold ? null : "none")
+      .select(".n").text((blk) => `${blk.champs} champions`);
+    dotLegend(t, ih + 28, st);
+    hoverDots(all, (r) => pos.get(r)[0], (r) => pos.get(r)[1]);
     gQuads.selectAll("line.divider").data([[bw, bw, 0, ih], [0, iw, bh, bh]]).join("line").attr("class", "divider")
       .attr("x1", (q) => q[0]).attr("x2", (q) => q[1]).attr("y1", (q) => q[2]).attr("y2", (q) => q[3])
       .style("stroke", "rgba(242,238,230,0.14)");
@@ -447,11 +551,12 @@ export function initTeams(data) {
     if (st.view !== "history") gCorr.transition(t).style("opacity", 0);
     if (st.view !== "quads") gQuads.transition(t).style("opacity", 0);
     if (st.view !== "cloud") gCloud.transition(t).style("opacity", 0);
+    if (st.view !== "cloud") gFan.transition(t).style("opacity", 0);
     if (st.view !== "cloud" && st.view !== "quads") gDots.transition(t).style("opacity", 0);
     if (st.view === "scatter") scatter(st, t);
     if (st.view === "history") history(t, prevView !== "history" && animate);
-    if (st.view === "cloud") cloud(t, animate && prevView !== "cloud" && prevView !== "quads");
-    if (st.view === "quads") quadrants(t);
+    if (st.view === "cloud") cloud(t, animate && prevView !== "cloud" && prevView !== "quads", st);
+    if (st.view === "quads") quadrants(t, st);
   }
 
   // --- Steps ---------------------------------------------------------------------------------------------
@@ -466,15 +571,25 @@ export function initTeams(data) {
     { ...base, highlight: true, fit: true, metric: EFF },
     { ...base, view: "history" },
     { ...base, view: "cloud" },
-    { ...base, view: "quads" },
+    { ...base, view: "cloud", gold: true, spot: true },
+    { ...base, view: "quads", gold: true },
     null,   // explore: built from the controls
   ];
   const nAll = d3.sum(quads, (q) => q.n);
   const controls = h("div", { class: "controls" });
+  // The first card invites the reader to follow a team (the same picker as the HUD chip)
+  const teamBtn = h("button", { class: "btn", type: "button" });
+  teamBtn.addEventListener("click", () => openTeamPicker(teamBtn));
+  const paintCta = () => {
+    const row = now.find(isFan);
+    teamBtn.textContent = row ? `Your team: ${row.team}` : "Follow your team";
+  };
+  paintCta();
   const steps = [
     { num: "How to read", title: "Thirty teams, one question", body: [
       h("p", null, "Each logo is one team in ", fmtSeason(last), ". Left to right: how much more often than the league average it shot threes. Bottom to top: how often it won."),
-      h("p", null, "If more threes meant more wins, the balls would climb from left to right.")] },
+      h("p", null, "If more threes meant more wins, the balls would climb from left to right."),
+      h("p", { class: "team-cta" }, teamBtn, h("small", null, "It stays ringed in its colors from here on."))] },
     { num: "Step 2", title: "The most three-happy team", body: [
       h("p", null, most.team_name, " took ", b(pct(most.fg3a_rate)), " of its shots from three, the most in the league, and won ", b(pct0(most.win_pct)), " of its games."),
       h("p", null, counter.team_name, " had the ", ordinalLow(lowRank), " 3-point rate and won ", b(String(counter.wins)), " games.")] },
@@ -491,15 +606,20 @@ export function initTeams(data) {
       h("p", null, "All ", d3.format(",")(nAll), " team-seasons since ", fmtSeason(seasons[0]), ", each against its own season’s league. Left to right: how much more often it shot threes. Bottom to top: how much better it made them."),
       h("p", null, "Bright dots had winning records. ", b(winnersWhere((d) => d.fg3_pct_z > 0)), " of them sit above the middle line: more accurate than their league. Only ",
         b(winnersWhere((d) => d.fg3a_rate_z > 0)), " sit right of it: more threes.")] },
-    { num: "Step 8", title: "Four kinds of teams", body: [
+    { num: "Step 8", title: "Where the champions sit", body: [
+      h("p", null, "The ", String(champs.length), " champions since ", fmtSeason(seasons[0]), ", in gold. ", b(String(champsWhere((d) => d.fg3_pct_z > 0))),
+        " of them shot threes more accurately than their league. Only ", b(String(champsWhere((d) => d.fg3a_rate_z > 0))), " took more of them."),
+      h("p", null, "Count every shot, with threes worth 1.5 (eFG%), and ", b(String(champsWhere((d) => d.efg_z > 0))), " of the ", String(champs.length),
+        " beat their league. Hover a gold dot to find a team.")] },
+    { num: "Step 9", title: "Four kinds of teams", body: [
       h("p", null, "Cut the cloud at both averages and line up each corner’s teams, best record first."),
       h("p", null, "Accurate, low-volume teams won ", b(pct(quad("low", "high").win_pct)), ". High-volume, inaccurate teams won ", b(pct(quad("high", "low").win_pct)), ".")] },
     { num: "Your turn", title: "Run the seasons", body: [
-      h("p", null, "Pick a stat and a season, or press play to run every season since ", fmtSeason(seasons[0]), ". Hover a ball for its numbers."),
+      h("p", null, "Pick a stat and a season, or press play to run every season since ", fmtSeason(seasons[0]), ". Hover a ball for its numbers. The crown marks that season’s champion."),
       controls] },
   ];
 
-  const exploreState = () => ({ ...base, season: explore.season, metric: explore.metric, fit: true });
+  const exploreState = () => ({ ...base, season: explore.season, metric: explore.metric, fit: true, gold: true });
   const metricSeg = h("div");
   controls.append(metricSeg);
   segmented(metricSeg, METRICS.map((mm) => ({ value: mm.key, label: mm.label })), explore.metric.key, (k) => {
@@ -539,6 +659,12 @@ export function initTeams(data) {
     size();
     if (current) render(current, { animate: false });
   }).observe(area);
+  onTeam((id) => {
+    fan = id;
+    paintWall();
+    paintCta();
+    if (current) render(current, { animate: false });
+  });
 
   return { stepEl: (i) => story.els[i] };
 }

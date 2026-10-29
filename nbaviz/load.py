@@ -124,6 +124,7 @@ def league_seasons() -> pd.DataFrame:
     s["pace"] = 48 * s["poss"] / s["game_min"]
     s["ortg"] = 100 * s["pts"] / s["poss"]
     s["orb_pct"] = s["oreb"] / (s["oreb"] + s["opp_dreb"])
+    s["tov_pct"] = s["tov"] / (s["fga"] + 0.44 * s["fta"] + s["tov"])
     return _blank_incomplete(s.reset_index(), g)
 
 

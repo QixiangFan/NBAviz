@@ -30,7 +30,7 @@ def league_seasons() -> pd.DataFrame:
     s["season_label"] = s["season"].map(C.season_str)
     s["shortened"] = s["season"].map(C.SHORTENED_SEASONS).fillna("")
     return s[["season", "season_label", "team_games", "ppg", "fg3m_pg", "fg3a_pg", "fg3a_rate",
-              "fg3_pct", "efg", "pace", "ortg", "shortened"]]
+              "fg3_pct", "efg", "pace", "ortg", "orb_pct", "tov_pct", "shortened"]]
 
 
 def team_seasons() -> pd.DataFrame:
@@ -149,6 +149,46 @@ def events() -> pd.DataFrame:
     return e.sort_values("season", kind="stable")
 
 
+# Hand-entered from NBA.com's history pages. Names are spelled as in the player totals, abbreviations
+# as the team used them that season; checks() fails if one does not match.
+MVPS = [
+    (1996, "Karl Malone"), (1997, "Michael Jordan"), (1998, "Karl Malone"), (1999, "Shaquille O'Neal"),
+    (2000, "Allen Iverson"), (2001, "Tim Duncan"), (2002, "Tim Duncan"), (2003, "Kevin Garnett"),
+    (2004, "Steve Nash"), (2005, "Steve Nash"), (2006, "Dirk Nowitzki"), (2007, "Kobe Bryant"),
+    (2008, "LeBron James"), (2009, "LeBron James"), (2010, "Derrick Rose"), (2011, "LeBron James"),
+    (2012, "LeBron James"), (2013, "Kevin Durant"), (2014, "Stephen Curry"), (2015, "Stephen Curry"),
+    (2016, "Russell Westbrook"), (2017, "James Harden"), (2018, "Giannis Antetokounmpo"),
+    (2019, "Giannis Antetokounmpo"), (2020, "Nikola Jokić"), (2021, "Nikola Jokić"), (2022, "Joel Embiid"),
+    (2023, "Nikola Jokić"), (2024, "Shai Gilgeous-Alexander"), (2025, "Shai Gilgeous-Alexander"),
+]
+CHAMPIONS = [
+    (1985, "BOS"), (1986, "LAL"), (1987, "LAL"), (1988, "DET"), (1989, "DET"), (1990, "CHI"), (1991, "CHI"),
+    (1992, "CHI"), (1993, "HOU"), (1994, "HOU"), (1995, "CHI"), (1996, "CHI"), (1997, "CHI"), (1998, "SAS"),
+    (1999, "LAL"), (2000, "LAL"), (2001, "LAL"), (2002, "SAS"), (2003, "DET"), (2004, "SAS"), (2005, "MIA"),
+    (2006, "SAS"), (2007, "BOS"), (2008, "LAL"), (2009, "LAL"), (2010, "DAL"), (2011, "MIA"), (2012, "MIA"),
+    (2013, "SAS"), (2014, "GSW"), (2015, "CLE"), (2016, "GSW"), (2017, "GSW"), (2018, "TOR"), (2019, "LAL"),
+    (2020, "MIL"), (2021, "GSW"), (2022, "DEN"), (2023, "BOS"), (2024, "OKC"), (2025, "NYK"),
+]
+
+
+def mvps() -> pd.DataFrame:
+    """Regular-season MVPs since 1996-97, the first season with player data, with their NBA.com ids."""
+    m = pd.DataFrame(MVPS, columns=["season", "player_name"])
+    p = load.player_seasons()[["season", "player_id", "player_name"]]
+    m = m.merge(p, on=["season", "player_name"], how="left")
+    m.insert(1, "season_label", m["season"].map(C.season_str))
+    return m[["season", "season_label", "player_id", "player_name"]].astype({"player_id": "Int64"})
+
+
+def champions() -> pd.DataFrame:
+    """NBA champions since 1985-86, with the franchise id and the name the team used that season."""
+    c = pd.DataFrame(CHAMPIONS, columns=["season", "team"])
+    t = load.team_seasons()[["season", "team", "team_id", "team_name"]]
+    c = c.merge(t, on=["season", "team"], how="left")
+    c.insert(1, "season_label", c["season"].map(C.season_str))
+    return c[["season", "season_label", "team_id", "team", "team_name"]].astype({"team_id": "Int64"})
+
+
 # --- Data dictionary --------------------------------------------------------
 
 TABLES = {
@@ -160,6 +200,8 @@ TABLES = {
         "fg3a_rate": "Share of field-goal attempts that were threes (from 1985-86)",
         "fg3_pct": "3-point percentage (from 1985-86)", "efg": "Effective FG%: (FGM + 0.5 × 3PM) / FGA",
         "pace": "Possessions per 48 min (from 1985-86)", "ortg": "Points per 100 possessions (from 1985-86)",
+        "orb_pct": "Offensive rebound %: share of a team's own misses it rebounds (from 1985-86)",
+        "tov_pct": "Turnover %: TOV / (FGA + 0.44 × FTA + TOV), turnovers per play (from 1985-86)",
         "shortened": "Why the season was short (lockout / COVID), else blank"}),
     "team_seasons": (team_seasons, "One row per team per season since 1985-86.", {
         "team_id": "NBA.com franchise id (stable across moves and renames)",
@@ -196,6 +238,10 @@ TABLES = {
         "*_pctl": "Percentile (0-100) within the season among qualified players, for the radar"}),
     "events": (events, "Hand-picked rule changes and milestones for the timeline.", {
         "kind": "rule or milestone", "label / detail": "Short label and one-sentence note"}),
+    "mvps": (mvps, "Regular-season MVPs since 1996-97, hand-entered from NBA.com's award history.", {
+        "player_id / player_name": "NBA.com player id and name, as in player_seasons"}),
+    "champions": (champions, "NBA champions since 1985-86, hand-entered from NBA.com's history.", {
+        "team_id / team / team_name": "Franchise id, and the abbreviation and name the team used that season"}),
 }
 
 CLEANING_RULES = [
@@ -289,4 +335,13 @@ def checks() -> list:
     out.append(_check("Jersey numbers found on the season rosters", None,
                       f"{known.mean():.1%} of {len(known):,} player-seasons" if known.any()
                       else "no rosters yet: run python collect_data.py rosters"))
+
+    # A name or abbreviation that matches nothing leaves a blank id; one that matches twice adds a row
+    for name, table, hand, key, label in (
+            ("Every MVP matches one player-season", mvps(), MVPS, "player_id", "player_name"),
+            ("Every champion matches one team-season", champions(), CHAMPIONS, "team_id", "team")):
+        missing = table[table[key].isna()]
+        out.append(_check(name, bool(len(table) == len(hand) and missing.empty),
+                          f"{int(table[key].notna().sum())} of {len(hand)} found" +
+                          "".join(f"; missing {s} {who}" for s, who in zip(missing["season_label"], missing[label]))))
     return out

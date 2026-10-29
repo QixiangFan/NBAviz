@@ -1,15 +1,19 @@
 // Boot: load the data behind a loader, start the motion system, build every chapter, run the HUD.
-// ?shot=<chapter>[:<step>] jumps straight to a chapter state for screenshots, e.g. ?shot=q1:0.6, ?shot=q3:5.
+// ?shot=<chapter>[:<step>] jumps straight to a chapter state for screenshots, e.g. ?shot=q1:0.6, ?shot=q3:5;
+// ?team=NYK picks the reader's team (ui/team.js).
 import { loadAll } from "./data.js";
 import { initMotion, initSnap, revealText, parallaxCards, scrollToEl, countTo, params, instant, stopScroll, startScroll } from "./motion.js";
 import { initHero } from "./viz/hero.js";
 import { initTimeline } from "./viz/timeline.js";
 import { initShotMap } from "./viz/shotmap.js";
+import { initEras } from "./viz/eras.js";
 import { initTeams } from "./viz/teams.js";
-import { initPlayers, initHalftime } from "./viz/players.js";
+import { initMvps } from "./viz/mvps.js";
+import { initPlayers } from "./viz/players.js";
 import { initScoreboard } from "./viz/scoreboard.js";
 import { initRibbons } from "./viz/ribbons.js";
 import { initCursor } from "./ui/cursor.js";
+import { initTeamPicker } from "./ui/team.js";
 
 async function boot() {
   initMotion();
@@ -25,12 +29,14 @@ async function boot() {
   ]);
   await Promise.race([document.fonts.ready, new Promise((resolve) => setTimeout(resolve, 1500))]);
 
+  initTeamPicker(data);   // first, so every chapter starts out with the reader's team
   const hero = initHero(data);
   const q1 = initTimeline(data);
   const q2 = initShotMap(data);
-  initHalftime();
+  initEras(data);
   const q3 = initTeams(data);
-  initPlayers(data);
+  const duel = initPlayers(data);
+  initMvps(data, duel);
   initScoreboard(data);
   initRibbons(data);
   revealText();

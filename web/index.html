@@ -137,19 +137,21 @@
     <div class="steps" id="q2-steps"></div>
   </section>
 
-  <!-- ============ HALFTIME · placeholder (sketch KN1) ============ -->
+  <!-- ============ HALFTIME · era fingerprints (sketch KN1) ============ -->
   <section class="halftime" id="half" data-period="half">
     <div class="ribbon" id="half-ribbon" aria-hidden="true"></div>
     <p class="period-label">Halftime report</p>
     <h2 class="chapter-title">First half: the shift is real</h2>
     <p class="chapter-lead">Threes went from a novelty to two of every five shots, and the mid-range all but disappeared.
       Second half: <strong>did the teams that shot the most threes win the most games?</strong></p>
-    <div class="placeholder-card">
-      <div class="stage-tag">Placeholder</div>
-      <h3>Era fingerprints</h3>
-      <p>One radar glyph per era, showing the league-average team: 3-point rate, 3P%, pace, offensive rating, rebounding,
-        turnovers. Reuses the radar from the 4th quarter. Data ready in <code>league_seasons.csv</code> · sketch KN1.</p>
-      <div class="ghost-glyphs" id="half-glyphs"></div>
+    <div class="eras">
+      <div class="eras-head">
+        <h3>Era fingerprints</h3>
+        <p>The league’s average team in four eras, on six stats. Each spoke runs from the lowest season since 1985-86 at
+          the center to the highest at the rim; the dashed outline is the era before. Hover a spoke for the numbers.</p>
+      </div>
+      <div class="era-glyphs" id="half-glyphs"></div>
+      <p class="eras-note" id="half-note"></p>
     </div>
   </section>
 
@@ -170,30 +172,32 @@
     <div class="steps" id="q3-steps"></div>
   </section>
 
-  <!-- ============ Q4 · players (sketches ZD2 / KN4) ============ -->
+  <!-- ============ Q4 · MVP hall, then the duel (sketches KN4 / ZD2) ============ -->
   <section class="chapter-card" id="q4" data-period="q4" data-q="4">
     <p class="period-label">4th quarter</p>
     <h2 class="chapter-title">The players</h2>
-    <p class="chapter-lead">Some stars bent the league toward the arc. Others won without it. Compare any two players from one
-      season on six skills, each ranked against that season’s league.</p>
-  </section>
-  <section class="players" id="q4-players" data-period="q4">
-    <div class="players-controls" id="q4-controls"></div>
-    <div class="players-court">
-      <article class="player-card" id="card-a"></article>
-      <figure class="duel" id="q4-radar" role="img" aria-label="Radar chart comparing two players"></figure>
-      <article class="player-card" id="card-b"></article>
-    </div>
+    <p class="chapter-lead">Some stars bent the league toward the arc. Others won without it. Start with every MVP since
+      1996-97, then put any two players, from any two seasons, head to head on six skills, each ranked against their own
+      season’s league.</p>
   </section>
   <section class="mvp" id="q4-mvp" data-period="q4">
-    <div class="mvp-hall">
-      <div class="mvp-head">
-        <h3>MVP hall</h3>
-        <span class="stage-tag static">Placeholder</span>
+    <div class="mvp-head">
+      <h3>MVP hall</h3>
+      <p class="mvp-lead" id="mvp-lead"></p>
+    </div>
+    <div class="mvp-scroll">
+      <figure class="mvp-chart" id="mvp-chart" aria-label="Every MVP since 1996-97, placed by the share of their shots that were threes, over the league average"></figure>
+    </div>
+    <div class="mvp-legend" id="mvp-legend"></div>
+  </section>
+  <section class="players" id="q4-players" data-period="q4">
+    <div class="players-court">
+      <div class="player-slot"><article class="player-card" id="card-a"></article></div>
+      <div class="duel-col">
+        <div class="presets" id="q4-presets"></div>
+        <figure class="duel" id="q4-radar" role="img" aria-label="Radar chart comparing two players"></figure>
       </div>
-      <p>Every MVP as a card, placed by how many threes they took. Did the league’s best players follow the shift
-        (Curry, Harden) or win without it (Jokić, Antetokounmpo)? Needs a short hand-made MVP table · sketch KN4.</p>
-      <div class="mvp-row" id="mvp-row"></div>
+      <div class="player-slot"><article class="player-card" id="card-b"></article></div>
     </div>
   </section>
 
@@ -207,8 +211,10 @@
       <li><strong>The three-point revolution is real.</strong> Attempts per team-game rose about elevenfold since 1985-86, and
         the mid-range share of shots fell from 37% in 1997-98 to 10% in 2025-26.</li>
       <li><strong>Taking more threes is no longer linked to winning more.</strong> Volume’s link to winning faded once every
-        team shot threes. Accuracy and overall efficiency track win % far more closely, and accuracy’s link keeps rising.</li>
-      <li><strong>Next:</strong> test the pattern on playoff teams and champions, and follow the players who take the shots.</li>
+        team shot threes. Accuracy and overall efficiency track win % far more closely, and accuracy’s link keeps rising.
+        Of the 41 champions since 1985-86, 38 shot better than their league (eFG%); only 25 took more threes than it.</li>
+      <li><strong>The best players didn’t need the volume either.</strong> Curry and Harden rode the shift, but 20 of the 30
+        MVPs since 1996-97 took threes less often than the league, including all 8 since 2018-19.</li>
     </ol>
     <div class="final-cols">
       <div>
@@ -223,7 +229,8 @@
         <h3>Data &amp; methods</h3>
         <p>NBA.com stats through <code>nba_api</code>, cleaned by <code>build_clean_data.py</code>. The clean tables, data
           dictionary, cleaning rules and validation checks are in <a href="../data/clean/README.md">data/clean/</a>.
-          Correlations compare each team only with its own season’s league (z-scores). Player photos and current logos:
+          Correlations compare each team only with its own season’s league (z-scores). MVP and champion lists: NBA.com
+          history, entered by hand and checked against the tables. Player photos and current logos:
           NBA.com. Older logos: SportsLogos.net. Action cutouts: press and web photos (Wikimedia Commons, PNGKey),
           cut out with Apple’s Vision framework, used for this course project only.</p>
       </div>

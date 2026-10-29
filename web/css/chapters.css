@@ -1,6 +1,6 @@
 /* ==========================================================================
    Chapter layouts: hero, chapter title cards, scrub + scrolly stages,
-   halftime, players, final buzzer, mobile.
+   halftime, MVP hall and players, final buzzer, mobile.
    ========================================================================== */
 
 /* --- TIP-OFF -------------------------------------------------------------- */
@@ -120,6 +120,7 @@
 .logo-row:nth-child(2) { animation-direction: reverse; animation-duration: 95s; }
 .logo-row img { width: clamp(64px, 7.5vw, 128px); aspect-ratio: 1; object-fit: contain; margin-right: 4.5vw;
   filter: grayscale(1); mix-blend-mode: screen; opacity: 0.18; }
+.logo-row img.fan { filter: none; mix-blend-mode: normal; opacity: 0.85; }   /* the reader's team (js/ui/team.js) */
 @keyframes drift { to { transform: translateX(-50%); } }
 
 /* --- Shared stage --------------------------------------------------------- */
@@ -199,6 +200,8 @@
 .step-card p:last-child { margin-bottom: 0; }
 .step-card .controls { display: flex; flex-direction: column; gap: 14px; margin-top: 16px; }
 .step-card .row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.step-card .team-cta { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin-top: 16px; }
+.team-cta small { font: 500 12px/1.4 var(--text); color: var(--muted); }
 .key { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin: 0 4px 0 2px; vertical-align: 0; }
 .key.two { background: var(--two); box-shadow: 0 0 8px var(--two); }
 .key.three { background: var(--three); box-shadow: 0 0 8px var(--three); }
@@ -238,18 +241,28 @@
 .q3-svg { width: 100%; height: 100%; overflow: visible; }
 .ball .leather { fill: #1b1f28; stroke: rgba(242, 238, 230, 0.55); stroke-width: 1; }
 .ball .seam { fill: none; stroke: rgba(242, 238, 230, 0.16); stroke-width: 1; }
-.ball text { font: 700 9px var(--mono); fill: var(--ink); text-anchor: middle; dominant-baseline: central; letter-spacing: 0.02em; pointer-events: none; }
+.ball .abbr { font: 700 9px var(--mono); fill: var(--ink); text-anchor: middle; dominant-baseline: central; letter-spacing: 0.02em; pointer-events: none; }
 .ball.hot .leather { fill: var(--three); stroke: #ffd2bf; }
 .ball.cold .leather { fill: var(--two); stroke: #cfe3ff; }
 .ball .logo { display: none; pointer-events: none; }
 .ball.has-logo .logo { display: inline; }
-.ball.has-logo .seam, .ball.has-logo text { display: none; }
+.ball.has-logo .seam, .ball.has-logo .abbr { display: none; }
 .ball.has-logo .leather { fill: #fff; stroke: rgba(11, 13, 18, 0.6); }
 .ball.has-logo.hot .leather { stroke: var(--three); stroke-width: 3.5; }
 .ball.has-logo.cold .leather { stroke: var(--two); stroke-width: 3.5; }
 .ball.dim { opacity: 0.4; filter: grayscale(1); }   /* faded but the logo still reads */
+/* The season's champion wears a crown and a gold edge (explore step); the reader's team, a ring in its
+   colors and a tag under the ball */
+.ball .crown { display: none; fill: var(--gold); stroke: var(--bg); stroke-width: 1.5; stroke-linejoin: round; }
+.ball.champ .crown { display: inline; }
+.ball.champ .leather, .ball.has-logo.champ .leather { stroke: var(--gold); stroke-width: 3; }
+.ball .fan-ring { display: none; fill: none; stroke: var(--team); stroke-width: 2; }
+.ball.fan .fan-ring { display: inline; }
+.ball .fan-tag { display: none; font: 700 8px var(--mono); letter-spacing: 0.16em; text-transform: uppercase; fill: var(--ink);
+  text-anchor: middle; pointer-events: none; paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
+.ball.fan .fan-tag { display: inline; }
 /* Hover: the ball grows (inner g, the outer one places it) and rings itself in its team's color */
-.ball-body { transform-box: fill-box; transform-origin: center; transition: transform 0.35s var(--ease-out); }
+.ball-body { transition: transform 0.35s var(--ease-out); }   /* scales about its own origin, the ball's center */
 .ball.hover .ball-body { transform: scale(1.45); }
 .ball.hover .leather, .ball.has-logo.hover .leather { stroke: var(--team); stroke-width: 3; }
 .ball.dim.hover { opacity: 1; filter: none; }
@@ -258,6 +271,12 @@
 .annot .halo, .annot text { paint-order: stroke; stroke: var(--bg); stroke-width: 5px; stroke-linejoin: round; }
 .annot line, .annot path { stroke: rgba(242, 238, 230, 0.5); fill: none; }
 .cloud-corners text { font: 600 11px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; fill: var(--ink-2);
+  paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
+.cloud-corners .count { fill: var(--ink); }
+.cloud-corners .mark, .quad-champs .mark { fill: var(--gold); }
+.quad-champs { font: 600 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; fill: var(--ink); }
+.fan-trail path { fill: none; stroke-width: 1.4; stroke-opacity: 0.55; stroke-linejoin: round; }
+.fan-trail text { font: 700 10px var(--mono); letter-spacing: 0.08em; fill: var(--ink);
   paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
 .quad-label { font: 900 20px var(--display); text-transform: uppercase; fill: var(--ink); }
 .quad-value { font: 700 40px var(--mono); fill: var(--ink); }
@@ -272,31 +291,59 @@
 .r-meter .led { font-size: 54px; }
 .r-meter .r-caption { grid-column: 1 / -1; font: 600 10px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
 
-/* --- Halftime (placeholder) ------------------------------------------------- */
-.halftime { position: relative; min-height: 100vh; padding: 18vh 6vw 14vh; border-top: 1px solid var(--line);
+/* --- Halftime: era fingerprints (js/viz/eras.js) ----------------------------- */
+.halftime { position: relative; min-height: 100vh; padding: 15vh 6vw 10vh; border-top: 1px solid var(--line);
   background: radial-gradient(ellipse at 20% 0%, rgba(61, 143, 240, 0.08), transparent 60%); }
 .halftime .ribbon { top: calc(var(--hud-h) + 10px); }   /* the arena's ribbon board, with the first half's numbers */
 .halftime .chapter-title { font-size: clamp(60px, 9vw, 160px); max-width: 1100px; }
-.placeholder-card {
-  position: relative; margin-top: 56px; padding: 28px; border-radius: 20px; border: 1.5px dashed rgba(242, 238, 230, 0.22);
-  background: repeating-linear-gradient(135deg, rgba(242, 238, 230, 0.025) 0 2px, transparent 2px 12px);
-  max-width: 1100px;
+.eras { margin-top: 44px; max-width: 1240px; }
+.eras-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 28px; }
+.eras-head h3, .mvp-head h3 { font: 900 34px var(--display); text-transform: uppercase; margin: 0; }
+.eras-head p { flex: 1 1 420px; max-width: 860px; margin: 0; font-size: 15px; color: var(--ink-2); }
+.era-glyphs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px 3.5vw; margin-top: 22px; }
+.era { display: flex; flex-direction: column; align-items: center; min-width: 0; }
+.era-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: center; gap: 2px 12px; }
+.era h4 { display: flex; align-items: center; gap: 8px; margin: 0; font: 800 22px/1 var(--display); letter-spacing: 0.04em; }
+.era h4::before { content: ""; width: 14px; height: 3px; border-radius: 2px; background: var(--era); }
+/* --radar-pad: the room the radar leaves around itself for the axis names (read by eras.js), with their size */
+.era-glyph { --radar-pad: 52; width: 100%; max-width: 300px; }
+.era-glyph .axis-name { font-size: 12px; letter-spacing: 0.06em; }
+.era p { display: flex; align-items: baseline; gap: 6px; margin: 0; }
+.era .led { font-size: 20px; }
+.era small { font: 600 10px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+.eras-note { max-width: 860px; margin: 20px 0 0; color: var(--ink-2); font-size: 16px; }
+/* Desktop: the halftime report is exactly one screen. The title fits on one line, the text takes what it
+   needs, and the glyphs fill the rest: each as wide as its column and as tall as the height left over
+   (every glyph's cell is a size container). */
+@media (min-width: 901px) {
+  .halftime { display: flex; flex-direction: column; height: 100vh; min-height: 640px; padding: calc(var(--hud-h) + 68px) 6vw 3.5vh; }
+  .halftime .chapter-title { font-size: clamp(44px, min(6vw, 9vh), 112px); }
+  .halftime .chapter-lead { max-width: 980px; margin-top: 1.4vh; font-size: 18px; }
+  .eras { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; width: 100%; margin-top: 3vh; }
+  .era-glyphs { flex: 1 1 0; min-height: 0; grid-template-rows: minmax(0, 1fr); row-gap: 0; margin-top: 1.2vh; }
+  .era { container-type: size; justify-content: center; }
+  .era-glyph { width: min(100%, 300px, 100cqh - 36px); }
+  .eras-note { max-width: 1100px; margin-top: 1.2vh; font-size: 15px; }
 }
-.placeholder-card .stage-tag { top: 20px; right: 20px; }
-.placeholder-card h3, .mvp-hall h3 { font: 900 34px var(--display); text-transform: uppercase; margin: 0 0 10px; }
-.placeholder-card p, .mvp-hall p { color: var(--ink-2); max-width: 680px; margin: 0; }
-.ghost-glyphs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
-.ghost-glyphs svg { width: 100%; height: auto; }
-.ghost-glyphs text { font: 600 11px var(--mono); fill: var(--ink-2); text-anchor: middle; }
+@media (min-width: 901px) and (max-width: 1199px) {   /* narrower columns: smaller axis names */
+  .era-glyph .axis-name { font-size: 10.5px; }
+}
 
-/* --- Q4: player cards -------------------------------------------------------- */
-/* Two screens, so each is one clean snap stop: the cards and radar, then the MVP hall */
-.players { position: relative; min-height: 100vh; padding: calc(var(--hud-h) + 3vh) 5vw 5vh;
+/* --- Q4: the MVP hall, then the player duel ---------------------------------- */
+/* Two screens, so each is one clean snap stop: the MVP hall, then the cards and radar */
+.mvp { min-height: 100vh; padding: calc(var(--hud-h) + 6vh) 5vw 6vh; border-top: 1px solid var(--line);
   display: flex; flex-direction: column; justify-content: center; }
-.mvp { min-height: 100vh; padding: 14vh 5vw 12vh; border-top: 1px solid var(--line);
+.players { position: relative; min-height: 100vh; padding: calc(var(--hud-h) + 3vh) 5vw 5vh; border-top: 1px solid var(--line);
   display: flex; flex-direction: column; justify-content: center; }
-.players-controls { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; margin-bottom: 28px; }
 .players-court { display: grid; grid-template-columns: minmax(250px, 1fr) minmax(320px, 1.25fr) minmax(250px, 1fr); gap: 3vw; align-items: center; }
+/* Each card has its own season and search above it; the matchups sit above the radar */
+.player-slot { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.slot-controls { display: flex; align-items: center; gap: 8px; }
+.slot-controls .control { gap: 8px; }
+.slot-controls input { flex: 1; min-width: 0; }
+.duel-col { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.presets { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.presets .chip { border: 1px solid var(--line); }
 .player-card { perspective: 1000px; }
 .card-tilt { transform-style: preserve-3d; }
 .card-inner { position: relative; transform-style: preserve-3d; transition: transform 0.9s var(--ease-out); min-height: 580px; }
@@ -344,8 +391,7 @@
 .card-stats div { display: flex; flex-direction: column; }
 .card-stats b { font: 700 20px var(--mono); }
 .card-stats small { font: 600 10px var(--mono); color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
-.card-actions { position: absolute; left: 22px; right: 22px; bottom: 20px; display: flex; gap: 8px; z-index: 2; }
-.card-actions input { flex: 1; min-width: 0; }
+.card-actions { position: absolute; left: 22px; right: 22px; bottom: 20px; display: flex; justify-content: flex-end; gap: 8px; z-index: 2; }
 .card-back table { width: 100%; border-collapse: collapse; font: 500 13px var(--mono); margin-top: 14px; }
 .card-back td { padding: 7px 0; border-bottom: 1px solid var(--line); }
 .card-back td:last-child { text-align: right; color: var(--ink); }
@@ -359,7 +405,7 @@
 }
 /* Radar (js/viz/radar.js), drawn like a center circle: the floor's edge is the 100th percentile, the dashed
    ring the league median. The two shapes add up like light where they overlap. */
-.duel .floor { fill: url(#duel-floor); stroke: var(--court); stroke-width: 1.25; }
+.duel .floor { stroke: var(--court); stroke-width: 1.25; }   /* lit by a gradient from radar.js */
 .duel .ring { fill: none; stroke: var(--grid); }
 .duel .ring.median { stroke: rgba(242, 238, 230, 0.3); stroke-dasharray: 2 5; }
 .duel .spoke { stroke: var(--grid); transition: stroke 0.25s; }
@@ -375,18 +421,41 @@
 .duel .shape { mix-blend-mode: screen; }
 .duel .shape .glow { fill: none; stroke-width: 6; opacity: 0.5; }
 .duel .shape .area { stroke-width: 2.5; stroke-linejoin: round; }
+.duel .shape.ghost { mix-blend-mode: normal; }   /* the shape before, as a dashed outline */
+.duel .shape.ghost .glow { display: none; }
+.duel .shape.ghost .area { stroke-width: 1.5; stroke-dasharray: 3 4; }
 .duel .dots circle { stroke: var(--bg); stroke-width: 2; transition: opacity 0.25s; }
 .duel .pings circle { fill: none; stroke-width: 1.5; }
 .duel .hit path { fill: transparent; }
-.mvp-head { display: flex; align-items: center; gap: 16px; }
-.mvp-row { display: flex; gap: 14px; margin-top: 24px; overflow: hidden; }
-.mvp-ghost {
-  flex: 0 0 150px; height: 200px; border-radius: 14px; border: 1.5px dashed rgba(242, 238, 230, 0.18);
-  display: flex; flex-direction: column; justify-content: flex-end; padding: 14px;
-  font: 600 11px var(--mono); letter-spacing: 0.1em; color: var(--muted); text-transform: uppercase;
-  background: repeating-linear-gradient(135deg, rgba(242, 238, 230, 0.025) 0 2px, transparent 2px 12px);
-}
-.mvp-ghost b { font: 900 34px var(--display); color: rgba(242, 238, 230, 0.25); }
+/* MVP hall (js/viz/mvps.js): medallions over the league line; stems orange above it, blue below */
+.mvp-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 28px; }
+.mvp-head h3 { font-size: clamp(40px, 5vw, 64px); line-height: 0.9; }
+.mvp-lead { flex: 1 1 460px; max-width: 760px; margin: 0; color: var(--ink-2); font-size: 17px; }
+.mvp-scroll { margin-top: 14px; }
+.mvp-chart { margin: 0; }
+.mvp-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.mvp-title { font: 600 11px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; fill: var(--ink-2); }
+.mvp-league { fill: none; stroke: rgba(242, 238, 230, 0.6); stroke-width: 2; }
+.mvp-stem { stroke-width: 2; stroke-linecap: round; }
+.mvp-stem.above { stroke: var(--three); }
+.mvp-stem.below { stroke: var(--two); }
+.medal { cursor: pointer; outline: none; }
+.medal-body { transition: transform 0.35s var(--ease-out); }   /* scales about the medallion's center */
+.medal.hover .medal-body, .medal:focus-visible .medal-body { transform: scale(1.3); }
+.medal-disc { fill: var(--bg-3); }
+.medal-initials { font-family: var(--display); font-weight: 800; fill: var(--ink-2); text-anchor: middle; }
+.medal-ring { fill: none; stroke: var(--team); stroke-width: 2; }
+.medal:focus-visible .medal-ring { stroke: var(--ink); stroke-width: 3; }
+.medal-fan { display: none; fill: none; stroke: var(--team); stroke-width: 2; stroke-dasharray: 2 3; }
+.medal.fan .medal-fan { display: inline; }
+.mvp-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 22px; margin-top: 6px;
+  font: 600 11px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); }
+.mvp-legend span { display: inline-flex; align-items: center; gap: 8px; }
+.mvp-key { display: inline-block; width: 18px; height: 0; border-top: 2px solid; }
+.mvp-key.above { border-color: var(--three); }
+.mvp-key.below { border-color: var(--two); }
+.mvp-key.league { border-color: rgba(242, 238, 230, 0.6); }
+.mvp-legend .mvp-hint { margin-left: auto; color: var(--muted); }
 
 /* --- FINAL -------------------------------------------------------------- */
 .final { padding: 18vh 6vw 10vh; border-top: 1px solid var(--line);
@@ -433,7 +502,10 @@
 @media (max-width: 900px) {
   .hud { padding: 0 14px; gap: 10px; }
   .hud-brand { display: none; }
-  .hud-periods { margin: 0; overflow-x: auto; max-width: calc(100vw - 90px); }
+  .hud-periods { margin: 0; overflow-x: auto; max-width: calc(100vw - 190px); }
+  .hud-team { padding: 0 10px; font-size: 10px; }
+  .hud-team.set { padding: 0 3px; }
+  .hud-team.set span { display: none; }
   .hud-periods a { padding: 8px 9px; }
   .hero-copy { left: 5vw; right: 5vw; top: calc(var(--hud-h) + 4vh); }
   .hero-dek { font-size: 16px; }
@@ -468,9 +540,16 @@
   .r-meter .led { font-size: 32px; }
   .stage-legend { display: none; }
   .players-court { grid-template-columns: 1fr; }
+  .mvp-scroll { overflow-x: auto; margin: 14px -5vw 0; padding: 0 5vw 6px; }
+  .mvp-chart { min-width: 760px; }
+  .mvp-legend .mvp-hint { margin-left: 0; }
   .final-board, .final-cols { grid-template-columns: 1fr; }
   .starting-five { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
-  .ghost-glyphs { grid-template-columns: repeat(2, 1fr); }
+  /* A swipeable row; each column is wider than its radar, so the axis names never reach the next one */
+  .era-glyphs { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(86vw, 340px); gap: 0 12px;
+    overflow-x: auto; scroll-snap-type: x mandatory; margin: 18px -6vw 0; padding: 0 6vw 8px; }
+  .era { scroll-snap-align: center; }
+  .era-glyph { max-width: 280px; }
   .seg { max-width: 100%; overflow-x: auto; }
   .q1-top { right: 4vw; }
 }

@@ -18,6 +18,7 @@
   --three: #ec5e22;     /* ball orange: three-pointers, volume */
   --acc: #16ab85;       /* court teal: accuracy */
   --buzzer: #ff3b30;    /* backboard light at the final buzzer; never data */
+  --gold: #e8b33a;      /* championship gold: marks champions only, always with a crown or a legend; never a series */
 
   --display: "Big Shoulders Display", "Arial Narrow", system-ui, sans-serif;
   --text: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -127,6 +128,32 @@ body::after {
 .shot-clock.low .shot-clock-num { animation: blink 0.6s steps(2) infinite; }
 @keyframes blink { 50% { opacity: 0.35; } }
 
+/* Your team (js/ui/team.js): a chip beside the shot clock, and the grid of logos it opens */
+.hud-team {
+  display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 999px; cursor: pointer;
+  font: 600 11px/1 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; color: var(--ink-2);
+  background: rgba(18, 21, 28, 0.7); border: 1px solid var(--line); backdrop-filter: blur(10px);
+  transition: color 0.25s, border-color 0.25s;   /* no transform: GSAP moves magnetic buttons */
+}
+.hud-team.set { padding-left: 4px; color: var(--ink); }
+.hud-team:hover, .hud-team[aria-expanded="true"] { color: var(--ink); border-color: rgba(242, 238, 230, 0.32); }
+.team-picker {
+  position: fixed; top: calc(var(--hud-h) + 6px); right: 20px; z-index: 70; width: min(440px, calc(100vw - 32px));
+  padding: 16px; border-radius: 16px; background: rgba(18, 21, 28, 0.97); border: 1px solid var(--line);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+.team-picker[hidden] { display: none; }
+.team-picker-title { margin: 0 0 12px; font: 600 11px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
+.team-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 4px; margin-bottom: 12px; }
+.team-opt {
+  display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 0 6px; border-radius: 10px; cursor: pointer;
+  font: 600 10px var(--mono); letter-spacing: 0.06em; color: var(--ink-2); background: transparent; border: 1px solid transparent;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.team-opt:hover { background: var(--bg-3); color: var(--ink); }
+.team-opt[aria-pressed="true"] { border-color: rgba(242, 238, 230, 0.5); background: var(--bg-3); color: var(--ink); }
+.team-opt .logo-chip { width: 36px; height: 36px; }
+
 /* --- Controls ------------------------------------------------------------ */
 .seg { display: inline-flex; gap: 2px; padding: 3px; border-radius: 999px; background: var(--bg-2); border: 1px solid var(--line); }
 .seg button, .chip, .btn {
@@ -165,14 +192,6 @@ svg text { fill: var(--ink-2); font: 500 12px var(--text); }
 .grid line { stroke: var(--grid); }
 .grid path { display: none; }
 .court-lines path, .court-lines line { fill: none; stroke: var(--court); stroke-width: 1.25; }
-
-.stage-tag {
-  position: absolute; top: calc(var(--hud-h) + 14px); right: 28px; z-index: 5;
-  font: 600 10px/1 var(--mono); letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2);
-  border: 1px solid var(--line); border-radius: 999px; padding: 7px 10px; background: rgba(11, 13, 18, 0.6);
-}
-.stage-tag::before { content: "● "; color: var(--three); }
-.stage-tag.static { position: static; display: inline-block; }
 
 /* Tooltip: values lead, labels follow; built with textContent only */
 .tooltip {
