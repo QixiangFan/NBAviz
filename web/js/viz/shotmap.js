@@ -11,7 +11,7 @@ import { SHOT_STYLES, shotStyle } from "./hero.js";
 import { dur } from "../motion.js";
 import { setupSteps, h, b, key } from "./steps.js";
 
-const STYLES = [...SHOT_STYLES, { color: "#a9a59c", alpha: 0.42, size: 2.6 }];   // last: shots outside the filter
+const STYLES = [...SHOT_STYLES, { color: "#a9a59c", alpha: 0.42, size: 2 }];   // last: shots outside the filter
 const DIM = STYLES.length - 1;
 const HIGHLIGHT = { all: () => true, two: (z) => z < 3, three: (z) => z >= 3, mid: (z) => z === 2 };
 const pct = d3.format(".1%");
