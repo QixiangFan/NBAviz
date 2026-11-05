@@ -1,12 +1,15 @@
 // 4th quarter (sketches ZD2 / QF4 / YZ1): two player cards and a radar duel between them (radar.js). Each
-// axis is a percentile within the season (players with 500+ minutes), so players from any era can be
-// compared. Cards are dressed in the team's colors and logo, tilt toward the pointer, and flip to the back
-// of the player's jersey and the numbers behind the radar. A new player is dealt in: the card turns edge-on
-// and back, the name scrambles into place and the points count to the new value. DRAFT.
+// axis is a percentile within the player's own season (players with 500+ minutes), so each card can come
+// from a different season and players from any two eras can be compared. Above each card: its season and a
+// search; above the radar: famous matchups across eras and a random one. Cards are dressed in the team's
+// colors and logo, tilt toward the pointer, and flip to the back of the player's jersey and the numbers
+// behind the radar. A new player is dealt in: the card turns edge-on and back, the name scrambles into place
+// and the points count to the new value. The MVP hall deals its MVPs into the left card (load()).
 import { season as fmtSeason } from "../data.js";
 import { countTo, instant, scramble } from "../motion.js";
 import { headshotUrl, teamColors } from "../media.js";
 import { jersey } from "../ui/jersey.js";
+import { getTeam, onTeam } from "../ui/team.js";
 import { radarDuel } from "./radar.js";
 import { h } from "./steps.js";
 
@@ -22,42 +25,76 @@ const SLOTS = [
   { el: "card-a", color: "#ec5e22", fallback: "Stephen Curry" },
   { el: "card-b", color: "#3d8ff0", fallback: "Nikola Jokić" },
 ];
+// Matchups across eras: [label, [player, season], [player, season]]. A pair missing from the data is left out.
+const PRESETS = [
+  ["Shaq vs. Hakeem", ["Shaquille O'Neal", 1999], ["Hakeem Olajuwon", 1996]],
+  ["MJ vs. LeBron", ["Michael Jordan", 1997], ["LeBron James", 2012]],
+  ["Iverson vs. Harden", ["Allen Iverson", 2000], ["James Harden", 2018]],
+  ["Allen vs. Curry", ["Ray Allen", 2005], ["Stephen Curry", 2015]],
+];
 const surname = (name) => name.split(" ").slice(1).join(" ") || name;   // what goes on the back of the jersey
 const ordinal = (k) => `${k}${Math.floor(k / 10) % 10 === 1 ? "th" : ["th", "st", "nd", "rd"][k % 10] || "th"}`;
 
 export function initPlayers(data) {
   const bySeason = d3.group(data.players, (p) => p.season);
   const seasons = [...bySeason.keys()].sort(d3.ascending);
-  let season = seasons[seasons.length - 1];
-  const roster = () => (bySeason.get(season) || []).slice().sort((a, c) => c.pts_pg - a.pts_pg);
-  let picked = SLOTS.map((s, i) => roster().find((p) => p.player_name === s.fallback) || roster()[i]);
+  const latest = seasons[seasons.length - 1];
+  // A season's players, best scorer first
+  const roster = (s) => (bySeason.get(s) || []).slice().sort((a, c) => c.pts_pg - a.pts_pg);
+  const find = (name, s) => roster(s).find((p) => p.player_name === name);
+  const teamOf = (p) => data.teamBySeason.get(p.season)?.get(p.team);
+  // The reader's team's best scorer in the latest season (ui/team.js)
+  const fanStar = (id) => (id == null ? null : roster(latest).find((p) => teamOf(p)?.team_id === id));
+  let picked = SLOTS.map((s, i) => find(s.fallback, latest) || roster(latest)[i]);   // one player-season per card
+  let touched = false;   // once the reader picks someone, picking a team no longer changes the cards
+  const star = fanStar(getTeam());
+  if (star && star !== picked[1]) picked[0] = star;
 
-  // Season picker + random matchup
-  const ctl = d3.select("#q4-controls");
-  const label = ctl.append("label").attr("class", "control");
-  label.append("span").text("Season");
-  const seasonSel = label.append("select").on("change", function () {
-    season = +this.value;
-    picked = picked.map((p, i) => roster().find((r) => r.player_id === p.player_id) || roster()[i]);
-    fillLists();
-    update();
+  // Matchups: famous pairs across eras, and a random one from any two seasons
+  const presets = PRESETS.map(([label, ...pair]) => ({ label, pair: pair.map(([name, s]) => find(name, s)) }))
+    .filter((m) => m.pair.every(Boolean));
+  const presetBox = d3.select("#q4-presets").attr("role", "group").attr("aria-label", "Matchups");
+  const chips = presetBox.selectAll("button.chip").data(presets).join("button").attr("class", "chip").attr("type", "button")
+    .text((m) => m.label).on("click", (_, m) => choose(m.pair));
+  presetBox.append("button").attr("class", "btn").attr("type", "button").text("Random matchup").on("click", () => {
+    const draw = () => {   // a season, then one of its 40 best scorers
+      const top = roster(seasons[Math.floor(Math.random() * seasons.length)]).slice(0, 40);
+      return top[Math.floor(Math.random() * top.length)];
+    };
+    const a = draw();
+    let c = draw();
+    while (c === a) c = draw();
+    choose([a, c]);
   });
-  seasonSel.selectAll("option").data(seasons.slice().reverse()).join("option").attr("value", (s) => s).text(fmtSeason);
-  seasonSel.property("value", season);
-  ctl.append("button").attr("class", "btn").attr("type", "button").text("Random matchup").on("click", () => {
-    const top = roster().slice(0, 60);
-    const a = top[Math.floor(Math.random() * top.length)];
-    let c = a;
-    while (c === a) c = top[Math.floor(Math.random() * top.length)];
-    picked = [a, c];
+  function choose(pair) {
+    picked = pair.slice();
+    touched = true;
     update();
-  });
+  }
 
   // Cards: tilt wrapper > flip wrapper > front/back faces. The slot color (orange/blue) stays on the edge,
-  // the points and the radar shape; the team's colors and logo dress the rest.
+  // the points and the radar shape; the team's colors and logo dress the rest. Above each card: its season
+  // and a search among that season's players.
   const cards = SLOTS.map((slot, i) => {
     const article = document.getElementById(slot.el);
     article.style.setProperty("--accent", slot.color);
+    const seasonSel = h("select", { "aria-label": `Season of player ${i + 1}` },
+      seasons.slice().reverse().map((s) => h("option", { value: s }, fmtSeason(s))));
+    const input = h("input", { type: "search", list: `${slot.el}-list`, placeholder: "Search a player", "aria-label": `Player ${i + 1}` });
+    const list = h("datalist", { id: `${slot.el}-list` });
+    article.before(h("div", { class: "slot-controls" }, h("label", { class: "control" }, h("span", null, "Season"), seasonSel), input, list));
+    seasonSel.addEventListener("change", () => {
+      // The same player if still qualified that season, else that season's best scorer
+      const s = +seasonSel.value;
+      picked[i] = roster(s).find((p) => p.player_id === picked[i].player_id) || roster(s).find((p) => p !== picked[1 - i]);
+      touched = true;
+      update();
+    });
+    input.addEventListener("change", () => {
+      const found = roster(picked[i].season).find((p) => p.player_name.toLowerCase() === input.value.trim().toLowerCase());
+      if (found) { picked[i] = found; touched = true; update(); }
+    });
+
     const photo = h("img", { class: "card-photo", alt: "", decoding: "async" });
     photo.addEventListener("load", () => photo.classList.add("loaded"));
     const logo = h("img", { class: "logo-chip", alt: "" });
@@ -69,22 +106,16 @@ export function initPlayers(data) {
     const team = h("span");
     const big = h("span", { class: "led" });
     const stats = h("div", { class: "card-stats" });
-    const input = h("input", { type: "search", list: `${slot.el}-list`, placeholder: "Search a player", "aria-label": `Player ${i + 1}` });
-    const list = h("datalist", { id: `${slot.el}-list` });
     const flip = h("button", { class: "btn", type: "button" }, "Flip");
     const table = h("table");
     const front = h("div", { class: "card-face card-front" }, mark, photo, h("p", { class: "card-team" }, logo, team), name, h("div", { class: "card-big" }, big, h("span", null, "points / game")), stats,
-      h("div", { class: "card-actions" }, input, flip));
+      h("div", { class: "card-actions" }, flip));
     const back = h("div", { class: "card-face card-back" }, kit, h("p", { class: "card-team" }, "Percentile in the season (0–100)"), table);
     const inner = h("div", { class: "card-inner" }, front, back);
     const tilt = h("div", { class: "card-tilt" }, inner);
-    article.append(tilt, list);
+    article.append(tilt);
     flip.addEventListener("click", () => article.classList.toggle("flipped"));
     back.addEventListener("click", () => article.classList.toggle("flipped"));
-    input.addEventListener("change", () => {
-      const found = roster().find((p) => p.player_name.toLowerCase() === input.value.trim().toLowerCase());
-      if (found) { picked[i] = found; update(); }
-    });
     if (!instant) {
       const rx = gsap.quickTo(tilt, "rotateX", { duration: 0.6, ease: "power3" });
       const ry = gsap.quickTo(tilt, "rotateY", { duration: 0.6, ease: "power3" });
@@ -95,14 +126,8 @@ export function initPlayers(data) {
       });
       article.addEventListener("pointerleave", () => { rx(0); ry(0); });
     }
-    return { article, tilt, photo, logo, mark, name, team, big, stats, input, list, table, kit, front, shown: null, pts: 0, deal: null };
+    return { article, tilt, photo, logo, mark, name, team, big, stats, seasonSel, input, list, table, kit, front, listSeason: null, shown: null, pts: 0, deal: null };
   });
-
-  function fillLists() {
-    cards.forEach((c) => {
-      d3.select(c.list).selectAll("option").data(roster(), (p) => p.player_id).join("option").attr("value", (p) => p.player_name);
-    });
-  }
 
   // Radar duel, under a VS badge. Hovering an axis compares the two players on it.
   const fig = document.getElementById("q4-radar");
@@ -113,9 +138,9 @@ export function initPlayers(data) {
     describe: (j) => {
       const a = AXES[j];
       return {
-        title: `${a.label} · ${fmtSeason(season)}`,
-        rows: picked.map((p, i) => ({ value: ordinal(p[`${a.key}_pctl`] ?? 0), label: `${p.player_name} · ${a.fmt(p[a.raw])}`, color: SLOTS[i].color })),
-        note: "Percentile among the season’s players with 500+ minutes and 20+ games",
+        title: a.label,
+        rows: picked.map((p, i) => ({ value: ordinal(p[`${a.key}_pctl`] ?? 0), label: `${p.player_name}, ${fmtSeason(p.season)} · ${a.fmt(p[a.raw])}`, color: SLOTS[i].color })),
+        note: "Percentile within each player’s own season, among players with 500+ minutes and 20+ games",
       };
     },
   });
@@ -135,6 +160,11 @@ export function initPlayers(data) {
       const c = cards[i];
       if (c.shown === p) return;
       c.shown = p;
+      c.seasonSel.value = p.season;
+      if (c.listSeason !== p.season) {   // the search offers that season's players
+        c.listSeason = p.season;
+        d3.select(c.list).selectAll("option").data(roster(p.season), (r) => r.player_id).join("option").attr("value", (r) => r.player_name);
+      }
       c.deal?.kill();
       if (!live || instant) { fill(c, p, false); return; }
       c.deal = gsap.timeline({ delay: 0.08 * k++ })
@@ -142,19 +172,20 @@ export function initPlayers(data) {
         .call(() => fill(c, p, true))
         .to(c.tilt, { scaleX: 1, duration: 0.45, ease: "back.out(2)" });
     });
+    chips.attr("aria-pressed", (m) => String(m.pair[0] === picked[0] && m.pair[1] === picked[1]));
     radar.set(picked.map((p) => AXES.map((a) => (p[`${a.key}_pctl`] || 0) / 100)), { animate: live });
   }
 
   function fill(c, p, animate) {
     if (animate) scramble(c.name, p.player_name, { duration: 0.7 });
     else c.name.textContent = p.player_name;
-    c.team.textContent = [p.jersey && `#${p.jersey}`, p.position, p.team, fmtSeason(season), `${p.gp} games`].filter(Boolean).join(" · ");
+    c.team.textContent = [p.jersey && `#${p.jersey}`, p.position, p.team, fmtSeason(p.season), `${p.gp} games`].filter(Boolean).join(" · ");
     const src = headshotUrl(p.player_id);
     if (c.photo.getAttribute("src") !== src) {
       c.photo.classList.remove("loaded");
       c.photo.src = src;
     }
-    const row = data.teamBySeason.get(season)?.get(p.team);
+    const row = teamOf(p);
     const colors = teamColors(row);
     c.article.style.setProperty("--team", colors.tint);
     c.article.style.setProperty("--team-a", colors.primary);
@@ -184,28 +215,26 @@ export function initPlayers(data) {
       });
   }
 
-  fillLists();
   update();
   if (!instant) ScrollTrigger.create({ trigger: fig, start: "top 75%", once: true, onEnter: reveal });
 
-  // MVP hall placeholder: ghost cards for the most recent seasons
-  d3.select("#mvp-row").selectAll("div").data(d3.range(8).map((i) => seasons[seasons.length - 1 - i])).join("div")
-    .attr("class", "mvp-ghost").each(function (s) {
-      this.append(h("b", null, "?"), h("span", null, `MVP · ${fmtSeason(s)}`));
-    });
-}
-
-/** Halftime placeholder: empty radar glyphs, one per era. */
-export function initHalftime() {
-  const eras = ["1985–2000", "2000–2012", "2012–2020", "2020–2026"];
-  d3.select("#half-glyphs").selectAll("svg").data(eras).join("svg").attr("viewBox", "0 0 160 170").each(function (era) {
-    const g = d3.select(this).append("g").attr("transform", "translate(80,78)");
-    for (const v of [0.4, 0.7, 1]) {
-      g.append("path").attr("d", d3.line()(d3.range(6).map((i) => {
-        const a = (Math.PI * 2 * i) / 6 - Math.PI / 2;
-        return [60 * v * Math.cos(a), 60 * v * Math.sin(a)];
-      })) + "Z").style("fill", "none").style("stroke", "rgba(242,238,230,0.16)").style("stroke-dasharray", v === 1 ? null : "2 4");
-    }
-    d3.select(this).append("text").attr("x", 80).attr("y", 164).text(era);
+  // Picking a team before touching the duel puts its best scorer in the left card
+  onTeam((id) => {
+    const p = fanStar(id);
+    if (touched || !p || p === picked[1]) return;
+    picked[0] = p;
+    update();
   });
+
+  return {
+    /** Deal a player-season into the left card (the MVP hall). The right card stays unless it is the same. */
+    load(season, playerId) {
+      const p = roster(season).find((r) => r.player_id === playerId);
+      if (!p) return;
+      picked[0] = p;
+      if (picked[1] === p) picked[1] = roster(season).find((r) => r !== p);
+      touched = true;
+      update();
+    },
+  };
 }

@@ -4,7 +4,8 @@
 const CDN = "https://cdn.nba.com";
 const canonical = (name) => name.replace("Los Angeles ", "LA ");   // "Los Angeles Clippers" became "LA Clippers"
 
-export const headshotUrl = (playerId) => `${CDN}/headshots/nba/latest/1040x760/${playerId}.png`;
+/** size: "1040x760" for the cards, "260x190" for small medallions */
+export const headshotUrl = (playerId, size = "1040x760") => `${CDN}/headshots/nba/latest/${size}/${playerId}.png`;
 
 /**
  * logoOf(teamSeasonRow): the logo the team used that season. Past eras come from logos.csv (`eras`).

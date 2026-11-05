@@ -11,7 +11,7 @@ import { SHOT_STYLES, shotStyle } from "./hero.js";
 import { dur } from "../motion.js";
 import { setupSteps, h, b, key } from "./steps.js";
 
-const STYLES = [...SHOT_STYLES, { color: "#a9a59c", alpha: 0.12, size: 1.6 }];
+const STYLES = [...SHOT_STYLES, { color: "#a9a59c", alpha: 0.42, size: 2 }];   // last: shots outside the filter
 const DIM = STYLES.length - 1;
 const HIGHLIGHT = { all: () => true, two: (z) => z < 3, three: (z) => z >= 3, mid: (z) => z === 2 };
 const pct = d3.format(".1%");
@@ -100,7 +100,7 @@ export function initShotMap(data) {
       });
       tops.push({ z, cx, top: base - Math.ceil(g.length / perRow) * d });
     });
-    gsap.to(linesEl, { opacity: 0.12, duration: dur(0.6) });
+    gsap.to(linesEl, { opacity: 0.25, duration: dur(0.6) });
     gsap.to(heatEl, { opacity: 0, duration: dur(0.6) });
     stamp(season, "columns");
     readouts(null);

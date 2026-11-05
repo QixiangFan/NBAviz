@@ -8,6 +8,7 @@ const CUTOUTS = "assets/players/cutouts.csv";
 const TABLES = {
   league: "league_seasons", events: "events", teams: "team_seasons", corr: "win_correlations",
   quads: "quadrants", zones: "zone_seasons", grid: "shot_grid", players: "player_seasons",
+  mvps: "mvps", champs: "champions",
 };
 const TEXT = { players: ["jersey"] };   // columns d3.autoType must not touch: jersey "00" would become 0
 

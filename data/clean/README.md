@@ -21,6 +21,8 @@ League averages per team-game, one row per season since 1979-80. 47 rows.
 | `efg` | Effective FG%: (FGM + 0.5 × 3PM) / FGA |
 | `pace` | Possessions per 48 min (from 1985-86) |
 | `ortg` | Points per 100 possessions (from 1985-86) |
+| `orb_pct` | Offensive rebound %: share of a team's own misses it rebounds (from 1985-86) |
+| `tov_pct` | Turnover %: TOV / (FGA + 0.44 × FTA + TOV), turnovers per play (from 1985-86) |
 | `shortened` | Why the season was short (lockout / COVID), else blank |
 
 ### `team_seasons.csv`
@@ -101,6 +103,22 @@ Hand-picked rule changes and milestones for the timeline. 8 rows.
 | `kind` | rule or milestone |
 | `label / detail` | Short label and one-sentence note |
 
+### `mvps.csv`
+
+Regular-season MVPs since 1996-97, hand-entered from NBA.com's award history. 30 rows.
+
+| Column | Meaning |
+|---|---|
+| `player_id / player_name` | NBA.com player id and name, as in player_seasons |
+
+### `champions.csv`
+
+NBA champions since 1985-86, hand-entered from NBA.com's history. 41 rows.
+
+| Column | Meaning |
+|---|---|
+| `team_id / team / team_name` | Franchise id, and the abbreviation and name the team used that season |
+
 ## Cleaning rules
 
 1. A season-level stat is kept only when at least 99% of that season's games report every box-score column it needs. NBA.com leaves FGA blank before 1981-82 and 3PA, turnovers and rebounds blank for most games before 1985-86, so 3PA-based stats, pace and ratings start in 1985-86 and 3PM in 1979-80.
@@ -128,3 +146,5 @@ Hand-picked rule changes and milestones for the timeline. 8 rows.
 | Shot zones relabeled to match the shot type | INFO | 22,647 shots in total; 19,626 in 1996-97 (22 ft line), at most 378 in any other season |
 | Player points add up to team points (within 0.5%) | PASS | largest gap 0.00% in 1996-97 |
 | Jersey numbers found on the season rosters | INFO | 97.4% of 10,116 player-seasons |
+| Every MVP matches one player-season | PASS | 30 of 30 found |
+| Every champion matches one team-season | PASS | 41 of 41 found |

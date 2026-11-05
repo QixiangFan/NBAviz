@@ -81,7 +81,7 @@ export function initTimeline(data) {
     const g = svg.append("g").attr("transform", `translate(${m.left},${m.top})`);
 
     g.append("rect").attr("x", x(SHORT_LINE[0] - 0.5)).attr("width", x(SHORT_LINE[1] + 0.5) - x(SHORT_LINE[0] - 0.5))
-      .attr("height", ih).style("fill", "rgba(242,238,230,0.045)");
+      .attr("height", ih).style("fill", "rgba(242,238,230,0.07)");
     g.append("text").attr("x", x((SHORT_LINE[0] + SHORT_LINE[1]) / 2)).attr("y", ih - 8).attr("text-anchor", "middle")
       .style("font", "600 9px var(--mono)").style("letter-spacing", "0.1em").style("fill", "var(--muted)").text("22 FT LINE");
     const grid = g.append("g").attr("class", "grid");
@@ -91,7 +91,7 @@ export function initTimeline(data) {
 
     const ticks = g.append("g").selectAll("g").data(events).join("g").attr("transform", (e) => `translate(${x(e.season)},0)`);
     ticks.append("line").attr("class", "event-tick").attr("y1", (e) => -16 - e.row * 22).attr("y2", ih);
-    ticks.append("circle").attr("cy", (e) => -24 - e.row * 22).attr("r", 9).style("fill", "var(--bg)").style("stroke", "rgba(242,238,230,0.3)");
+    ticks.append("circle").attr("cy", (e) => -24 - e.row * 22).attr("r", 9).style("fill", "var(--bg)").style("stroke", "rgba(242,238,230,0.5)");
     ticks.append("text").attr("y", (e) => -24 - e.row * 22).attr("dy", "0.35em").attr("text-anchor", "middle")
       .style("font", "700 10px var(--mono)").style("fill", "var(--ink-2)").text((e) => e.n);
 
@@ -100,7 +100,7 @@ export function initTimeline(data) {
       .style("fill", "none").style("stroke-width", 5).style("opacity", 0.75);
     const path = g.append("path").attr("clip-path", "url(#q1-clip)")
       .style("fill", "none").style("stroke-width", 2.5).style("stroke-linejoin", "round").style("stroke-linecap", "round");
-    const nowLine = g.append("line").attr("y1", -8).attr("y2", ih).style("stroke", "rgba(242,238,230,0.3)");
+    const nowLine = g.append("line").attr("y1", -8).attr("y2", ih).style("stroke", "rgba(242,238,230,0.45)");
     const nowBall = g.append("g").attr("class", "now-ball");   // the clock's ball, rolling along the line
     nowBall.append("circle").attr("r", 7);
     nowBall.append("path").attr("d", ballSeams(7));
