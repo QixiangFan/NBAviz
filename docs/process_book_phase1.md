@@ -57,7 +57,7 @@ Draft text and figures for the process book. Screenshots are in `docs/screenshot
 | Loader | Counts the shots in the data, to set the scale | — |
 | Tip-off (hook) | 6,000 real 2025-26 shots burst from the rim onto a 3D court; the fan quote; the 3.3 → 37.0 headline | Hook |
 | Q1 · The long way out | Scroll-scrubbed timeline 1979-80 → 2025-26 with a live scoreboard and rule-change cards | QF1 |
-| Q2 · Where the shots went | Shot particles move from 1997-98 to 2014-15 (when threes passed the mid-range) to 2025-26, then stack into points-per-shot columns; a slider covers all 30 seasons | ZD8 / QF7 |
+| Q2 · Where the shots went | Shot particles move from 1997-98 to 2014-15 (when threes passed the mid-range) to 2025-26, then stack into points-per-shot columns; a slider covers all 30 seasons. Next page: a hex heat map of every shot, two seasons side by side, colored by share of attempts or points per shot, with a zone dumbbell | ZD8 / QF7 |
 | Halftime | Recap and handoff to the main question; era fingerprints (placeholder) | KN1 |
 | Q3 · Does volume win? | Main message: one set of team "balls" moves from volume to accuracy to efficiency, then every season, then four groups | QF8 / KN7 / JB2 / JB4 / JB6 |
 | Q4 · The players | Two flip-able player cards around a morphing radar; MVP hall (placeholder) | ZD2 / KN4 |
@@ -73,7 +73,7 @@ Draft text and figures for the process book. Screenshots are in `docs/screenshot
 |---|---|---|
 | Q1 annotated timeline | **Partly implemented**: scroll scrubbing, 4 metrics with line morphing, event cards, crosshair tooltip | 03, 04, 05 |
 | Q3 team scatter, correlation history, quadrants | **Partly implemented**: 8 scroll steps, metric morphs, live r readout, play-through of all seasons, hover | 11–17 |
-| Q2 shot particles | **Draft**: 5 scroll steps on all 30 seasons; the slider redraws the 22 ft arc for 1996-97; filter by shot type | 06–09c |
+| Q2 shot particles | **Draft**: 5 scroll steps on all 30 seasons; the slider redraws the 22 ft arc for 1996-97; filter by shot type. Second page (hex heat map, two seasons, zone dumbbell): 4 scroll steps | 06–09c |
 | Q4 player radar duel | **Draft**: season picker, search, random matchup, card flip; needs polish | 18, 19 |
 | Halftime era fingerprints, MVP hall | **Placeholder** with the planned encoding written in | 10, 18 |
 | Loader, tip-off, final scoreboard | Implemented | 00, 01, 20 |

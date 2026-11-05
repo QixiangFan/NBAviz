@@ -234,6 +234,30 @@
   filter: drop-shadow(0 0 8px rgba(236, 94, 34, 0.6)); }
 .trend:focus-visible { outline: 2px solid var(--three); outline-offset: 4px; border-radius: 6px; }
 
+/* Q2, page 2: hex heat maps of two seasons, a zone dumbbell under them (js/viz/heatmap.js). JS places the courts. */
+.hm-court { position: absolute; }
+.hm-court svg { position: absolute; left: 0; overflow: visible; }
+.hm-court .court-lines { pointer-events: none; }
+.hm-court .court-lines path, .hm-court .court-lines line { stroke: rgba(242, 238, 230, 0.4); }
+.hm-hex path { cursor: crosshair; }
+.hm-head { position: absolute; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-bottom: 8px; transform: translateY(-100%); }
+.hm-season { font: 900 36px/1 var(--display); text-transform: uppercase; color: var(--ink); white-space: nowrap; }
+.hm-sub { font: 600 11px var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-2); }
+.hm-dumb { position: absolute; left: 0; overflow: visible; }
+.hm-dumb .dumb-title { font: 600 11px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; fill: var(--ink-2); }
+.hm-dumb .dumb-label { font: 600 12px var(--mono); letter-spacing: 0.04em; fill: var(--ink-2); }
+.hm-dumb .dumb-value { font: 600 12px var(--mono); fill: var(--ink); font-variant-numeric: tabular-nums; }
+.hm-dumb .track { stroke: var(--grid); stroke-width: 1; }
+.hm-dumb .conn { stroke: var(--court); stroke-width: 2; }
+.hm-dumb .da { fill: #8d8a84; stroke: var(--bg); stroke-width: 2; }
+.hm-dumb .db { fill: var(--ink); stroke: var(--bg); stroke-width: 2; filter: drop-shadow(0 0 5px rgba(242, 238, 230, 0.4)); }
+.hm-legend { position: absolute; left: 5vw; bottom: 5vh; z-index: 2; width: 260px; pointer-events: none; }
+.hm-bar { height: 8px; border-radius: 3px; }
+.hm-ticks { position: relative; display: flex; justify-content: space-between; margin-top: 6px;
+  font: 600 10px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
+.hm-note { margin-top: 6px; font: 500 10px/1.4 var(--mono); color: var(--muted); }
+.step-card select { font-size: 13px; }
+
 /* Q3 */
 .q3-svg { width: 100%; height: 100%; overflow: visible; }
 .ball .leather { fill: #1b1f28; stroke: rgba(242, 238, 230, 0.55); stroke-width: 1; }
@@ -467,6 +491,10 @@
   .r-meter { top: calc(var(--hud-h) + 1vh); bottom: auto; right: 3vw; padding: 8px 12px; }
   .r-meter .led { font-size: 32px; }
   .stage-legend { display: none; }
+  .hm-legend { right: auto; left: 4vw; bottom: calc(42vh + 8px); width: 180px; }
+  .hm-note { display: none; }
+  .hm-season { font-size: 26px; }
+  .hm-sub { display: none; }
   .players-court { grid-template-columns: 1fr; }
   .final-board, .final-cols { grid-template-columns: 1fr; }
   .starting-five { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }

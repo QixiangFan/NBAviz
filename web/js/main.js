@@ -1,10 +1,11 @@
 // Boot: load the data behind a loader, start the motion system, build every chapter, run the HUD.
-// ?shot=<chapter>[:<step>] jumps straight to a chapter state for screenshots, e.g. ?shot=q1:0.6, ?shot=q3:5.
+// ?shot=<chapter>[:<step>] jumps straight to a chapter state for screenshots, e.g. ?shot=q1:0.6, ?shot=q3:5, ?shot=q2b:2.
 import { loadAll } from "./data.js";
 import { initMotion, initSnap, revealText, parallaxCards, scrollToEl, countTo, params, instant, stopScroll, startScroll } from "./motion.js";
 import { initHero } from "./viz/hero.js";
 import { initTimeline } from "./viz/timeline.js";
 import { initShotMap } from "./viz/shotmap.js";
+import { initHeatmap } from "./viz/heatmap.js";
 import { initTeams } from "./viz/teams.js";
 import { initPlayers, initHalftime } from "./viz/players.js";
 import { initScoreboard } from "./viz/scoreboard.js";
@@ -28,6 +29,7 @@ async function boot() {
   const hero = initHero(data);
   const q1 = initTimeline(data);
   const q2 = initShotMap(data);
+  const q2b = initHeatmap(data);
   initHalftime();
   const q3 = initTeams(data);
   initPlayers(data);
@@ -44,7 +46,7 @@ async function boot() {
   document.body.classList.remove("is-loading");
   startScroll();
   hero.play();
-  if (params.has("shot")) deepLink(params.get("shot"), { q1, q2, q3 });
+  if (params.has("shot")) deepLink(params.get("shot"), { q1, q2, q2b, q3 });
 }
 
 async function hideLoader(data) {
