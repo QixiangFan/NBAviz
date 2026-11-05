@@ -17,6 +17,7 @@ import { initScoreboard } from "./viz/scoreboard.js";
 import { initRibbons } from "./viz/ribbons.js";
 import { initCursor } from "./ui/cursor.js";
 import { initTeamPicker } from "./ui/team.js";
+import { initShotClock } from "./ui/shotclock.js";
 
 async function boot() {
   initMotion();
@@ -97,19 +98,20 @@ function initHud() {
   }));
   const bar = document.getElementById("game-clock-bar");
   ScrollTrigger.create({ start: 0, end: "max", onUpdate: (self) => gsap.set(bar, { scaleX: self.progress }) });
-  const clock = document.getElementById("shot-clock");
+  const clock = initShotClock(document.getElementById("shot-clock"));
+  const left = (self) => 24 * (1 - self.progress);
+  let possession = null;   // the section the clock is running for
   document.querySelectorAll("[data-period]").forEach((section) => {
     ScrollTrigger.create({
       trigger: section, start: section.id === "tipoff" ? "top top" : "top 50%", end: "bottom 50%",
       onToggle: (self) => {
         if (!self.isActive) return;
         links.forEach((a) => a.classList.toggle("active", a.dataset.goto === section.dataset.period));
+        // A new chapter resets the clock at once, like a new possession
+        if (possession && possession !== section) clock.set(left(self));
+        possession = section;
       },
-      onUpdate: (self) => {
-        const secs = Math.max(0, Math.ceil(24 * (1 - self.progress)));
-        clock.textContent = String(secs).padStart(2, "0");
-        clock.parentElement.classList.toggle("low", secs <= 5);
-      },
+      onUpdate: (self) => { if (self.isActive) clock.run(left(self)); },
     });
   });
 }
