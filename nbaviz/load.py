@@ -161,8 +161,8 @@ def _zone(d: pd.DataFrame) -> tuple:
 
 
 @lru_cache
-def shot_grid() -> pd.DataFrame:
-    """League attempts and makes per season, 1 ft x 1 ft half-court cell and shot zone (see _zone).
+def team_shot_grid() -> pd.DataFrame:
+    """Attempts and makes per season, franchise (team_id), 1 ft x 1 ft half-court cell and shot zone (see _zone).
 
     x, y are the cell's lower-left corner in feet from the hoop (x -25..24, y -5..42). A cell on
     a zone boundary (e.g. the 3-point line) gets one row per zone. `relabeled` counts attempts whose
@@ -171,19 +171,25 @@ def shot_grid() -> pd.DataFrame:
     season totals still match the game logs."""
     parts = []
     for f in _files("shot_chart", "shots"):
-        d = pd.read_csv(f, usecols=["LOC_X", "LOC_Y", "SHOT_TYPE", "SHOT_ZONE_BASIC", "SHOT_MADE_FLAG"])
+        d = pd.read_csv(f, usecols=["TEAM_ID", "LOC_X", "LOC_Y", "SHOT_TYPE", "SHOT_ZONE_BASIC", "SHOT_MADE_FLAG"])
         if d.empty:  # franchise did not exist that season (e.g. NOP in 2000-01)
             continue
         inside = d["LOC_Y"] <= HALF_COURT_Y
         d["x"] = np.where(inside, _cell(d["LOC_X"], -250, 50), np.nan)
         d["y"] = np.where(inside, _cell(d["LOC_Y"], -50, 48), np.nan)
         d["zone"], d["relabeled"] = _zone(d)
-        g = d.groupby(["x", "y", "zone"], dropna=False).agg(
+        g = d.groupby(["TEAM_ID", "x", "y", "zone"], dropna=False).agg(
             fga=("SHOT_MADE_FLAG", "size"), fgm=("SHOT_MADE_FLAG", "sum"), relabeled=("relabeled", "sum")).reset_index()
         g["season"] = int(f.stem[:4])
-        parts.append(g)
-    grid = pd.concat(parts, ignore_index=True)
-    return grid.groupby(["season", "x", "y", "zone"], dropna=False, as_index=False)[["fga", "fgm", "relabeled"]].sum()
+        parts.append(g.rename(columns={"TEAM_ID": "team_id"}))
+    return pd.concat(parts, ignore_index=True)
+
+
+@lru_cache
+def shot_grid() -> pd.DataFrame:
+    """League attempts and makes per season, cell and shot zone: team_shot_grid summed over teams."""
+    return team_shot_grid().groupby(["season", "x", "y", "zone"], dropna=False, as_index=False)[
+        ["fga", "fgm", "relabeled"]].sum()
 
 
 @lru_cache

@@ -50,6 +50,15 @@ export async function loadAll(onProgress = () => {}) {
   data.teamBySeason = d3.index(data.teams, (d) => d.season, (d) => d.team);   // players only carry the abbreviation
   data.logo = logoLookup(data.teams, await logoEras);
   data.cutouts = new Map((await cutouts).map((d) => [d.slug, d]));   // player photos for the hero and Q1
+  const teamShots = new Map();
+  /** One franchise's shot grid by season (team_shots/<team_id>.csv, about 0.8 MB), fetched on first use. */
+  data.teamShots = (id) => {
+    if (!teamShots.has(id)) {
+      teamShots.set(id, d3.csv(`${DATA}team_shots/${id}.csv`, d3.autoType)
+        .then((rows) => d3.group(rows.filter((c) => c.zone in ZONE_INDEX), (c) => c.season)));
+    }
+    return teamShots.get(id);
+  };
   return data;
 }
 

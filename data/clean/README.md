@@ -119,6 +119,14 @@ NBA champions since 1985-86, hand-entered from NBA.com's history. 41 rows.
 |---|---|
 | `team_id / team / team_name` | Franchise id, and the abbreviation and name the team used that season |
 
+### `team_shots/<team_id>.csv`
+
+shot_grid for one franchise (one file per team_id, all its seasons since 1996-97); the 2nd quarter's heat map loads it when a team is picked. 30 files, 989,495 rows.
+
+| Column | Meaning |
+|---|---|
+| `season / x / y / zone / fga / fgm` | As in shot_grid, for that franchise's attempts only |
+
 ## Cleaning rules
 
 1. A season-level stat is kept only when at least 99% of that season's games report every box-score column it needs. NBA.com leaves FGA blank before 1981-82 and 3PA, turnovers and rebounds blank for most games before 1985-86, so 3PA-based stats, pace and ratings start in 1985-86 and 3PM in 1979-80.
@@ -144,6 +152,8 @@ NBA champions since 1985-86, hand-entered from NBA.com's history. 41 rows.
 | Shot-chart attempts match game-log FGA (within 1%) | PASS | 30 seasons (1996-97 to 2025-26); largest gap 0.00% in 1996-97 |
 | Empty shot-chart files skipped | INFO | 8: 1996-97_NOP, 1997-98_NOP, 1998-99_NOP, 1999-00_NOP, 2000-01_NOP, 2001-02_NOP, 2002-03_CHA, 2003-04_CHA |
 | Shot zones relabeled to match the shot type | INFO | 22,647 shots in total; 19,626 in 1996-97 (22 ft line), at most 378 in any other season |
+| Every team shot chart matches one team-season | PASS | 892 team-seasons with shots; unmatched: none |
+| Team shot-chart attempts match team game-log FGA (within 1%) | PASS | largest gap 0.15% (1610612739 in 1996-97) |
 | Player points add up to team points (within 0.5%) | PASS | largest gap 0.00% in 1996-97 |
 | Jersey numbers found on the season rosters | INFO | 97.4% of 10,116 player-seasons |
 | Every MVP matches one player-season | PASS | 30 of 30 found |

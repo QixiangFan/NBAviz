@@ -2,8 +2,8 @@
 
     python build_clean_data.py
 
-Writes data/clean/<table>.csv plus data/clean/README.md: a data dictionary, the cleaning
-rules, and the result of every validation check. Re-run it after downloading more data
+Writes data/clean/<table>.csv (and data/clean/<table>/<key>.csv for the split tables) plus
+data/clean/README.md: a data dictionary, the cleaning rules, and the result of every validation check. Re-run it after downloading more data
 (e.g. more shot-chart seasons). Exits with an error if any check fails.
 """
 import sys
@@ -24,6 +24,12 @@ def readme(tables: dict, results: list) -> str:
                   "| Column | Meaning |", "|---|---|"]
         lines += [f"| `{col}` | {text} |" for col, text in columns.items()]
         lines.append("")
+    for name, (_, key, about, columns) in export.SPLIT_TABLES.items():
+        files = tables[name]
+        lines += [f"### `{name}/<{key}>.csv`", "", f"{about} {len(files)} files, "
+                  f"{sum(len(df) for df in files.values()):,} rows.", "", "| Column | Meaning |", "|---|---|"]
+        lines += [f"| `{col}` | {text} |" for col, text in columns.items()]
+        lines.append("")
     lines += ["## Cleaning rules", ""] + [f"{i}. {rule}" for i, rule in enumerate(export.CLEANING_RULES, 1)]
     lines += ["", "## Validation checks", "", "| Check | Result | Detail |", "|---|---|---|"]
     lines += [f"| {r['check']} | {r['status']} | {r['detail']} |" for r in results]
@@ -40,6 +46,16 @@ def main():
         df.to_csv(path, index=False)
         tables[name] = df
         print(f"{len(df):,} rows, {path.stat().st_size / 1e3:,.0f} KB")
+    for name, (build, key, _, _) in export.SPLIT_TABLES.items():
+        print(f"{name}/", end=" ", flush=True)
+        folder = CLEAN_DIR / name
+        folder.mkdir(exist_ok=True)
+        files = {k: g.drop(columns=key) for k, g in build().groupby(key)}
+        for k, df in files.items():
+            df.to_csv(folder / f"{k}.csv", index=False)
+        tables[name] = files
+        size = sum((folder / f"{k}.csv").stat().st_size for k in files)
+        print(f"{len(files)} files, {sum(len(df) for df in files.values()):,} rows, {size / 1e3:,.0f} KB")
 
     print("\nChecks")
     results = export.checks()

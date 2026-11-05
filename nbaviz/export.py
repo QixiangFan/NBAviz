@@ -88,6 +88,12 @@ def shot_grid() -> pd.DataFrame:
     return g[g["x"].notna()].drop(columns="relabeled").astype({"fga": int, "fgm": int})
 
 
+def team_shots() -> pd.DataFrame:
+    g = load.team_shot_grid()
+    g = g[g["x"].notna()].drop(columns="relabeled").astype({"fga": int, "fgm": int})
+    return g[["team_id", "season", "x", "y", "zone", "fga", "fgm"]].sort_values(["team_id", "season", "x", "y", "zone"])
+
+
 def player_seasons() -> pd.DataFrame:
     p = load.player_seasons()
     p = p[(p["min"] >= PLAYER_MIN_MINUTES) & (p["gp"] >= PLAYER_MIN_GAMES)].copy()
@@ -244,6 +250,14 @@ TABLES = {
         "team_id / team / team_name": "Franchise id, and the abbreviation and name the team used that season"}),
 }
 
+# Tables too big to load up front: one CSV per value of the key column, in data/clean/<table>/<key>.csv,
+# without the key column. The website fetches a file only when the reader asks for it.
+SPLIT_TABLES = {
+    "team_shots": (team_shots, "team_id", "shot_grid for one franchise (one file per team_id, all its "
+                                          "seasons since 1996-97); the 2nd quarter's heat map loads it when a team is picked.", {
+        "season / x / y / zone / fga / fgm": "As in shot_grid, for that franchise's attempts only"}),
+}
+
 CLEANING_RULES = [
     "A season-level stat is kept only when at least 99% of that season's games report every box-score "
     "column it needs. NBA.com leaves FGA blank before 1981-82 and 3PA, turnovers and rebounds blank for "
@@ -323,6 +337,16 @@ def checks() -> list:
     out.append(_check("Shot zones relabeled to match the shot type", None,
                       f"{int(relabeled.sum()):,} shots in total; {int(relabeled[worst]):,} in {C.season_str(worst)} "
                       f"(22 ft line), at most {int(relabeled.drop(worst).max()):,} in any other season"))
+
+    shots = load.team_shot_grid().groupby(["season", "team_id"])["fga"].sum()
+    logs = load.team_games().groupby(["season", "team_id"])["fga"].sum()
+    unknown = shots.index.difference(logs.index)
+    out.append(_check("Every team shot chart matches one team-season", bool(unknown.empty),
+                      f"{len(shots):,} team-seasons with shots; unmatched: " +
+                      (", ".join(f"{t} {C.season_str(s)}" for s, t in unknown) or "none")))
+    gap = (shots / logs.reindex(shots.index) - 1).abs()
+    out.append(_check("Team shot-chart attempts match team game-log FGA (within 1%)", bool((gap < 0.01).all()),
+                      f"largest gap {gap.max():.2%} ({gap.idxmax()[1]} in {C.season_str(gap.idxmax()[0])})"))
 
     p = load.player_seasons()
     player_pts = p.groupby("season")["pts"].sum()

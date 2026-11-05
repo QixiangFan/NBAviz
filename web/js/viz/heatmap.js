@@ -2,17 +2,19 @@
 // slide). Every attempt of a season is binned into 3 ft hexagons, and two seasons sit side by side on one
 // color scale. Color is the share of attempts, or points per shot with the size showing how often teams
 // shot from the spot. A dumbbell chart under the courts reads the same two seasons zone by zone. The last
-// step hands the reader both seasons and the color switch. DRAFT.
+// step hands the reader two seasons, the whole league or one team (the reader's team by default), and the
+// color switch. DRAFT.
 import { ZONES, ZONE_NAMES, season as fmtSeason, STANDARD_LINE } from "../data.js";
 import { fitCourt, drawCourt, COURT } from "./court.js";
 import { setupSteps, h, b } from "./steps.js";
 import { segmented } from "../ui/controls.js";
 import { showTip, moveTip, hideTip } from "../ui/tooltip.js";
+import { getTeam, onTeam } from "../ui/team.js";
 import { dur } from "../motion.js";
 
 const R = 1.5;                            // hexagon radius in feet (2.6 ft across)
 const SUB = 4;                            // each 1 ft grid cell is split SUB × SUB so the hexagons don't alias it
-const MIN_ATTEMPTS = 40;                  // points per shot is noise below this
+const MIN_ATTEMPTS = { league: 40, team: 12 };   // points per shot is noise below this
 const PPS_DOMAIN = [0.6, 1.4];            // cold to hot, 1.0 point per shot in the middle
 const HEAD = 54;                          // season title above each court
 const GAP = 28;
@@ -46,13 +48,21 @@ function hexOf(x, y) {
   return [rq, rr];
 }
 
-/** One season's grid cells as hexagons: attempts, makes and points, plus the season's total attempts. */
-function binSeason(cells) {
+/**
+ * One season's grid cells as hexagons (attempts, makes, points) and as zones (share of attempts, points
+ * per shot, in ZONES order), plus the season's total attempts. No cells (a team that did not exist yet)
+ * gives total 0 and zones null.
+ */
+function binSeason(cells = []) {
   const bins = new Map();
+  const zones = ZONES.map(() => ({ fga: 0, fgm: 0 }));
   let total = 0;
   const w = 1 / (SUB * SUB);
   for (const c of cells) {
     total += c.fga;
+    const zone = zones[ZONES.indexOf(c.zone)];
+    zone.fga += c.fga;
+    zone.fgm += c.fgm;
     const value = THREE_ZONES.has(c.zone) ? 3 : 2;
     for (let i = 0; i < SUB; i++) {
       for (let j = 0; j < SUB; j++) {
@@ -74,7 +84,10 @@ function binSeason(cells) {
   }
   const hexes = [...bins.values()];
   hexes.forEach((d) => { d.share = d.fga / total; d.pps = d.pts / d.fga; });
-  return { total, hexes };
+  return {
+    total, hexes,
+    zones: total ? zones.map((z, i) => ({ share: z.fga / total, pps: ((i >= 3 ? 3 : 2) * z.fgm) / Math.max(1, z.fga) })) : null,
+  };
 }
 
 /** Pointy-top hexagon path of radius r pixels, centered on (0, 0). */
@@ -91,20 +104,25 @@ export function initHeatmap(data) {
   const first = seasons.find((s) => s >= STANDARD_LINE) ?? seasons[0];
   const last = seasons[seasons.length - 1];
   const area = document.getElementById("q2b-viz");
+  const teamRow = d3.index(data.teams, (d) => d.team_id, (d) => d.season);
+  const teams = data.teams.filter((d) => d.season === data.lastSeason).sort((a, c) => d3.ascending(a.team_name, c.team_name));
+  // What the courts draw: a team's grid by season once its file is in, or the whole league (team null)
+  let shown = { team: null, grid: null };
   const cache = new Map();
   const binned = (s) => {
-    if (!cache.has(s)) cache.set(s, binSeason(data.gridBySeason.get(s)));
-    return cache.get(s);
+    const key = `${shown.team ?? "league"}:${s}`;
+    if (!cache.has(key)) cache.set(key, binSeason(shown.grid ? shown.grid.get(s) : data.gridBySeason.get(s)));
+    return cache.get(key);
   };
   const zone = (s, z) => data.zoneShare(s, z);
   const threeShare = (s) => zone(s, "C3").share + zone(s, "AB3").share;
 
   const STORY = [
-    { a: first, b: last, mode: "freq", showB: false },
-    { a: first, b: last, mode: "freq", showB: true },
-    { a: first, b: last, mode: "pps", showB: true },
+    { a: first, b: last, team: null, mode: "freq", showB: false },
+    { a: first, b: last, team: null, mode: "freq", showB: true },
+    { a: first, b: last, team: null, mode: "pps", showB: true },
   ];
-  const explore = { a: first, b: last, mode: "pps" };
+  const explore = { a: first, b: last, team: getTeam(), mode: "pps" };
   const st = { ...STORY[0] };
 
   // --- DOM ------------------------------------------------------------------------------------------
@@ -163,23 +181,37 @@ export function initHeatmap(data) {
   }
 
   // --- Draw -----------------------------------------------------------------------------------------
+  // A story step and the team control can ask for different teams back to back; only the latest may draw.
+  async function load() {
+    const team = st.team;
+    const grid = team == null ? null : await data.teamShots(team);
+    if (team !== st.team) return;
+    shown = { team, grid };
+    render();
+  }
+
+  /** Who the court shows in a season: the team's name that season (null if it did not play), or the league. */
+  const whoIn = (s) => (shown.team == null ? "All teams" : teamRow.get(shown.team)?.get(s)?.team_name ?? null);
+
   function render({ animate = true } = {}) {
     if (!courts[0].s) return;
     const time = animate ? dur(0.5) * 1000 : 0;
     const freq = st.mode === "freq";
+    const minAttempts = shown.grid ? MIN_ATTEMPTS.team : MIN_ATTEMPTS.league;
     const pair = [st.a, st.b].map(binned);
 
     const shares = pair.flatMap((p) => p.hexes.map((d) => d.share)).sort(d3.ascending);
     const seq = d3.scaleSequentialSqrt(SEQ).domain([0, d3.quantile(shares, 0.985) || 1]).clamp(true);
     const div = d3.scaleSequential(DIV).domain(PPS_DOMAIN).clamp(true);
     // Size saturates at the 80th-percentile spot so the few very busy hexagons at the rim don't shrink the rest
-    const sizeShares = pair.flatMap((p) => p.hexes.filter((d) => d.fga >= MIN_ATTEMPTS).map((d) => d.share)).sort(d3.ascending);
+    const sizeShares = pair.flatMap((p) => p.hexes.filter((d) => d.fga >= minAttempts).map((d) => d.share)).sort(d3.ascending);
     const size = d3.scaleSqrt().domain([0, d3.quantile(sizeShares, 0.8) || 1]).range([0.3, 1]).clamp(true);
 
     courts.forEach((c, k) => {
       const s = k === 0 ? st.a : st.b;
       const visible = k === 0 || st.showB;
       const { total, hexes } = pair[k];
+      const who = whoIn(s);
       const short = s < STANDARD_LINE;
       if (c.short !== short) {
         c.short = short;
@@ -187,14 +219,14 @@ export function initHeatmap(data) {
       }
       c.el.transition().duration(time).style("opacity", visible ? 1 : 0.14);
       c.title.text(fmtSeason(s));
-      c.sub.text(`${int(total)} shots`);
-      const shown = hexes.filter((d) => (freq ? d.fga > 0 : d.fga >= MIN_ATTEMPTS));
+      c.sub.text(total ? `${who} · ${int(total)} shots` : "No team this season");
+      const shown = hexes.filter((d) => (freq ? d.fga > 0 : d.fga >= minAttempts));
       c.hexG.selectAll("path").data(shown, (d) => d.key).join(
         (enter) => enter.append("path").attr("fill-opacity", 0),
       )
         .attr("transform", (d) => `translate(${c.s.x(d.cx)},${c.s.y(d.cy)})`)
         .on("pointerenter", (event, d) => showTip(event, {
-          title: `${fmtSeason(s)} · all teams`,
+          title: `${fmtSeason(s)} · ${who}`,
           rows: [
             { value: int(Math.round(d.fga)), label: "attempts" },
             { value: pct(d.share), label: "of all shots" },
@@ -210,11 +242,11 @@ export function initHeatmap(data) {
         .attr("fill", (d) => (freq ? seq(d.share) : div(d.pps)));
     });
 
-    renderLegend(freq, seq, div);
-    renderDumbbell(freq, time);
+    renderLegend(freq, seq, div, minAttempts);
+    renderDumbbell(freq, pair, time);
   }
 
-  function renderLegend(freq, seq, div) {
+  function renderLegend(freq, seq, div, minAttempts) {
     const ramp = freq
       ? (t) => seq(seq.domain()[1] * t * t)               // the sqrt scale, so the bar matches the hexagons
       : (t) => div(PPS_DOMAIN[0] + t * (PPS_DOMAIN[1] - PPS_DOMAIN[0]));
@@ -225,15 +257,15 @@ export function initHeatmap(data) {
     legendTicks.selectAll("span").data(ticks).join("span").attr("class", (d) => d[1]).text((d) => d[0]);
     legendNote.text(freq
       ? "Each hexagon is 2.6 ft across."
-      : `Size = how often teams shot from the spot. Hexagons under ${MIN_ATTEMPTS} attempts are hidden.`);
+      : `Size = how often teams shot from the spot. Hexagons under ${minAttempts} attempts are hidden.`);
   }
 
-  function renderDumbbell(freq, time) {
+  function renderDumbbell(freq, pair, time) {
     if (!showDumb) return;
     const W = area.clientWidth;
     const top = 34;
-    const val = (s, z) => (freq ? zone(s, z).share : zone(s, z).pps);
-    const rows = ZONES.map((z, i) => ({ z, i, name: ZONE_NAMES[z], a: val(st.a, z), b: st.showB ? val(st.b, z) : null }));
+    const val = (p, i) => (!p.zones ? null : freq ? p.zones[i].share : p.zones[i].pps);
+    const rows = ZONES.map((z, i) => ({ z, i, name: ZONE_NAMES[z], a: val(pair[0], i), b: st.showB ? val(pair[1], i) : null }));
     const f = freq ? pct : (v) => v.toFixed(2);
     dumbX.domain(freq ? [0, 0.45] : PPS_DOMAIN);
     dumbTitle.attr("x", 0).attr("y", 12).text(freq ? "Share of attempts by zone" : "Points per shot by zone");
@@ -253,12 +285,15 @@ export function initHeatmap(data) {
     row.attr("transform", (r) => `translate(0,${top + r.i * DUMB_ROW + DUMB_ROW / 2})`);
     row.select(".dumb-label").attr("x", 0).attr("dy", "0.32em").text((r) => r.name);
     row.select(".track").attr("x1", dumbX.range()[0]).attr("x2", dumbX.range()[1]);
+    // A season with no data (a team that did not exist yet) leaves its dot out; the other one still shows
+    const at = (r) => r.a ?? r.b;
     const t = row.transition().duration(time);
-    t.select(".da").attr("cx", (r) => dumbX(r.a));
-    t.select(".db").attr("cx", (r) => dumbX(r.b ?? r.a)).style("opacity", (r) => (r.b == null ? 0 : 1));
-    t.select(".conn").attr("x1", (r) => dumbX(r.a)).attr("x2", (r) => dumbX(r.b ?? r.a)).style("opacity", (r) => (r.b == null ? 0 : 1));
+    t.select(".da").attr("cx", (r) => dumbX(at(r) ?? 0)).style("opacity", (r) => (r.a == null ? 0 : 1));
+    t.select(".db").attr("cx", (r) => dumbX(r.b ?? at(r) ?? 0)).style("opacity", (r) => (r.b == null ? 0 : 1));
+    t.select(".conn").attr("x1", (r) => dumbX(at(r) ?? 0)).attr("x2", (r) => dumbX(r.b ?? at(r) ?? 0))
+      .style("opacity", (r) => (r.a == null || r.b == null ? 0 : 1));
     row.select(".dumb-value").attr("x", dumbX.range()[1] + 16).attr("dy", "0.32em")
-      .text((r) => (r.b == null ? f(r.a) : `${f(r.a)} → ${f(r.b)}`));
+      .text((r) => [r.a, r.b].map((v) => (v == null ? "–" : f(v))).slice(0, st.showB ? 2 : 1).join(" → "));
 
     dumbKey.attr("transform", `translate(${W - 190 + 16},${12})`).selectAll("*").remove();
     [[st.a, "da"], ...(st.showB ? [[st.b, "db"]] : [])].forEach(([s, cls], k) => {
@@ -268,26 +303,27 @@ export function initHeatmap(data) {
   }
 
   // --- Steps ----------------------------------------------------------------------------------------
-  const seasonSelect = (label, which) => {
-    const select = h("select", { "aria-label": label },
-      ...seasons.map((s) => h("option", { value: s }, fmtSeason(s))));
-    select.addEventListener("change", () => {
-      explore[which] = Number(select.value);
-      Object.assign(st, explore, { showB: true });
-      render();
-    });
-    select.value = explore[which];
-    return h("label", { class: "control" }, h("span", null, label), select);
+  const EXPLORE = 3;
+  function applyExplore() {
+    Object.assign(st, explore, { showB: true });
+    load();
+  }
+  const select = (label, options, value, onChange) => {
+    const el = h("select", { "aria-label": label }, ...options.map(([v, text]) => h("option", { value: v }, text)));
+    el.value = value;
+    el.addEventListener("change", () => onChange(el.value));
+    return { el, control: h("label", { class: "control" }, h("span", null, label), el) };
   };
+  const seasonOpts = seasons.map((s) => [s, fmtSeason(s)]);
+  const seasonA = select("Season A", seasonOpts, explore.a, (v) => { explore.a = Number(v); applyExplore(); });
+  const seasonB = select("Season B", seasonOpts, explore.b, (v) => { explore.b = Number(v); applyExplore(); });
+  const team = select("Team", [["", "Whole league"], ...teams.map((d) => [d.team_id, d.team_name])], explore.team ?? "",
+    (v) => { explore.team = v ? Number(v) : null; applyExplore(); });
   const modeRow = h("div", { class: "row" });
-  const mode = segmented(modeRow, [{ value: "freq", label: "Attempts" }, { value: "pps", label: "Points per shot" }],
-    explore.mode, (v) => {
-      explore.mode = v;
-      Object.assign(st, explore, { showB: true });
-      render();
-    }, "Heat map color");
+  segmented(modeRow, [{ value: "freq", label: "Attempts" }, { value: "pps", label: "Points per shot" }],
+    explore.mode, (v) => { explore.mode = v; applyExplore(); }, "Heat map color");
   const controls = h("div", { class: "controls" },
-    h("div", { class: "row" }, seasonSelect("Season A", "a"), seasonSelect("Season B", "b")), modeRow);
+    team.control, h("div", { class: "row" }, seasonA.control, seasonB.control), modeRow);
 
   const lastZ = (z) => zone(last, z).pps.toFixed(2);
   const steps = [
@@ -306,8 +342,8 @@ export function initHeatmap(data) {
       h("p", null, "In ", fmtSeason(last), " a mid-range attempt returned ", b(lastZ("MID")), " points, a corner three ", b(lastZ("C3")),
         " and a shot at the rim ", b(lastZ("RA")), ". Teams moved attempts away from the least valuable spot."),
       h("p", null, "But a three is only worth more ", h("em", null, "if it goes in"), ".")] },
-    { num: "Your turn", title: "Pick two seasons", body: [
-      h("p", null, `Compare any two of the ${seasons.length} seasons from ${fmtSeason(seasons[0])} to ${fmtSeason(last)}, and switch what the color shows.`),
+    { num: "Your turn", title: "Pick a team and two seasons", body: [
+      h("p", null, `Compare any two of the ${seasons.length} seasons from ${fmtSeason(seasons[0])} to ${fmtSeason(last)}, for the whole league or one franchise, and switch what the color shows.`),
       seasons[0] < STANDARD_LINE && h("p", null, `Before ${fmtSeason(STANDARD_LINE)} the arc was 22 ft all the way around.`),
       controls] },
   ].filter(Boolean);
@@ -322,7 +358,13 @@ export function initHeatmap(data) {
   render({ animate: false });
   const story = setupSteps(document.getElementById("q2b-steps"), steps, (i) => {
     actions[i]();
-    render();
+    load();
+  });
+  // The reader's team (picked in the HUD) is the one the last step shows
+  onTeam((id) => {
+    explore.team = id;
+    team.el.value = id ?? "";
+    if (story.active === EXPLORE) applyExplore();
   });
   new ResizeObserver(() => { fit(); render({ animate: false }); }).observe(area);
 
