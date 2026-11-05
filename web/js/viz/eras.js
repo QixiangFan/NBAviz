@@ -18,8 +18,9 @@ const AXES = [
   { key: "tov_pct", label: "Turnovers", long: "Turnovers per play", fmt: pct },
   { key: "pace", label: "Pace", long: "Possessions per 48 minutes", fmt: num },
 ];
-// One hue, the three-point orange, getting brighter era by era (validated as an ordinal ramp on the dark surface)
-const RAMP = ["#872f06", "#a83d0e", "#c1552b", "#ec5e22"];
+// One hue, the three-point orange, getting brighter era by era (validated as an ordinal ramp on the dark surface;
+// every step at least 3.3:1 against it)
+const RAMP = ["#a8461a", "#c9531f", "#ec5e22", "#f7925f"];
 
 export function initEras(data) {
   const rows = data.league.filter((d) => d.fg3a_rate != null);   // 3PA-based stats start in 1985-86

@@ -157,15 +157,15 @@
   border-radius: 4px 12px 12px 4px; padding: 11px 14px; transition: opacity 0.4s, filter 0.4s;
 }
 .event.milestone { border-left-color: var(--three); }
-.event.old { opacity: 0.4; filter: saturate(0.4); }
+.event.old { opacity: 0.65; filter: saturate(0.5); }
 .event .when { font: 600 10px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
 .event h4 { margin: 3px 0 2px; font: 800 20px/1.05 var(--display); text-transform: uppercase; }
 .event p { margin: 0; font-size: 13px; color: var(--ink-2); }
 .q1-note { position: absolute; left: 5vw; bottom: 3.5vh; margin: 0; font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.05em; }
 .q1-chart .now-ball circle { fill: var(--three); filter: drop-shadow(0 0 8px var(--three)); }
 .q1-chart .now-ball path { fill: none; stroke: rgba(11, 13, 18, 0.6); stroke-width: 1; }
-.q1-chart .event-tick { stroke: rgba(242, 238, 230, 0.16); }
-.q1-chart .event-tick.passed { stroke: rgba(242, 238, 230, 0.4); }
+.q1-chart .event-tick { stroke: rgba(242, 238, 230, 0.3); }
+.q1-chart .event-tick.passed { stroke: rgba(242, 238, 230, 0.55); }
 
 /* --- Scrolly (Q2, Q3): sticky stage + step cards --------------------------- */
 .scrolly { position: relative; }
@@ -223,7 +223,7 @@
 .overlay .readout.three .readout-name { fill: var(--three); }
 .trend { display: block; width: 100%; height: auto; overflow: visible; cursor: pointer; touch-action: none; }
 .trend .line { fill: none; stroke-width: 2; stroke-linejoin: round; }
-.trend .line.future { opacity: 0.22; }
+.trend .line.future { opacity: 0.5; }
 .trend .two .line { stroke: var(--two); }
 .trend .three .line { stroke: var(--three); }
 .trend .two text, .trend .dot.two { fill: var(--two); }
@@ -232,7 +232,7 @@
 .trend .end { fill: var(--muted); }
 .trend .cross { stroke: var(--muted); stroke-dasharray: 2 3; }
 .trend .track { stroke: var(--bg-3); stroke-width: 4; stroke-linecap: round; }
-.trend .head { stroke: var(--ink-2); stroke-opacity: 0.35; }
+.trend .head { stroke: var(--ink-2); stroke-opacity: 0.55; }
 .trend .knob { fill: var(--three); stroke: rgba(236, 94, 34, 0.25); stroke-width: 8; paint-order: stroke;
   filter: drop-shadow(0 0 8px rgba(236, 94, 34, 0.6)); }
 .trend:focus-visible { outline: 2px solid var(--three); outline-offset: 4px; border-radius: 6px; }
@@ -240,7 +240,7 @@
 /* Q3 */
 .q3-svg { width: 100%; height: 100%; overflow: visible; }
 .ball .leather { fill: #1b1f28; stroke: rgba(242, 238, 230, 0.55); stroke-width: 1; }
-.ball .seam { fill: none; stroke: rgba(242, 238, 230, 0.16); stroke-width: 1; }
+.ball .seam { fill: none; stroke: rgba(242, 238, 230, 0.26); stroke-width: 1; }
 .ball .abbr { font: 700 9px var(--mono); fill: var(--ink); text-anchor: middle; dominant-baseline: central; letter-spacing: 0.02em; pointer-events: none; }
 .ball.hot .leather { fill: var(--three); stroke: #ffd2bf; }
 .ball.cold .leather { fill: var(--two); stroke: #cfe3ff; }
@@ -250,7 +250,7 @@
 .ball.has-logo .leather { fill: #fff; stroke: rgba(11, 13, 18, 0.6); }
 .ball.has-logo.hot .leather { stroke: var(--three); stroke-width: 3.5; }
 .ball.has-logo.cold .leather { stroke: var(--two); stroke-width: 3.5; }
-.ball.dim { opacity: 0.4; filter: grayscale(1); }   /* faded but the logo still reads */
+.ball.dim { opacity: 0.6; filter: grayscale(1); }   /* faded but the logo still reads */
 /* The season's champion wears a crown and a gold edge (explore step); the reader's team, a ring in its
    colors and a tag under the ball */
 .ball .crown { display: none; fill: var(--gold); stroke: var(--bg); stroke-width: 1.5; stroke-linejoin: round; }
@@ -275,7 +275,7 @@
 .cloud-corners .count { fill: var(--ink); }
 .cloud-corners .mark, .quad-champs .mark { fill: var(--gold); }
 .quad-champs { font: 600 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; fill: var(--ink); }
-.fan-trail path { fill: none; stroke-width: 1.4; stroke-opacity: 0.55; stroke-linejoin: round; }
+.fan-trail path { fill: none; stroke-width: 1.6; stroke-opacity: 0.75; stroke-linejoin: round; }
 .fan-trail text { font: 700 10px var(--mono); letter-spacing: 0.08em; fill: var(--ink);
   paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
 .quad-label { font: 900 20px var(--display); text-transform: uppercase; fill: var(--ink); }
@@ -406,16 +406,16 @@
 /* Radar (js/viz/radar.js), drawn like a center circle: the floor's edge is the 100th percentile, the dashed
    ring the league median. The two shapes add up like light where they overlap. */
 .duel .floor { stroke: var(--court); stroke-width: 1.25; }   /* lit by a gradient from radar.js */
-.duel .ring { fill: none; stroke: var(--grid); }
-.duel .ring.median { stroke: rgba(242, 238, 230, 0.3); stroke-dasharray: 2 5; }
-.duel .spoke { stroke: var(--grid); transition: stroke 0.25s; }
-.duel .spoke.on { stroke: rgba(242, 238, 230, 0.55); }
+.duel .ring { fill: none; stroke: rgba(242, 238, 230, 0.18); }
+.duel .ring.median { stroke: rgba(242, 238, 230, 0.45); stroke-dasharray: 2 5; }
+.duel .spoke { stroke: rgba(242, 238, 230, 0.18); transition: stroke 0.25s; }
+.duel .spoke.on { stroke: rgba(242, 238, 230, 0.7); }
 .duel .spoke-end { fill: var(--court); }
 .duel .median-label { font: 600 9px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; fill: var(--muted);
   text-anchor: middle; paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
 .duel .ring-label { font: 500 10px var(--mono); fill: var(--muted); }
 .duel .axis-name { font: 800 15px var(--display); text-transform: uppercase; fill: var(--ink); transition: opacity 0.25s; }
-.duel .focused .axis-name:not(.on), .duel .focused .dots circle:not(.on) { opacity: 0.35; }
+.duel .focused .axis-name:not(.on), .duel .focused .dots circle:not(.on) { opacity: 0.5; }
 .duel .sweep path { fill: var(--ink); }
 .duel .sweep .beam { stroke: var(--ink); stroke-opacity: 0.6; stroke-width: 1.5; }
 .duel .shape { mix-blend-mode: screen; }
@@ -423,7 +423,7 @@
 .duel .shape .area { stroke-width: 2.5; stroke-linejoin: round; }
 .duel .shape.ghost { mix-blend-mode: normal; }   /* the shape before, as a dashed outline */
 .duel .shape.ghost .glow { display: none; }
-.duel .shape.ghost .area { stroke-width: 1.5; stroke-dasharray: 3 4; }
+.duel .shape.ghost .area { stroke-width: 1.75; stroke-dasharray: 3 4; }
 .duel .dots circle { stroke: var(--bg); stroke-width: 2; transition: opacity 0.25s; }
 .duel .pings circle { fill: none; stroke-width: 1.5; }
 .duel .hit path { fill: transparent; }
@@ -497,6 +497,111 @@
   transition: transform 0.4s var(--ease-out); }
 .starting-five li:hover .jersey { transform: translateY(-6px) rotate(-2deg); }
 .colophon { margin-top: 80px; font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+
+/* --- Q3 timeout: the film room (js/viz/filmroom.js) ---------------------------
+   Brushing and linking: the cloud (A), the seasons strip (B) and the win % histogram (C) share one
+   selection. Desktop: exactly one screen; the cloud takes the left, the strip, readouts and histogram
+   stack on the right, and the histogram takes whatever height is left. */
+.film { position: relative; padding: calc(var(--hud-h) + 5vh) 5vw 6vh; border-top: 1px solid var(--line);
+  background: radial-gradient(ellipse at 85% 0%, rgba(22, 171, 133, 0.07), transparent 60%); }
+.film-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 32px; }
+.film-head .period-label { margin-bottom: 10px; }
+.film .chapter-title { font-size: clamp(40px, min(5.2vw, 8vh), 84px); }
+.film-reset { margin-left: auto; }
+.film-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: 18px 2.4vw; margin-top: 22px; }
+.film-view, .film-side { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.film-side { gap: 12px; }
+.film-view-head { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin-bottom: 6px; }
+.film-view-head h3 { display: flex; align-items: center; gap: 8px; margin: 0; font: 600 11px var(--mono);
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink); }
+.film-view-head h3 b { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%;
+  background: var(--ink); color: var(--bg); font-size: 11px; letter-spacing: 0; }
+.film-view-head p { margin: 0; font: 500 11px var(--mono); letter-spacing: 0.04em; color: var(--muted); }
+.film-chips, .film-legend { display: flex; flex-wrap: wrap; gap: 4px; margin-left: auto; }
+.film .chip { padding: 6px 10px; font-size: 10px; border: 1px solid var(--line); }
+.film-legend { gap: 4px 14px; font: 500 11px var(--mono); color: var(--ink-2); }
+.film-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.film-key { width: 8px; height: 8px; border-radius: 50%; background: var(--ink); opacity: 0.34; }
+.film-key.on { opacity: 1; }
+.film-key.champ { background: var(--gold); opacity: 1; }
+.film-key.fan { background: transparent; opacity: 1; box-shadow: inset 0 0 0 1.5px var(--team); }
+.film-fig { position: relative; margin: 0; min-height: 0; }
+.film-fig svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.film-cloud .film-fig { flex: 1 1 auto; height: min(86vw, 560px); }
+.film-strip { height: clamp(96px, 16vh, 170px); }
+.film-hist-view { flex: 1 1 0; }
+.film-hist { flex: 1 1 auto; min-height: 84px; }
+.film-axis-title { font: 500 11px var(--mono); fill: var(--ink-2); }
+.film-zero { stroke: rgba(242, 238, 230, 0.42); }
+.film-corner { position: absolute; z-index: 1; background: rgba(11, 13, 18, 0.72); }
+
+/* Dots: dim in range, bright when selected, nearly gone outside the seasons in play */
+.film-dot { fill: var(--ink); opacity: 0.34; transition: opacity 0.2s; }
+.film-dot.on { opacity: 1; }
+.film-dot.out { opacity: 0.14; }
+.film-dot.champ { fill: var(--gold); }
+.film-dot.fan { stroke: var(--team); stroke-width: 1.5; }
+.film-dot.fan:not(.out) { opacity: 1; fill-opacity: 0.4; }
+.film-dot.fan.on { fill-opacity: 1; }
+.film-spot circle { fill: none; stroke: var(--team); stroke-width: 2.5; }
+.film-spot text { font: 700 11px var(--mono); fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
+
+/* Brushes: a dashed frame on the 2D one; the 1D ones also show their two edges */
+.film-brush .selection { fill: var(--ink); fill-opacity: 0.05; stroke: var(--ink); stroke-opacity: 0.7; stroke-dasharray: 4 3; }
+.film-brush .overlay, .film-brush .selection, .film-brush .handle { touch-action: none; }
+.film-brush-x .selection { fill-opacity: 0.08; stroke-dasharray: none; stroke-opacity: 0.45; }
+.film-brush-x .handle { fill: var(--ink); fill-opacity: 0.6; }
+
+/* B: lines bright inside the seasons in play; under them, the selection per season */
+.film-line { fill: none; stroke-width: 1.8; stroke-linejoin: round; }
+.film-line.faint { opacity: 0.5; }
+.film-track { fill: var(--bg-3); }
+.film-count { fill: var(--ink-2); opacity: 0.55; }
+.film-count.in { fill: var(--ink); opacity: 0.9; }
+.film-mark { stroke: var(--ink); stroke-dasharray: 2 3; }
+.film-band-label { font: 600 9px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; fill: var(--muted); }
+
+/* C: every team-season in range (outline), the ones inside the box (filled) */
+.film-ghost { fill: rgba(242, 238, 230, 0.1); stroke: var(--court); stroke-width: 1; }
+.film-bar { fill: var(--ink); opacity: 0.85; }
+.film-bar.off { opacity: 0.38; }
+.film-half { stroke: var(--muted); stroke-dasharray: 2 3; }
+.film-mean line { stroke: var(--ink); stroke-width: 2; }
+.film-mean text { font: 700 10px var(--mono); fill: var(--ink); paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
+
+/* Readouts: LED cells, like the Q3 r meter */
+.film-sub { margin: 8px 0 6px; font: 600 10px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+.film-cells { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.film-cell { min-width: 0; padding: 7px 12px 8px; border-radius: 10px; background: #0d0f14; border: 1px solid var(--line);
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.6); }
+.film-cell .lbl { display: flex; align-items: center; gap: 6px; font: 600 10px var(--mono); letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--ink-2); }
+.film-cell.gold .lbl::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+.film-cell p { display: flex; align-items: baseline; gap: 8px; margin: 4px 0 0; min-width: 0; }
+.film-cell .led { flex: none; font-size: clamp(20px, min(2.2vw, 3.6vh), 30px); }
+.film-cell small { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: 500 10px var(--mono); color: var(--muted); }
+.film-board .film-sub { margin-top: 0; }
+/* One row: as many of the five as fit */
+.film-best { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; height: 30px; overflow: hidden; }
+.film-best button { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; border-radius: 999px;
+  border: 1px solid var(--line); background: var(--bg-2); color: var(--ink-2); font: 600 10px var(--mono); letter-spacing: 0.04em; cursor: default; }
+.film-best button:hover, .film-best button:focus-visible { border-color: var(--team); color: var(--ink); }
+.film-best b { color: var(--ink); }
+.film-best .logo-chip { width: 22px; height: 22px; padding: 2px; }
+.film-abbr { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--bg-3); font-size: 8px; }
+
+@media (min-width: 901px) {
+  .film { display: flex; flex-direction: column; height: 100vh; min-height: 640px; padding: calc(var(--hud-h) + 3vh) 4vw 3vh; }
+  .film-grid { flex: 1 1 0; min-height: 0; grid-template-rows: minmax(0, 1fr); margin-top: 2.2vh; }
+  .film-cloud .film-fig { height: auto; min-height: 0; }
+}
+@media (max-width: 900px) {
+  .film-grid { grid-template-columns: minmax(0, 1fr); }
+  .film-legend { margin-left: 0; }
+  .film-hist-view { flex: none; }
+  .film-hist { flex: none; height: 140px; }
+  .film-corner { font-size: 9px; padding: 5px 8px; }
+}
 
 /* --- Mobile ------------------------------------------------------------- */
 @media (max-width: 900px) {

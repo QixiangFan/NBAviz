@@ -52,7 +52,7 @@ export function radarDuel(fig, { axes, colors, describe, max = 520, pad = 62, la
     colors.forEach((c, s) => {   // each shape brightens toward its edge
       const fill = defs.append("radialGradient").attr("id", `${id}-fill-${s}`).attr("gradientUnits", "userSpaceOnUse")
         .attr("cx", 0).attr("cy", 0).attr("r", r);
-      [[0, 0.04], [0.7, 0.16], [1, 0.36]].forEach(([o, a]) => fill.append("stop").attr("offset", o).attr("stop-color", c).attr("stop-opacity", a));
+      [[0, 0.06], [0.7, 0.22], [1, 0.45]].forEach(([o, a]) => fill.append("stop").attr("offset", o).attr("stop-color", c).attr("stop-opacity", a));
     });
     defs.append("filter").attr("id", `${id}-glow`).attr("x", "-25%").attr("y", "-25%").attr("width", "150%").attr("height", "150%")
       .append("feGaussianBlur").attr("stdDeviation", 5);

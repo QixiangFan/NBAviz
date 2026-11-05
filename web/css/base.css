@@ -1,6 +1,7 @@
 /* ==========================================================================
    Arena night: tokens, type, HUD, loader, controls. Dark only, by design.
-   Series colors validated (dark, all pairs) with the dataviz palette script.
+   Series colors validated (dark, all pairs) with the dataviz palette script. Contrast on --bg (WCAG):
+   text >= 4.5:1 (--muted 5.4), axis and court lines 3:1, faded data marks >= 2:1.
    ========================================================================== */
 :root {
   color-scheme: dark;
@@ -9,10 +10,10 @@
   --bg-3: #1a1e27;
   --ink: #f2eee6;
   --ink-2: #a9a59c;
-  --muted: #6f6c66;
-  --line: rgba(242, 238, 230, 0.10);
-  --court: rgba(242, 238, 230, 0.20);
-  --grid: rgba(242, 238, 230, 0.07);
+  --muted: #8a867e;
+  --line: rgba(242, 238, 230, 0.15);
+  --court: rgba(242, 238, 230, 0.37);
+  --grid: rgba(242, 238, 230, 0.13);
 
   --two: #3d8ff0;       /* ice blue: two-pointers, overall efficiency */
   --three: #ec5e22;     /* ball orange: three-pointers, volume */

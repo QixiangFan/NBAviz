@@ -51,7 +51,7 @@ export function initTeams(data) {
   // The cloud and the four groups: every team-season, bright when it won at least half its games
   const everyTeam = teams.filter((d) => d.fg3a_rate_z != null && d.fg3_pct_z != null);
   const dotKey = (d) => `${d.season}-${d.team_id}`;
-  const shade = (d) => (d.win_pct >= 0.5 ? 0.9 : 0.22);
+  const shade = (d) => (d.win_pct >= 0.5 ? 0.9 : 0.4);
   const winners = everyTeam.filter((d) => d.win_pct >= 0.5);
   const winnersWhere = (test) => pct0(d3.mean(winners, (d) => (test(d) ? 1 : 0)));
   // Champions turn gold from the champions step on; the reader's team is ringed in its colors
@@ -165,7 +165,7 @@ export function initTeams(data) {
       yTitle.attr("transform", `translate(-44,${ih / 2}) rotate(-90)`).text("Win %");
       gRef.selectAll("line").data([[x(0), x(0), 0, ih], [0, iw, y(0.5), y(0.5)]]).join("line")
         .attr("x1", (d) => d[0]).attr("x2", (d) => d[1]).attr("y1", (d) => d[2]).attr("y2", (d) => d[3])
-        .style("stroke", "rgba(242,238,230,0.18)");
+        .style("stroke", "rgba(242,238,230,0.32)");
     } else if (view === "cloud") {
       // Volume across, accuracy up, both against the team's own season. The two average lines cut the
       // cloud into the four groups of the next step, and become that step's dividers.
@@ -183,7 +183,7 @@ export function initTeams(data) {
       yTitle.attr("transform", `translate(-44,${ih / 2}) rotate(-90)`).text(`${ACC.label}: ${ACC.name} vs. league avg (SD) →`);
       gRef.selectAll("line").data([[x(0), x(0), 0, ih], [0, iw, y(0), y(0)]]).join("line")
         .attr("x1", (d) => d[0]).attr("x2", (d) => d[1]).attr("y1", (d) => d[2]).attr("y2", (d) => d[3])
-        .style("stroke", "rgba(242,238,230,0.3)");
+        .style("stroke", "rgba(242,238,230,0.42)");
     } else {
       const x = xt();
       const y = yr();
@@ -195,7 +195,7 @@ export function initTeams(data) {
       yTitle.attr("transform", `translate(-44,${ih / 2}) rotate(-90)`).text("Correlation with win % (r)");
       gRef.selectAll("line").data([[0, iw, y(0), y(0)]]).join("line")
         .attr("x1", (d) => d[0]).attr("x2", (d) => d[1]).attr("y1", (d) => d[2]).attr("y2", (d) => d[3])
-        .style("stroke", "rgba(242,238,230,0.3)");
+        .style("stroke", "rgba(242,238,230,0.42)");
     }
     gX.select(".domain").style("stroke", "var(--court)");
     gY.select(".domain").remove();
@@ -321,7 +321,7 @@ export function initTeams(data) {
     });
     gCorr.selectAll("path.raw").data(series, (s) => s.key).join("path").attr("class", "raw")
       .attr("d", (s) => line(s.raw)).style("fill", "none").style("stroke", (s) => s.color)
-      .style("stroke-width", 1.2).style("opacity", 0.35);
+      .style("stroke-width", 1.4).style("opacity", 0.55);
     const paths = gCorr.selectAll("path.corr").data(series, (s) => s.key).join("path").attr("class", "corr")
       .attr("d", (s) => line(s.smooth)).style("fill", "none").style("stroke", (s) => s.color)
       .style("stroke-width", 3.5).style("stroke-linejoin", "round").style("stroke-linecap", "round");
@@ -362,7 +362,7 @@ export function initTeams(data) {
   // Dot styles. st.gold: champions in gold; st.spot (the champions step): everyone else faded; the reader's
   // team ringed in its colors. Colors switch at once (CSS colors don't tween); opacity moves with the dots.
   const isGold = (d, st) => !!st.gold && isChamp(d);
-  const dotOpacity = (d, st) => (st.spot && !isChamp(d) ? (isFan(d) ? 0.55 : 0.08) : isFan(d) || isGold(d, st) ? 1 : shade(d));
+  const dotOpacity = (d, st) => (st.spot && !isChamp(d) ? (isFan(d) ? 0.7 : 0.26) : isFan(d) || isGold(d, st) ? 1 : shade(d));
   function paintDots(sel, st) {
     sel.classed("champ", (d) => isGold(d, st)).classed("fan", isFan)
       .style("fill", (d) => (isGold(d, st) ? "var(--gold)" : "var(--ink)"))
@@ -376,9 +376,9 @@ export function initTeams(data) {
   function dotLegend(t, y, st) {
     const fanRow = everyTeam.filter(isFan).at(-1);
     const keys = [
-      ...(st.spot ? [] : [{ label: "winning record", short: "winning", opacity: 0.9 }, { label: "losing record", short: "losing", opacity: 0.22 }]),
+      ...(st.spot ? [] : [{ label: "winning record", short: "winning", opacity: 0.9 }, { label: "losing record", short: "losing", opacity: 0.4 }]),
       ...(st.gold ? [{ label: "champion", short: "champion", fill: "var(--gold)" }] : []),
-      ...(st.spot ? [{ label: "every other team-season", short: "others", opacity: 0.22 }] : []),
+      ...(st.spot ? [{ label: "every other team-season", short: "others", opacity: 0.26 }] : []),
       ...(fanRow ? [{ label: `your team (${fanRow.team})`, short: fanRow.team, stroke: teamColors(fanRow).accent }] : []),
     ];
     const narrow = iw < 460;
@@ -530,7 +530,7 @@ export function initTeams(data) {
     hoverDots(all, (r) => pos.get(r)[0], (r) => pos.get(r)[1]);
     gQuads.selectAll("line.divider").data([[bw, bw, 0, ih], [0, iw, bh, bh]]).join("line").attr("class", "divider")
       .attr("x1", (q) => q[0]).attr("x2", (q) => q[1]).attr("y1", (q) => q[2]).attr("y2", (q) => q[3])
-      .style("stroke", "rgba(242,238,230,0.14)");
+      .style("stroke", "rgba(242,238,230,0.26)");
   }
 
   // --- State machine: every step is a full description of what should be on screen ---------------------

@@ -1,5 +1,6 @@
 // Boot: load the data behind a loader, start the motion system, build every chapter, run the HUD.
-// ?shot=<chapter>[:<step>] jumps straight to a chapter state for screenshots, e.g. ?shot=q1:0.6, ?shot=q3:5;
+// ?shot=<chapter>[:<step>] jumps straight to a chapter state for screenshots, e.g. ?shot=q1:0.6, ?shot=q3:5,
+// ?shot=film (the Q3 timeout's linked views);
 // ?team=NYK picks the reader's team (ui/team.js).
 import { loadAll } from "./data.js";
 import { initMotion, initSnap, revealText, parallaxCards, scrollToEl, countTo, params, instant, stopScroll, startScroll } from "./motion.js";
@@ -8,6 +9,7 @@ import { initTimeline } from "./viz/timeline.js";
 import { initShotMap } from "./viz/shotmap.js";
 import { initEras } from "./viz/eras.js";
 import { initTeams } from "./viz/teams.js";
+import { initFilmRoom } from "./viz/filmroom.js";
 import { initMvps } from "./viz/mvps.js";
 import { initPlayers } from "./viz/players.js";
 import { initScoreboard } from "./viz/scoreboard.js";
@@ -35,6 +37,7 @@ async function boot() {
   const q2 = initShotMap(data);
   initEras(data);
   const q3 = initTeams(data);
+  initFilmRoom(data);
   const duel = initPlayers(data);
   initMvps(data, duel);
   initScoreboard(data);

@@ -172,6 +172,44 @@
     <div class="steps" id="q3-steps"></div>
   </section>
 
+  <!-- ============ Q3 timeout · film room: three linked, brushable views (js/viz/filmroom.js) ============ -->
+  <section class="film" id="film" data-period="q3">
+    <div class="film-head">
+      <div>
+        <p class="period-label">3rd-quarter timeout · film room</p>
+        <h2 class="chapter-title">Draw your own box</h2>
+      </div>
+      <button class="btn film-reset" type="button" id="film-reset">Reset</button>
+    </div>
+    <div class="film-grid" id="film-grid">
+      <div class="film-view film-cloud">
+        <div class="film-view-head">
+          <h3><b>A</b>Every team-season</h3><p>drag a box, or pick a corner</p>
+          <div class="film-legend" id="film-legend"></div>
+        </div>
+        <figure class="film-fig" id="film-cloud" role="img" aria-label="Every team-season since 1985-86 by three-point volume and accuracy against its own season's league; drag a box to select"></figure>
+      </div>
+      <div class="film-side">
+        <div class="film-view">
+          <div class="film-view-head">
+            <h3><b>B</b>Seasons</h3><p>drag a range</p>
+            <div class="film-chips" id="film-eras" role="group" aria-label="Seasons"></div>
+          </div>
+          <figure class="film-fig film-strip" id="film-strip" role="img" aria-label="Each season's correlation with win % for volume, accuracy and efficiency, with bars for how many of its teams are in your box; drag to pick seasons"></figure>
+          <div class="film-r" id="film-r"></div>
+        </div>
+        <div class="film-board" id="film-board" aria-live="polite"></div>
+        <div class="film-view film-hist-view">
+          <div class="film-view-head">
+            <h3><b>C</b>Win %</h3><p>drag a range</p>
+            <div class="film-chips" id="film-win" role="group" aria-label="Records"></div>
+          </div>
+          <figure class="film-fig film-hist" id="film-hist" role="img" aria-label="Win % of the team-seasons in range (outline) and inside the box (filled); drag to filter"></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ============ Q4 · MVP hall, then the duel (sketches KN4 / ZD2) ============ -->
   <section class="chapter-card" id="q4" data-period="q4" data-q="4">
     <p class="period-label">4th quarter</p>
