@@ -1,6 +1,6 @@
 // The HUD shot clock, drawn like the one on top of the backboard: three seven-segment LED digits (tens,
 // ones, tenths) with the unlit segments faintly visible. A jump in the reading (a snap to the next step,
-// a fast scroll) runs down through every tenth in between instead of skipping to the new number.
+// a fast scroll) runs through every tenth in between instead of skipping to the new number.
 import { instant } from "../motion.js";
 
 const NS = "http://www.w3.org/2000/svg";
@@ -45,16 +45,25 @@ export function initShotClock(face, total = 24) {
     housing.classList.toggle("expired", t === 0);
   };
 
+  // The face chases the reading frame by frame: at least a tenth per frame, so a small jump shows every
+  // tenth in between, and 12% of the gap per frame (at 60 fps), so it never trails the scroll for long.
+  let target = total;
+  const chase = () => {
+    const gap = target - state.v;
+    const step = Math.max(0.1, Math.abs(gap) * (1 - 0.88 ** gsap.ticker.deltaRatio(60)));
+    state.v = Math.abs(gap) <= step ? target : state.v + Math.sign(gap) * step;
+    draw();
+    if (state.v === target) gsap.ticker.remove(chase);
+  };
   const set = (secs) => {
-    gsap.killTweensOf(state);
-    state.v = secs;
+    gsap.ticker.remove(chase);
+    target = state.v = secs;
     draw();
   };
   const run = (secs) => {
     if (instant) return set(secs);
-    // About 0.3 s per second of difference, so each tenth stays up for a frame or two; capped for long jumps
-    const duration = Math.min(0.9, 0.1 + 0.3 * Math.abs(secs - state.v));
-    gsap.to(state, { v: secs, duration, ease: "none", overwrite: true, onUpdate: draw });
+    target = secs;
+    gsap.ticker.add(chase);   // re-adding a listener does not duplicate it
   };
   set(total);
   return { run, set };
