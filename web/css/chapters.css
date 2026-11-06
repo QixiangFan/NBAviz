@@ -481,6 +481,32 @@
 .mvp-key.league { border-color: rgba(242, 238, 230, 0.6); }
 .mvp-legend .mvp-hint { margin-left: auto; color: var(--muted); }
 
+/* MVPs by position (js/viz/positions.js): five lanes across seventy seasons, a decade table beside them */
+.pos-body { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 3vw; align-items: center; margin-top: 14px; }
+.pos-body .mvp-scroll { margin-top: 0; }
+.pos-lane { font: 800 18px var(--display); letter-spacing: 0.04em; text-transform: uppercase; fill: var(--ink); }
+.pos-dot { fill: var(--three); fill-opacity: 0.85; stroke: var(--bg); stroke-width: 1.5; transition: opacity 0.25s; }
+.pos-dot.ring { fill: none; stroke: var(--ink-2); }
+.pos-dot.link { cursor: pointer; outline: none; }
+.pos-dot.hover, .pos-dot:focus-visible { fill-opacity: 1; stroke: var(--ink); stroke-width: 2; }
+.pos-dot.dim { opacity: 0.15; }
+.pos-size-key .pos-dot { fill-opacity: 0.6; }
+.pos-side { display: flex; flex-direction: column; gap: 14px; }
+.pos-table { border-collapse: collapse; font: 500 13px var(--mono); font-variant-numeric: tabular-nums; }
+.pos-table th { color: var(--ink-2); font-weight: 600; padding: 5px 8px; text-align: center; }
+.pos-table tbody th { text-align: left; white-space: nowrap; }
+.pos-table td { width: 36px; padding: 5px 0; text-align: center; font-weight: 700; color: var(--ink);
+  background: color-mix(in srgb, var(--three) min(var(--n) * 8%, 72%), transparent); border: 1px solid var(--bg); }
+.pos-table td.zero { color: var(--muted); font-weight: 400; background: none; }
+.pos-table tbody tr { cursor: default; }
+.pos-table tbody tr:hover th { color: var(--ink); }
+.pos-table td:hover { outline: 1px solid var(--ink); outline-offset: -1px; }
+.pos-note { margin: 0; font-size: 13px; color: var(--muted); }
+.pos-key { display: inline-block; width: 10px; height: 10px; border-radius: 50%; }
+.pos-key.fill { background: var(--three); }
+.pos-key.ring { border: 1.5px solid var(--ink-2); }
+.pos-legend.same span:has(.pos-key) { display: none; }
+
 /* --- FINAL -------------------------------------------------------------- */
 .final { padding: 18vh 6vw 10vh; border-top: 1px solid var(--line);
   background: radial-gradient(ellipse at 50% 0%, rgba(236, 94, 34, 0.12), transparent 55%); }
@@ -676,6 +702,7 @@
   .mvp-scroll { overflow-x: auto; margin: 14px -5vw 0; padding: 0 5vw 6px; }
   .mvp-chart { min-width: 760px; }
   .mvp-legend .mvp-hint { margin-left: 0; }
+  .pos-body { grid-template-columns: 1fr; }
   .final-board, .final-cols { grid-template-columns: 1fr; }
   .starting-five { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
   /* A swipeable row; each column is wider than its radar, so the axis names never reach the next one */

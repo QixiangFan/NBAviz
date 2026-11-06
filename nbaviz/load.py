@@ -228,3 +228,19 @@ def player_rosters() -> pd.DataFrame:
     r = r.rename(columns=str.lower).rename(columns={"teamid": "team_id", "num": "jersey"})
     r["jersey"] = r["jersey"].str.strip().replace("", np.nan)
     return r[["season", "team_id", "player_id", "jersey", "position"]].drop_duplicates(["season", "team_id", "player_id"])
+
+
+# --- Basketball-Reference export ---------------------------------------------
+
+@lru_cache
+def bref(table: str) -> pd.DataFrame:
+    """One table of the Basketball-Reference export in data/raw/bref/ (Kaggle: "NBA Stats 1947-present"),
+    NBA rows only. Its seasons are labeled by the year they end; here they start, like everywhere else."""
+    path = C.BREF_DIR / f"{table}.csv"
+    if not path.exists():
+        raise FileNotFoundError(f"No {path}. Download the Kaggle dataset sumitrodatta/nba-aba-baa-stats "
+                                f"and unzip it into {C.BREF_DIR}")
+    df = pd.read_csv(path)
+    if "lg" in df:
+        df = df[df["lg"] == "NBA"]
+    return df.assign(season=df["season"] - 1)

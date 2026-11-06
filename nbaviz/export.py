@@ -186,6 +186,36 @@ def mvps() -> pd.DataFrame:
     return m[["season", "season_label", "player_id", "player_name"]].astype({"player_id": "Int64"})
 
 
+POSITIONS = ["PG", "SG", "SF", "PF", "C"]
+
+
+def mvp_positions() -> pd.DataFrame:
+    """Every MVP since 1955-56 with the position Basketball-Reference lists for that season. The export's
+    award table ends a season early, so later MVPs come from the hand-entered list."""
+    awards = load.bref("Player Award Shares")
+    won = awards[(awards["award"] == "nba mvp") & awards["winner"]][["season", "player", "player_id", "share"]]
+    per_game = load.bref("Player Per Game")
+    later = pd.DataFrame([r for r in MVPS if r[0] > won["season"].max()], columns=["season", "player"])
+    later = later.merge(per_game[["season", "player", "player_id"]].drop_duplicates(), how="left")
+    m = pd.concat([won, later], ignore_index=True).rename(columns={"player": "player_name", "player_id": "bref_id",
+                                                                   "share": "vote_share"})
+
+    # A traded player has one row per team plus a combined one (TOT, or 2TM/3TM in newer exports)
+    rows = per_game.rename(columns={"player_id": "bref_id"})
+    rows = rows.assign(combined=rows["team"].str.fullmatch(r"\dTM|TOT")).sort_values("combined", ascending=False)
+    rows = rows.drop_duplicates(["season", "bref_id"])
+    adv = load.bref("Advanced").rename(columns={"player_id": "bref_id"})[["season", "bref_id", "team", "ts_percent"]]
+    m = m.merge(rows, on=["season", "bref_id"], how="left").merge(adv, on=["season", "bref_id", "team"], how="left")
+    m["pos"] = m["pos"].str.split("-").str[0]   # the first listed position, e.g. SF-PF -> SF
+    m = m.rename(columns={"pts_per_game": "pts_pg", "trb_per_game": "reb_pg", "ast_per_game": "ast_pg",
+                          "x3pa_per_game": "fg3a_pg", "ts_percent": "ts_pct"})
+    m = m.merge(mvps()[["season", "player_id"]], on="season", how="left")   # NBA.com id, from 1996-97
+    m.insert(1, "season_label", m["season"].map(C.season_str))
+    cols = ["season", "season_label", "player_name", "bref_id", "player_id", "pos", "team",
+            "pts_pg", "reb_pg", "ast_pg", "fg3a_pg", "ts_pct", "vote_share"]
+    return m.sort_values("season")[cols].astype({"player_id": "Int64"}).reset_index(drop=True)
+
+
 def champions() -> pd.DataFrame:
     """NBA champions since 1985-86, with the franchise id and the name the team used that season."""
     c = pd.DataFrame(CHAMPIONS, columns=["season", "team"])
@@ -246,6 +276,15 @@ TABLES = {
         "kind": "rule or milestone", "label / detail": "Short label and one-sentence note"}),
     "mvps": (mvps, "Regular-season MVPs since 1996-97, hand-entered from NBA.com's award history.", {
         "player_id / player_name": "NBA.com player id and name, as in player_seasons"}),
+    "mvp_positions": (mvp_positions, "Every regular-season MVP since 1955-56 with their listed position and "
+                                     "per-game stats, from the Basketball-Reference export (Kaggle: NBA Stats "
+                                     "1947-present); the 2025-26 MVP from the hand-entered list.", {
+        "player_name / bref_id": "Name and Basketball-Reference id",
+        "player_id": "NBA.com id, as in mvps (from 1996-97; blank before)",
+        "pos": f"First listed position that season: {', '.join(POSITIONS)}",
+        "team": "Basketball-Reference abbreviation (2TM/TOT if traded mid-season)",
+        "pts_pg / reb_pg / ast_pg / fg3a_pg": "Per-game averages (3PA blank before the line, 1979-80)",
+        "ts_pct": "True shooting %", "vote_share": "Share of the MVP voting points won (blank for 2025-26)"}),
     "champions": (champions, "NBA champions since 1985-86, hand-entered from NBA.com's history.", {
         "team_id / team / team_name": "Franchise id, and the abbreviation and name the team used that season"}),
 }
@@ -368,4 +407,18 @@ def checks() -> list:
         out.append(_check(name, bool(len(table) == len(hand) and missing.empty),
                           f"{int(table[key].notna().sum())} of {len(hand)} found" +
                           "".join(f"; missing {s} {who}" for s, who in zip(missing["season_label"], missing[label]))))
+
+    pos = mvp_positions()
+    gaps = sorted(set(range(pos["season"].min(), C.LAST_SEASON + 1)) - set(pos["season"]))
+    bad = pos[~pos["pos"].isin(POSITIONS)]
+    out.append(_check("One MVP with a listed position per season since 1955-56",
+                      bool(pos["season"].is_unique and not gaps and bad.empty),
+                      f"{len(pos)} MVPs; missing seasons: {', '.join(map(C.season_str, gaps)) or 'none'}; "
+                      f"no position: {', '.join(bad['season_label']) or 'none'}"))
+    both = pos.merge(mvps(), on="season", suffixes=("", "_nba"))
+    differ = both[both["player_name"] != both["player_name_nba"]]
+    out.append(_check("Basketball-Reference MVPs match the hand-entered list", bool(differ.empty),
+                      f"{len(both) - len(differ)} of {len(both)} seasons agree" +
+                      "".join(f"; {s}: {a} vs {b}" for s, a, b in
+                              zip(differ["season_label"], differ["player_name"], differ["player_name_nba"]))))
     return out

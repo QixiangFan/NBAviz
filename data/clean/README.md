@@ -111,6 +111,20 @@ Regular-season MVPs since 1996-97, hand-entered from NBA.com's award history. 30
 |---|---|
 | `player_id / player_name` | NBA.com player id and name, as in player_seasons |
 
+### `mvp_positions.csv`
+
+Every regular-season MVP since 1955-56 with their listed position and per-game stats, from the Basketball-Reference export (Kaggle: NBA Stats 1947-present); the 2025-26 MVP from the hand-entered list. 71 rows.
+
+| Column | Meaning |
+|---|---|
+| `player_name / bref_id` | Name and Basketball-Reference id |
+| `player_id` | NBA.com id, as in mvps (from 1996-97; blank before) |
+| `pos` | First listed position that season: PG, SG, SF, PF, C |
+| `team` | Basketball-Reference abbreviation (2TM/TOT if traded mid-season) |
+| `pts_pg / reb_pg / ast_pg / fg3a_pg` | Per-game averages (3PA blank before the line, 1979-80) |
+| `ts_pct` | True shooting % |
+| `vote_share` | Share of the MVP voting points won (blank for 2025-26) |
+
 ### `champions.csv`
 
 NBA champions since 1985-86, hand-entered from NBA.com's history. 41 rows.
@@ -158,3 +172,5 @@ shot_grid for one franchise (one file per team_id, all its seasons since 1996-97
 | Jersey numbers found on the season rosters | INFO | 97.4% of 10,116 player-seasons |
 | Every MVP matches one player-season | PASS | 30 of 30 found |
 | Every champion matches one team-season | PASS | 41 of 41 found |
+| One MVP with a listed position per season since 1955-56 | PASS | 71 MVPs; missing seasons: none; no position: none |
+| Basketball-Reference MVPs match the hand-entered list | PASS | 30 of 30 seasons agree |

@@ -12,6 +12,7 @@ import { initEras } from "./viz/eras.js";
 import { initTeams } from "./viz/teams.js";
 import { initFilmRoom } from "./viz/filmroom.js";
 import { initMvps } from "./viz/mvps.js";
+import { initPositions } from "./viz/positions.js";
 import { initPlayers } from "./viz/players.js";
 import { initScoreboard } from "./viz/scoreboard.js";
 import { initRibbons } from "./viz/ribbons.js";
@@ -42,6 +43,7 @@ async function boot() {
   const q3 = initTeams(data);
   initFilmRoom(data);
   const duel = initPlayers(data);
+  initPositions(data, duel);
   initMvps(data, duel);
   initScoreboard(data);
   initRibbons(data);

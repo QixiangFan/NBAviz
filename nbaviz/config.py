@@ -4,6 +4,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw"
 CLEAN_DIR = ROOT / "data" / "clean"
+BREF_DIR = RAW_DIR / "bref" / "v56"   # Basketball-Reference export from Kaggle, downloaded by hand
 
 # --- Season coverage -------------------------------------------------------
 LAST_SEASON = 2025              # most recent *completed* regular season (2025-26)
