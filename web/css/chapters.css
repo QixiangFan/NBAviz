@@ -48,7 +48,7 @@
 .hero-player .cutout-echo { transition: transform 1.4s var(--ease-out) 1s, opacity 1.2s 1s; }
 .hero-player.waiting .cutout-glow, .hero-player.waiting .cutout-body { transform: translateY(18%); opacity: 0; }
 .hero-player.waiting .cutout-echo { transform: translateY(18%); opacity: 0; }
-.hero-copy { position: absolute; left: 6vw; top: calc(var(--hud-h) + 9vh); z-index: 2; max-width: 1040px; }
+.hero-copy { position: absolute; left: var(--gutter); top: calc(var(--hud-h) + 9vh); z-index: 2; max-width: 1040px; }
 .hero-title { font-size: clamp(68px, 12.6vw, 232px); }
 .hero-title > span { display: block; }
 .hero-title .accent { color: var(--three); }
@@ -57,6 +57,12 @@
 .hero-stats { display: flex; gap: 48px; flex-wrap: wrap; }
 .hero-stats .led { font-size: 46px; }
 .hero-stats p { margin: 6px 0 0; font: 500 12px/1.4 var(--mono); letter-spacing: 0.04em; color: var(--ink-2); max-width: 220px; }
+/* Desktop: each title line stays on one line (a third line pushed the stats under the ribbon), and the size
+   also follows the height, so the kicker, title, dek and stats always end above the ribbon board */
+@media (min-width: 901px) {
+  .hero-copy { max-width: none; }
+  .hero-title { white-space: nowrap; font-size: clamp(68px, min(12.6vw, 50.5vh - 212px), 232px); }
+}
 .lower-third {
   position: absolute; right: 5vw; bottom: 15vh; width: 340px; z-index: 2;
   background: rgba(18, 21, 28, 0.82); backdrop-filter: blur(8px);
@@ -77,7 +83,7 @@
 
 /* --- Chapter title cards ----------------------------------------------------- */
 .chapter-card {
-  position: relative; min-height: 100vh; padding: 18vh 6vw 12vh; display: flex; flex-direction: column; justify-content: center;
+  position: relative; min-height: 100vh; padding: 18vh var(--gutter) 12vh; display: flex; flex-direction: column; justify-content: center;
   overflow: hidden;
 }
 .chapter-card .chapter-title { font-size: clamp(72px, 13vw, 250px); }
@@ -106,6 +112,7 @@
 .lineage .cutout + .cutout { margin-left: -3.5vw; }
 .lineage .cutout:nth-child(1) { height: 70%; }
 .lineage .cutout:nth-child(2) { height: 86%; }
+.lineage .cutout figcaption { bottom: 3vh; }   /* not 4% of each figure, which put the three names at three heights */
 .lineage .cutout:nth-child(1) .cutout-art { filter: grayscale(0.8) sepia(0.35) contrast(1.08) brightness(0.85); }
 .lineage .cutout:nth-child(2) .cutout-art { filter: saturate(0.6) brightness(0.92); }
 
@@ -125,7 +132,7 @@
 
 /* --- Shared stage --------------------------------------------------------- */
 .stage { position: sticky; top: 0; height: 100vh; overflow: hidden; }
-.viz-area { position: absolute; left: 38vw; right: 4vw; top: calc(var(--hud-h) + 4vh); bottom: 5vh; }
+.viz-area { position: absolute; left: 38vw; right: var(--gutter); top: calc(var(--hud-h) + 4vh); bottom: 5vh; }
 .viz-area .court-lines, .viz-area .particles, .viz-area .overlay, .viz-area .heat { position: absolute; }
 .viz-area .heat { pointer-events: none; opacity: 0; }
 .viz-area .overlay { overflow: visible; pointer-events: none; }
@@ -136,10 +143,10 @@
   position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%); pointer-events: none; white-space: nowrap;
   font: 900 25vw/1 var(--display); color: transparent; -webkit-text-stroke: 1px rgba(242, 238, 230, 0.09);
 }
-.q1-top { position: absolute; left: 5vw; top: calc(var(--hud-h) + 4vh); display: flex; flex-direction: column; gap: 12px; z-index: 2; }
-.q1-chart { position: absolute; left: 3vw; right: 33vw; top: 24vh; bottom: 11vh; margin: 0; }
+.q1-top { position: absolute; left: var(--gutter); top: calc(var(--hud-h) + 4vh); display: flex; flex-direction: column; gap: 12px; z-index: 2; }
+.q1-chart { position: absolute; left: calc(var(--gutter) - 24px); right: calc(var(--gutter) + 29vw); top: 24vh; bottom: 11vh; margin: 0; }
 .q1-chart svg { width: 100%; height: 100%; overflow: visible; }
-.q1-side { position: absolute; right: 4vw; top: calc(var(--hud-h) + 9vh); width: 27vw; bottom: 9vh; display: flex; flex-direction: column; gap: 14px; }
+.q1-side { position: absolute; right: var(--gutter); top: calc(var(--hud-h) + 9vh); width: 27vw; bottom: 9vh; display: flex; flex-direction: column; gap: 14px; }
 .scoreboard {
   background: #0d0f14; border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px;
   box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.7), 0 0 0 4px rgba(18, 21, 28, 0.7);
@@ -161,7 +168,7 @@
 .event .when { font: 600 10px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
 .event h4 { margin: 3px 0 2px; font: 800 20px/1.05 var(--display); text-transform: uppercase; }
 .event p { margin: 0; font-size: 13px; color: var(--ink-2); }
-.q1-note { position: absolute; left: 5vw; bottom: 3.5vh; margin: 0; font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.05em; }
+.q1-note { position: absolute; left: var(--gutter); bottom: 3.5vh; margin: 0; font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.05em; }
 .q1-chart .now-ball circle { fill: var(--three); filter: drop-shadow(0 0 8px var(--three)); }
 .q1-chart .now-ball path { fill: none; stroke: rgba(11, 13, 18, 0.6); stroke-width: 1; }
 .q1-chart .event-tick { stroke: rgba(242, 238, 230, 0.3); }
@@ -170,7 +177,7 @@
 /* --- Scrolly (Q2, Q3): sticky stage + step cards --------------------------- */
 .scrolly { position: relative; }
 .steps { position: relative; z-index: 3; margin-top: -100vh; padding-bottom: 20vh; pointer-events: none; }
-.step { min-height: 100vh; display: flex; align-items: center; padding-left: 5vw; }
+.step { min-height: 100vh; display: flex; align-items: center; padding-left: var(--gutter); }
 .step-card {
   position: relative; pointer-events: auto; width: min(400px, 90vw); padding: 24px 26px; border-radius: 18px;
   background: rgba(18, 21, 28, 0.84); backdrop-filter: blur(12px); border: 1px solid var(--line);
@@ -208,7 +215,7 @@
 .key.acc { background: var(--acc); }
 
 /* Q2 */
-.stage-legend { position: absolute; right: 4vw; bottom: 4vh; z-index: 2; display: flex; gap: 18px;
+.stage-legend { position: absolute; right: 0; top: 100%; z-index: 2; display: flex; gap: 18px; white-space: nowrap;
   font: 600 11px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
 .overlay .col-label { font: 800 18px var(--display); text-transform: uppercase; fill: var(--ink); }
 .overlay .col-value { font: 700 26px var(--mono); fill: var(--ink); }
@@ -254,12 +261,17 @@
 .hm-dumb .conn { stroke: var(--court); stroke-width: 2; }
 .hm-dumb .da { fill: #8d8a84; stroke: var(--bg); stroke-width: 2; }
 .hm-dumb .db { fill: var(--ink); stroke: var(--bg); stroke-width: 2; filter: drop-shadow(0 0 5px rgba(242, 238, 230, 0.4)); }
-.hm-legend { position: absolute; left: 5vw; bottom: 5vh; z-index: 2; width: 260px; pointer-events: none; }
+.hm-legend { position: absolute; z-index: 2; display: flex; align-items: flex-start; gap: 6px 24px; pointer-events: none; }
+.hm-scale { flex: none; width: 260px; }
 .hm-bar { height: 8px; border-radius: 3px; }
 .hm-ticks { position: relative; display: flex; justify-content: space-between; margin-top: 6px;
   font: 600 10px var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-2); }
-.hm-note { margin-top: 6px; font: 500 10px/1.4 var(--mono); color: var(--muted); }
+.hm-note { max-width: 440px; font: 500 10px/1.4 var(--mono); color: var(--muted); }
 .step-card select { font-size: 13px; }
+/* Label | control rows, so the selects line up whatever the label's length */
+.step-card .fields { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 10px 14px; align-items: center; }
+.step-card .fields .control { display: contents; }
+.step-card .fields select { width: 100%; }
 
 /* Q3 */
 .q3-svg { width: 100%; height: 100%; overflow: visible; }
@@ -306,17 +318,17 @@
 .quad-value { font: 700 40px var(--mono); fill: var(--ink); }
 .quad-sub { font: 500 11px var(--mono); fill: var(--ink-2); }
 .r-meter {
-  position: absolute; right: 4vw; top: calc(var(--hud-h) + 56px); z-index: 2; display: grid; grid-template-columns: auto auto; gap: 0 10px;
-  align-items: baseline; padding: 14px 18px; border-radius: 14px; background: #0d0f14; border: 1px solid var(--line);
+  position: absolute; right: 0; top: 0; z-index: 2; display: flex; align-items: center; gap: 12px;
+  padding: 8px 16px 8px 14px; border-radius: 12px; background: #0d0f14; border: 1px solid var(--line);
   box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.7); opacity: 0; transition: opacity 0.5s;
 }
 .r-meter.show { opacity: 1; }
-.r-meter .r-label { font: italic 700 28px var(--text); color: var(--ink-2); align-self: center; }
-.r-meter .led { font-size: 54px; }
-.r-meter .r-caption { grid-column: 1 / -1; font: 600 10px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
+.r-meter .r-label { font: italic 700 24px var(--text); color: var(--ink-2); }
+.r-meter .led { font-size: 42px; }
+.r-meter .r-caption { width: 17em; min-height: 2.8em; font: 600 10px/1.4 var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); }
 
 /* --- Halftime: era fingerprints (js/viz/eras.js) ----------------------------- */
-.halftime { position: relative; min-height: 100vh; padding: 15vh 6vw 10vh; border-top: 1px solid var(--line);
+.halftime { position: relative; min-height: 100vh; padding: 15vh var(--gutter) 10vh; border-top: 1px solid var(--line);
   background: radial-gradient(ellipse at 20% 0%, rgba(61, 143, 240, 0.08), transparent 60%); }
 .halftime .ribbon { top: calc(var(--hud-h) + 10px); }   /* the arena's ribbon board, with the first half's numbers */
 .halftime .chapter-title { font-size: clamp(60px, 9vw, 160px); max-width: 1100px; }
@@ -340,10 +352,10 @@
    needs, and the glyphs fill the rest: each as wide as its column and as tall as the height left over
    (every glyph's cell is a size container). */
 @media (min-width: 901px) {
-  .halftime { display: flex; flex-direction: column; height: 100vh; min-height: 640px; padding: calc(var(--hud-h) + 68px) 6vw 3.5vh; }
+  .halftime { display: flex; flex-direction: column; height: 100vh; min-height: 640px; padding: calc(var(--hud-h) + 68px) var(--gutter) 3.5vh; }
   .halftime .chapter-title { font-size: clamp(44px, min(6vw, 9vh), 112px); }
   .halftime .chapter-lead { max-width: 980px; margin-top: 1.4vh; font-size: 18px; }
-  .eras { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; width: 100%; margin-top: 3vh; }
+  .eras { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; width: 100%; max-width: none; margin-top: 3vh; }
   .era-glyphs { flex: 1 1 0; min-height: 0; grid-template-rows: minmax(0, 1fr); row-gap: 0; margin-top: 1.2vh; }
   .era { container-type: size; justify-content: center; }
   .era-glyph { width: min(100%, 300px, 100cqh - 36px); }
@@ -355,9 +367,9 @@
 
 /* --- Q4: the MVP hall, then the player duel ---------------------------------- */
 /* Two screens, so each is one clean snap stop: the MVP hall, then the cards and radar */
-.mvp { min-height: 100vh; padding: calc(var(--hud-h) + 6vh) 5vw 6vh; border-top: 1px solid var(--line);
+.mvp { min-height: 100vh; padding: calc(var(--hud-h) + 6vh) var(--gutter) 6vh; border-top: 1px solid var(--line);
   display: flex; flex-direction: column; justify-content: center; }
-.players { position: relative; min-height: 100vh; padding: calc(var(--hud-h) + 3vh) 5vw 5vh; border-top: 1px solid var(--line);
+.players { position: relative; min-height: 100vh; padding: calc(var(--hud-h) + 3vh) var(--gutter) 5vh; border-top: 1px solid var(--line);
   display: flex; flex-direction: column; justify-content: center; }
 .players-court { display: grid; grid-template-columns: minmax(250px, 1fr) minmax(320px, 1.25fr) minmax(250px, 1fr); gap: 3vw; align-items: center; }
 /* Each card has its own season and search above it; the matchups sit above the radar */
@@ -508,7 +520,7 @@
 .pos-legend.same span:has(.pos-key) { display: none; }
 
 /* --- FINAL -------------------------------------------------------------- */
-.final { padding: 18vh 6vw 10vh; border-top: 1px solid var(--line);
+.final { padding: 18vh var(--gutter) 10vh; border-top: 1px solid var(--line);
   background: radial-gradient(ellipse at 50% 0%, rgba(236, 94, 34, 0.12), transparent 55%); }
 .final-title { font-size: clamp(64px, 11vw, 200px); }
 .final-sub { font: 600 12px var(--mono); color: var(--ink-2); letter-spacing: 0.12em; text-transform: uppercase; margin: 28px 0 18px; }
@@ -552,7 +564,7 @@
    Brushing and linking: the cloud (A), the seasons strip (B) and the win % histogram (C) share one
    selection. Desktop: exactly one screen; the cloud takes the left, the strip, readouts and histogram
    stack on the right, and the histogram takes whatever height is left. */
-.film { position: relative; padding: calc(var(--hud-h) + 5vh) 5vw 6vh; border-top: 1px solid var(--line);
+.film { position: relative; padding: calc(var(--hud-h) + 5vh) var(--gutter) 6vh; border-top: 1px solid var(--line);
   background: radial-gradient(ellipse at 85% 0%, rgba(22, 171, 133, 0.07), transparent 60%); }
 .film-head { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 32px; }
 .film-head .period-label { margin-bottom: 10px; }
@@ -641,7 +653,7 @@
 .film-abbr { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--bg-3); font-size: 8px; }
 
 @media (min-width: 901px) {
-  .film { display: flex; flex-direction: column; height: 100vh; min-height: 640px; padding: calc(var(--hud-h) + 3vh) 4vw 3vh; }
+  .film { display: flex; flex-direction: column; height: 100vh; min-height: 640px; padding: calc(var(--hud-h) + 3vh) var(--gutter) 3vh; }
   .film-grid { flex: 1 1 0; min-height: 0; grid-template-rows: minmax(0, 1fr); margin-top: 2.2vh; }
   .film-cloud .film-fig { height: auto; min-height: 0; }
 }
@@ -691,10 +703,11 @@
   .step { align-items: flex-end; padding: 0 4vw 5vh; }
   .step-card { width: 100%; padding: 18px; }
   .step-card h3 { font-size: 30px; }
-  .r-meter { top: calc(var(--hud-h) + 1vh); bottom: auto; right: 3vw; padding: 8px 12px; }
-  .r-meter .led { font-size: 32px; }
+  .r-meter { padding: 6px 10px; gap: 8px; }
+  .r-meter .led { font-size: 30px; }
+  .r-meter .r-caption { width: 14em; }
   .stage-legend { display: none; }
-  .hm-legend { right: auto; left: 4vw; bottom: calc(42vh + 8px); width: 180px; }
+  .hm-scale { width: 180px; }
   .hm-note { display: none; }
   .hm-season { font-size: 26px; }
   .hm-sub { display: none; }
@@ -707,7 +720,7 @@
   .starting-five { grid-template-columns: repeat(2, 1fr); row-gap: 28px; }
   /* A swipeable row; each column is wider than its radar, so the axis names never reach the next one */
   .era-glyphs { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: min(86vw, 340px); gap: 0 12px;
-    overflow-x: auto; scroll-snap-type: x mandatory; margin: 18px -6vw 0; padding: 0 6vw 8px; }
+    overflow-x: auto; scroll-snap-type: x mandatory; margin: 18px calc(-1 * var(--gutter)) 0; padding: 0 var(--gutter) 8px; }
   .era { scroll-snap-align: center; }
   .era-glyph { max-width: 280px; }
   .seg { max-width: 100%; overflow-x: auto; }

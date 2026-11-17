@@ -20,6 +20,9 @@ const HEAD = 54;                          // season title above each court
 const GAP = 28;
 const DUMB_ROW = 26;
 const DUMB_H = 34 + ZONES.length * DUMB_ROW + 30;
+const DUMB_GAP = 22;                      // between the legend and the dumbbell
+const LEGEND_H = 30;                      // the color key under the courts (one row: scale, then its note)
+const LEGEND_GAP = 14;
 const THREE_ZONES = new Set(["C3", "AB3"]);
 const pct = d3.format(".1%");
 const int = d3.format(",");
@@ -147,24 +150,31 @@ export function initHeatmap(data) {
   let showDumb = true;
 
   const legend = d3.select("#q2b-legend");
-  const legendBar = legend.append("div").attr("class", "hm-bar");
-  const legendTicks = legend.append("div").attr("class", "hm-ticks");
+  const legendScale = legend.append("div").attr("class", "hm-scale");
+  const legendBar = legendScale.append("div").attr("class", "hm-bar");
+  const legendTicks = legendScale.append("div").attr("class", "hm-ticks");
   const legendNote = legend.append("div").attr("class", "hm-note");
+  let dumbW = 0;
 
   // --- Layout ---------------------------------------------------------------------------------------
+  // One block, centered in the stage: the two courts with their season titles, the color key under them,
+  // then the zone dumbbell, all on the courts' outer edges.
   function fit() {
     const W = area.clientWidth;
     const H = area.clientHeight;
     if (!W || !H) return;
     showDumb = W >= 640 && H >= 600;
-    const dumbH = showDumb ? DUMB_H : 0;
-    const avail = H - dumbH - (showDumb ? 16 : 0);
+    const dumbH = showDumb ? DUMB_GAP + DUMB_H : 0;
+    const avail = H - LEGEND_GAP - LEGEND_H - dumbH;
     // Two courts side by side, or stacked on a narrow screen: whichever gives the bigger court
     const side = Math.min((W - GAP) / 2 / 50, (avail - HEAD) / 47);
     const stack = Math.min(W / 50, (avail - GAP - 2 * HEAD) / 2 / 47);
+    const ch = HEAD + 47 * Math.max(side, stack);   // one court with its title
+    const courtsH = side >= stack ? ch : 2 * ch + GAP;
+    const y0 = Math.max(0, (H - courtsH - LEGEND_GAP - LEGEND_H - dumbH) / 2);
     const boxes = side >= stack
-      ? [0, 1].map((k) => ({ x: k * ((W - GAP) / 2 + GAP), y: 0, w: (W - GAP) / 2, h: avail }))
-      : [0, 1].map((k) => ({ x: 0, y: k * ((avail - GAP) / 2 + GAP), w: W, h: (avail - GAP) / 2 }));
+      ? [0, 1].map((k) => ({ x: k * ((W - GAP) / 2 + GAP), y: y0, w: (W - GAP) / 2, h: ch }))
+      : [0, 1].map((k) => ({ x: 0, y: y0 + k * (ch + GAP), w: W, h: ch }));
     courts.forEach((c, k) => {
       const box = boxes[k];
       c.s = fitCourt(box.w, box.h - HEAD);
@@ -175,9 +185,18 @@ export function initHeatmap(data) {
       c.lines.style("top", `${HEAD}px`);
       c.short = null;   // redraw the lines
     });
-    dumbSvg.style("display", showDumb ? null : "none").attr("width", W).attr("height", dumbH)
-      .style("top", `${H - dumbH}px`);
-    dumbX.range([170, W - 190]);
+    // The courts' outer edges, which the key and the dumbbell share
+    const [a, b] = courts;
+    const left = boxes[0].x + a.s.ox;
+    const right = side >= stack ? boxes[1].x + b.s.ox + b.s.width : left + a.s.width;
+    const bottom = y0 + courtsH;
+    // The key lives outside the area (which is role="img"), so it is placed in the stage's coordinates
+    legend.style("left", `${area.offsetLeft + left}px`).style("top", `${area.offsetTop + bottom + LEGEND_GAP}px`)
+      .style("max-width", `${right - left}px`);
+    dumbW = right - left;
+    dumbSvg.style("display", showDumb ? null : "none").attr("width", dumbW).attr("height", DUMB_H)
+      .style("left", `${left}px`).style("top", `${bottom + LEGEND_GAP + LEGEND_H + DUMB_GAP}px`);
+    dumbX.range([170, dumbW - 190]);
   }
 
   // --- Draw -----------------------------------------------------------------------------------------
@@ -262,7 +281,7 @@ export function initHeatmap(data) {
 
   function renderDumbbell(freq, pair, time) {
     if (!showDumb) return;
-    const W = area.clientWidth;
+    const W = dumbW;
     const top = 34;
     const val = (p, i) => (!p.zones ? null : freq ? p.zones[i].share : p.zones[i].pps);
     const rows = ZONES.map((z, i) => ({ z, i, name: ZONE_NAMES[z], a: val(pair[0], i), b: st.showB ? val(pair[1], i) : null }));
@@ -323,7 +342,7 @@ export function initHeatmap(data) {
   segmented(modeRow, [{ value: "freq", label: "Attempts" }, { value: "pps", label: "Points per shot" }],
     explore.mode, (v) => { explore.mode = v; applyExplore(); }, "Heat map color");
   const controls = h("div", { class: "controls" },
-    team.control, h("div", { class: "row" }, seasonA.control, seasonB.control), modeRow);
+    h("div", { class: "fields" }, team.control, seasonA.control, seasonB.control), modeRow);
 
   const lastZ = (z) => zone(last, z).pps.toFixed(2);
   const steps = [

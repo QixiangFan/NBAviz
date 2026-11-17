@@ -25,6 +25,7 @@ export function initShotMap(data) {
   const linesEl = document.getElementById("q2-lines");
   const heatEl = document.getElementById("q2-heat");
   const overlay = d3.select("#q2-overlay");
+  const legendEl = document.getElementById("q2-legend");
   const field = new ParticleField(document.getElementById("q2-canvas"), n);
   field.setStyles(STYLES);
 
@@ -50,6 +51,9 @@ export function initShotMap(data) {
 
   function fit() {
     court = fitCourt(area.clientWidth, area.clientHeight);
+    // The key sits under the court, flush with its right edge
+    legendEl.style.right = `${court.w - court.ox - court.width}px`;
+    legendEl.style.top = `${court.oy + court.height + 12}px`;
     drawCourt(linesEl, court, { shortLine: (state.season ?? last) < STANDARD_LINE });
     overlay.attr("width", court.w).attr("height", court.h);
     field.resize(court.w, court.h);

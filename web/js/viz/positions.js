@@ -8,6 +8,7 @@ import { instant, scrollToEl } from "../motion.js";
 import { showTip, moveTip, hideTip } from "../ui/tooltip.js";
 import { segmented } from "../ui/controls.js";
 import { h, b } from "./steps.js";
+import { roomFor } from "./mvps.js";
 
 const POSITIONS = ["PG", "SG", "SF", "PF", "C"];
 const POS_NAME = { PG: "Point guard", SG: "Shooting guard", SF: "Small forward", PF: "Power forward", C: "Center" };
@@ -62,7 +63,7 @@ export function initPositions(data, duel) {
     const W = fig.clientWidth;
     if (!W) return;
     drawnWidth = W;
-    const H = Math.max(340, Math.min(460, W * 0.5));
+    const H = Math.max(300, Math.min(460, W * 0.5, roomFor(fig)));
     const m = { top: 44, right: 18, bottom: 34, left: 132 };
     const iw = W - m.left - m.right;
     const ih = H - m.top - m.bottom;
@@ -205,5 +206,9 @@ export function initPositions(data, duel) {
   new ResizeObserver(() => {
     if (Math.abs(fig.clientWidth - drawnWidth) >= 2) draw();
   }).observe(fig);
+  let drawnHeight = innerHeight;
+  addEventListener("resize", () => {
+    if (innerHeight !== drawnHeight) { drawnHeight = innerHeight; draw(); }
+  });
   if (!instant) ScrollTrigger.create({ trigger: fig, start: "top 75%", once: true, onEnter: reveal });
 }

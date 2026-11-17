@@ -51,8 +51,8 @@ export function initMvps(data, duel) {
     const W = fig.clientWidth;
     if (!W) return;
     drawnWidth = W;
-    const H = Math.max(360, Math.min(500, W * 0.42));
-    const m = { top: 44, right: 112, bottom: 42, left: 48 };
+    const H = Math.max(320, Math.min(500, W * 0.42, roomFor(fig)));
+    const m = { top: 44, right: 112, bottom: 42, left: 34 };   // the % labels start on the title's left edge
     const iw = W - m.left - m.right;
     const ih = H - m.top - m.bottom;
     const x = d3.scalePoint(mvps.map((d) => d.season), [0, iw]).padding(0.5);
@@ -201,6 +201,21 @@ export function initMvps(data, duel) {
   new ResizeObserver(() => {
     if (Math.abs(fig.clientWidth - drawnWidth) >= 2) draw();
   }).observe(fig);
+  let drawnHeight = innerHeight;
+  addEventListener("resize", () => {
+    if (innerHeight !== drawnHeight) { drawnHeight = innerHeight; draw(); }
+  });
   onTeam(paintFan);
   if (!instant) ScrollTrigger.create({ trigger: fig, start: "top 75%", once: true, onEnter: reveal });
+}
+
+/**
+ * The chart height that keeps a one-screen section (the MVP hall, MVPs by position) on one screen: the
+ * viewport less the section's padding, its head and its legend.
+ */
+export function roomFor(fig) {
+  const sec = fig.closest("section");
+  const cs = getComputedStyle(sec);
+  const other = [...sec.children].filter((el) => !el.contains(fig)).reduce((sum, el) => sum + el.offsetHeight, 0);
+  return innerHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - other - 40;   // 40: margins between
 }

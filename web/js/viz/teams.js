@@ -133,7 +133,10 @@ export function initTeams(data) {
     W = area.clientWidth;
     H = area.clientHeight;
     const narrow = W < 600;
-    const m = { top: 24, right: narrow ? 70 : 96, bottom: 64, left: narrow ? 48 : 60 };
+    // The r meter has a band of its own above the plot, flush with the plot's right edge, so it never
+    // covers a ball near 100% (the 2015-16 Warriors won 89%)
+    const m = { top: meter.offsetHeight + 16, right: narrow ? 70 : 96, bottom: 64, left: narrow ? 48 : 60 };
+    meter.style.right = `${m.right}px`;
     iw = W - m.left - m.right;
     ih = H - m.top - m.bottom;
     R = Math.max(10, Math.min(17, iw / 54));
