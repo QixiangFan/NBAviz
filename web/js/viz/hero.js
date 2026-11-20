@@ -7,15 +7,15 @@ import { fitCourt, drawCourt } from "./court.js";
 import { dur, instant, countTo } from "../motion.js";
 import { cutout } from "../ui/cutout.js";
 
-// Particle styles shared with the 2nd quarter: index = (three ? 2 : 0) + made. Misses wear the series color
+// Particle styles: index = (three ? 2 : 0) + made. Misses wear the series color
 // (4.4-4.6:1 on --bg); makes a lighter tint of it (9-10:1) and a bigger dot, so "bright = made" reads at a glance.
-export const SHOT_STYLES = [
+const SHOT_STYLES = [
   { color: "#3d8ff0", alpha: 0.85, size: 2.3 },   // two, missed
   { color: "#8cc4ff", alpha: 1.0, size: 2.8 },    // two, made
   { color: "#ec5e22", alpha: 0.85, size: 2.3 },   // three, missed
   { color: "#ff9a5e", alpha: 1.0, size: 2.8 },    // three, made
 ];
-export const shotStyle = (zone, made) => (zone >= 3 ? 2 : 0) + made;
+const shotStyle = (zone, made) => (zone >= 3 ? 2 : 0) + made;
 
 export function initHero(data) {
   const box = document.getElementById("hero-court");

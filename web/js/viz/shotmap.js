@@ -7,11 +7,17 @@ import { shotSampler, ZONES, ZONE_NAMES, season as fmtSeason, STANDARD_LINE } fr
 import { ParticleField } from "./particles.js";
 import { HeatField, shotDensity, densityQuantile } from "./heat.js";
 import { fitCourt, drawCourt } from "./court.js";
-import { SHOT_STYLES, shotStyle } from "./hero.js";
 import { dur } from "../motion.js";
 import { setupSteps, h, b, key } from "./steps.js";
 
-const STYLES = [...SHOT_STYLES, { color: "#a9a59c", alpha: 0.42, size: 2 }];   // last: shots outside the filter
+// One round style per shot type, a lighter tint of each series color (7.6-8.4:1 on --bg); made or missed is
+// not shown here.
+const STYLES = [
+  { color: "#6aaeff", alpha: 1.0, size: 2, round: true },      // two
+  { color: "#ff7b3f", alpha: 1.0, size: 2, round: true },      // three
+  { color: "#a9a59c", alpha: 0.42, size: 1.5, round: true },   // shots outside the filter
+];
+const shotStyle = (zone) => (zone >= 3 ? 1 : 0);
 const DIM = STYLES.length - 1;
 const HIGHLIGHT = { all: () => true, two: (z) => z < 3, three: (z) => z >= 3, mid: (z) => z === 2 };
 const pct = d3.format(".1%");
@@ -69,7 +75,7 @@ export function initShotMap(data) {
     const test = HIGHLIGHT[highlight];
     const tx = Float32Array.from(sm.x, (v) => court.x(v));
     const ty = Float32Array.from(sm.y, (v) => court.y(v));
-    const st = Uint8Array.from(sm.zone, (z, i) => (test(z) ? shotStyle(z, sm.made[i]) : DIM));
+    const st = Uint8Array.from(sm.zone, (z, i) => (test(z) ? shotStyle(z) : DIM));
     const time = animate ? dur(duration ?? (moved ? 2.2 : 0.7)) : 0;
     gsap.to(linesEl, { opacity: 1, duration: dur(0.6) });
     gsap.to(heatEl, { opacity: heatOn ? 1 : 0, duration: dur(0.6) });
@@ -85,7 +91,6 @@ export function initShotMap(data) {
     state = { season, highlight: "all", view: "columns", readout: false };
     const groups = ZONES.map(() => []);
     for (let i = 0; i < n; i++) groups[sm.zone[i]].push(i);
-    groups.forEach((g) => g.sort((a, c) => sm.made[c] - sm.made[a]));  // makes at the bottom
     const colW = court.width / ZONES.length;
     const perRow = 12;
     const rows = Math.ceil(d3.max(groups, (g) => g.length) / perRow);
@@ -100,7 +105,7 @@ export function initShotMap(data) {
       g.forEach((i, j) => {
         tx[i] = cx - (perRow * d) / 2 + (j % perRow) * d + d / 2;
         ty[i] = base - Math.floor(j / perRow) * d;
-        st[i] = shotStyle(z, sm.made[i]);
+        st[i] = shotStyle(z);
       });
       tops.push({ z, cx, top: base - Math.ceil(g.length / perRow) * d });
     });
@@ -233,7 +238,7 @@ export function initShotMap(data) {
   const steps = [
     { num: "How to read", title: "Every dot is a shot", body: [
       h("p", null, "Each dot is a real field-goal attempt from ", b(fmtSeason(first)), ", drawn from NBA.com shot charts. ",
-        key("three"), "Orange are threes, ", key("two"), "blue are twos. Bright dots went in.")] },
+        key("three"), "Orange are threes, ", key("two"), "blue are twos.")] },
     { num: "Step 2", title: "The mid-range was king", body: [
       h("p", null, "In ", fmtSeason(first), ", ", b(pct(zoneStat(first, "MID").share)), " of all shots were mid-range jumpers, the long twos between the paint and the arc."),
       h("p", null, "Only ", b(pct(threeShare(first))), " were threes.")] },
@@ -245,7 +250,7 @@ export function initShotMap(data) {
     { num: "The math", title: "Follow the points", body: [
       h("p", null, "Why move? In ", fmtSeason(last), " a mid-range shot returned ", b(zoneStat(last, "MID").pps.toFixed(2)),
         " points per attempt. A corner three returned ", b(zoneStat(last, "C3").pps.toFixed(2)), ", and a shot at the rim ", b(zoneStat(last, "RA").pps.toFixed(2)), "."),
-      h("p", null, "Each column holds one zone’s dots; the bright ones at the bottom went in.")] },
+      h("p", null, "Each column holds one zone’s dots, so the taller it stands, the more often teams shot from there.")] },
     { num: "Your turn", title: "Pick a season", body: [
       h("p", null, `Drag along the chart through ${seasons.length} seasons of shot charts, ${fmtSeason(seasons[0])} to ${fmtSeason(last)}, or press play, and filter by shot type.`),
       seasons[0] < STANDARD_LINE && h("p", null, `In ${fmtSeason(seasons[0])} the arc was 22 ft all the way around. Watch it move back out.`),
@@ -310,12 +315,12 @@ export function initShotMap(data) {
   chipSel.attr("aria-pressed", (c) => String(c[0] === explore.highlight));
 
   const legend = d3.select("#q2-legend").selectAll("span")
-    .data([["two", "Two-pointer"], ["three", "Three-pointer"], [null, "Bright = made"], [null, "Glow = every attempt"]])
+    .data([["two", "Two-pointer"], ["three", "Three-pointer"], [null, "Glow = every attempt"]])
     .join("span").each(function ([cls, text]) {
       if (cls) this.appendChild(key(cls));
       this.appendChild(document.createTextNode(text));
     });
-  const glowKey = legend.filter((_, i) => i === 3).style("display", "none");   // shown with the heat map
+  const glowKey = legend.filter((_, i) => i === 2).style("display", "none");   // shown with the heat map
 
   fit();
   showCourt(first, "all", { animate: false });

@@ -10,7 +10,7 @@ export class ParticleField {
     const f = () => new Float32Array(n);
     this.x = f(); this.y = f(); this.fx = f(); this.fy = f(); this.tx = f(); this.ty = f(); this.delay = f();
     this.style = new Uint8Array(n); this.fromStyle = new Uint8Array(n); this.toStyle = new Uint8Array(n);
-    this.styles = [];        // [{ color, alpha, size }]
+    this.styles = [];        // [{ color, alpha, size, round }]: size is the side of a square, or a circle's diameter
     this.t = 1;
     this.spread = 0;
     this.ease = (t) => t;
@@ -84,9 +84,14 @@ export class ParticleField {
       ctx.globalAlpha = s.alpha;
       ctx.fillStyle = s.color;
       const r = s.size;
+      const half = r / 2;
       ctx.beginPath();
       for (let i = 0; i < n; i++) {
-        if (this.style[i] === si) ctx.rect(this.x[i] - r / 2, this.y[i] - r / 2, r, r);
+        if (this.style[i] !== si) continue;
+        if (s.round) {
+          ctx.moveTo(this.x[i] + half, this.y[i]);
+          ctx.arc(this.x[i], this.y[i], half, 0, Math.PI * 2);
+        } else ctx.rect(this.x[i] - half, this.y[i] - half, r, r);
       }
       ctx.fill();
     });
