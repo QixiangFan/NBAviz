@@ -18,6 +18,17 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrambleTextPlugin.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+  <script>
+    // A script that fails to parse, link or download (often a stale copy in the browser cache next to fresh
+    // ones) stops the story before it starts: say so on the loader instead of loading forever.
+    addEventListener("error", function (e) {
+      var script = e.target && e.target.tagName === "SCRIPT";
+      var label = document.getElementById("loader-label");
+      if (label && (script || e.error instanceof SyntaxError)) {
+        label.textContent = "A script failed to load. Reload with Cmd+Shift+R (Ctrl+Shift+R on Windows).";
+      }
+    }, true);
+  </script>
   <script type="module" src="js/main.js"></script>
 </head>
 <body>

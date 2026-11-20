@@ -7,10 +7,10 @@ Website: <https://qixiangfan.github.io/NBAviz/>
 The clean data is already in `data/clean/`, so you only need a static file server. From the repo root:
 
 ```bash
-python3 -m http.server 8000
+python3 serve.py
 ```
 
-Then open <http://localhost:8000/> (it redirects to `web/`). Opening `web/index.html` directly from disk won't work, because the browser blocks loading the CSVs over `file://`.
+Then open <http://localhost:8000/> (it redirects to `web/`). `serve.py` is `python3 -m http.server 8000` that also tells the browser not to cache, so after editing a file you never get a mix of fresh and stale scripts (with plain `http.server`, reload with Cmd+Shift+R). Opening `web/index.html` directly from disk won't work, because the browser blocks loading the CSVs over `file://`.
 
 The libraries (D3, GSAP, Lenis) and fonts load from CDNs, so you need an internet connection.
 
