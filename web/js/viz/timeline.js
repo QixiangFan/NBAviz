@@ -28,7 +28,6 @@ export function initTimeline(data) {
   const bySeason = new Map(league.map((d) => [d.season, d]));
   const events = data.events.map((e, i) => ({ ...e, n: i + 1 }));
   const chartEl = document.getElementById("q1-chart");
-  const seasonBg = document.getElementById("q1-season");
   let metric = METRICS[0];
   let current = first;       // fractional season the clock has reached
   let shown = "";            // which events are in the stack
@@ -83,7 +82,7 @@ export function initTimeline(data) {
     g.append("rect").attr("x", x(SHORT_LINE[0] - 0.5)).attr("width", x(SHORT_LINE[1] + 0.5) - x(SHORT_LINE[0] - 0.5))
       .attr("height", ih).style("fill", "rgba(242,238,230,0.07)");
     g.append("text").attr("x", x((SHORT_LINE[0] + SHORT_LINE[1]) / 2)).attr("y", ih - 8).attr("text-anchor", "middle")
-      .style("font", "600 9px var(--mono)").style("letter-spacing", "0.1em").style("fill", "var(--muted)").text("22 FT LINE");
+      .attr("class", "short-line-label").text("22 FT LINE");
     const grid = g.append("g").attr("class", "grid");
     const yAxis = g.append("g").attr("class", "axis");
     g.append("g").attr("class", "axis").attr("transform", `translate(0,${ih})`)
@@ -93,7 +92,7 @@ export function initTimeline(data) {
     ticks.append("line").attr("class", "event-tick").attr("y1", (e) => -16 - e.row * 22).attr("y2", ih);
     ticks.append("circle").attr("cy", (e) => -24 - e.row * 22).attr("r", 9).style("fill", "var(--bg)").style("stroke", "rgba(242,238,230,0.5)");
     ticks.append("text").attr("y", (e) => -24 - e.row * 22).attr("dy", "0.35em").attr("text-anchor", "middle")
-      .style("font", "700 10px var(--mono)").style("fill", "var(--ink-2)").text((e) => e.n);
+      .style("font", "700 10px var(--mono)").style("fill", "var(--ink)").text((e) => e.n);
 
     const area = g.append("path").attr("clip-path", "url(#q1-clip)").style("fill", "url(#q1-wash)");
     const glow = g.append("path").attr("clip-path", "url(#q1-clip)").attr("filter", "url(#q1-glow)")
@@ -171,10 +170,9 @@ export function initTimeline(data) {
       .attr("transform", `translate(${x(sf)},${v == null ? 0 : y(v)}) rotate(${((sf - first) * 36).toFixed(1)})`);
     ticks.select("line").classed("passed", (e) => e.season <= sf);
     ticks.select("circle").style("fill", (e) => (e.season <= sf ? (e.kind === "rule" ? "var(--ink)" : "var(--three)") : "var(--bg)"));
-    ticks.select("text").style("fill", (e) => (e.season <= sf ? "var(--bg)" : "var(--ink-2)"));
+    ticks.select("text").style("fill", (e) => (e.season <= sf ? "var(--bg)" : "var(--ink)"));
 
     const row = bySeason.get(Math.min(last, lo));
-    seasonBg.textContent = fmtSeason(row.season);
     cells.select(".led").each(function ([k]) {
       const mm = METRICS.find((q) => q.key === k);
       const val = k === "season" ? fmtSeason(row.season) : row[k] == null ? "--.-" : mm.fmt(row[k]);

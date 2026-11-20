@@ -139,10 +139,11 @@
 
 /* --- Q1: scrubbed timeline ------------------------------------------------- */
 .scrub { position: relative; height: 460vh; }
-.q1-season {
-  position: absolute; left: 50%; top: 55%; transform: translate(-50%, -50%); pointer-events: none; white-space: nowrap;
-  font: 900 25vw/1 var(--display); color: transparent; -webkit-text-stroke: 1px rgba(242, 238, 230, 0.09);
-}
+/* Q1's small type (axis, labels, card text, note) sits a step whiter than --ink-2: 13:1 on --bg */
+#q1-scrub { --small: #d8d4cc; }
+#q1-scrub .stage-kicker { color: var(--small); }
+.q1-chart .axis text { fill: var(--small); font-size: 12px; }
+.q1-chart .short-line-label { font: 600 10px var(--mono); letter-spacing: 0.1em; fill: var(--small); }
 .q1-top { position: absolute; left: var(--gutter); top: calc(var(--hud-h) + 4vh); display: flex; flex-direction: column; gap: 12px; z-index: 2; }
 .q1-chart { position: absolute; left: calc(var(--gutter) - 24px); right: calc(var(--gutter) + 29vw); top: 24vh; bottom: 11vh; margin: 0; }
 .q1-chart svg { width: 100%; height: 100%; overflow: visible; }
@@ -154,7 +155,7 @@
 }
 .scoreboard .cell { display: flex; flex-direction: column; gap: 4px; }
 .scoreboard .cell.wide { grid-column: 1 / -1; }
-.scoreboard .lbl { font: 600 10px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.scoreboard .lbl { font: 600 10px var(--mono); letter-spacing: 0.14em; text-transform: uppercase; color: var(--small); }
 .scoreboard .led { font-size: 30px; align-self: flex-start; }
 .scoreboard .wide .led { font-size: 40px; color: var(--three); }
 .scoreboard .led.off { color: var(--muted); text-shadow: none; }
@@ -164,11 +165,11 @@
   border-radius: 4px 12px 12px 4px; padding: 11px 14px; transition: opacity 0.4s, filter 0.4s;
 }
 .event.milestone { border-left-color: var(--three); }
-.event.old { opacity: 0.65; filter: saturate(0.5); }
-.event .when { font: 600 10px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-2); }
+.event.old { opacity: 0.85; filter: saturate(0.5); }
+.event .when { font: 600 10px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--small); }
 .event h4 { margin: 3px 0 2px; font: 800 20px/1.05 var(--display); text-transform: uppercase; }
-.event p { margin: 0; font-size: 13px; color: var(--ink-2); }
-.q1-note { position: absolute; left: var(--gutter); bottom: 3.5vh; margin: 0; font: 500 11px var(--mono); color: var(--muted); letter-spacing: 0.05em; }
+.event p { margin: 0; font-size: 13px; color: var(--small); }
+.q1-note { position: absolute; left: var(--gutter); bottom: 3.5vh; margin: 0; font: 500 12px var(--mono); color: var(--small); letter-spacing: 0.05em; }
 .q1-chart .now-ball circle { fill: var(--three); filter: drop-shadow(0 0 8px var(--three)); }
 .q1-chart .now-ball path { fill: none; stroke: rgba(11, 13, 18, 0.6); stroke-width: 1; }
 .q1-chart .event-tick { stroke: rgba(242, 238, 230, 0.3); }
