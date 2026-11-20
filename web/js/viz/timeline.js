@@ -1,8 +1,9 @@
 // 1st quarter (sketch QF1): scrolling runs the clock from 1979-80 to today. The line draws itself, a
 // scoreboard reads out the season, and rule changes pop up as the line passes them. Switching the
-// metric morphs the line; hovering reads any season the clock has reached.
+// metric morphs the line; hovering reads any season the clock has reached. From the keyboard the chart is the
+// clock's slider: the arrow keys step a season, the page scrolls to run the clock there, and the tooltip reads it out.
 import { season as fmtSeason } from "../data.js";
-import { dur, instant } from "../motion.js";
+import { dur, instant, scrollToY } from "../motion.js";
 import { segmented } from "../ui/controls.js";
 import { showTip, hideTip } from "../ui/tooltip.js";
 import { cutout } from "../ui/cutout.js";
@@ -107,7 +108,7 @@ export function initTimeline(data) {
     g.append("rect").attr("width", iw).attr("height", ih).style("fill", "transparent")
       .on("pointermove", (event) => hover(event)).on("pointerleave", () => { cross.style("display", "none"); hideTip(); });
 
-    refs = { x, y: yScale(metric, ih), iw, ih, clip, grid, yAxis, ticks, area, glow, path, nowLine, nowBall, cross };
+    refs = { x, y: yScale(metric, ih), m, iw, ih, clip, grid, yAxis, ticks, area, glow, path, nowLine, nowBall, cross };
     paint();
     setSeason(current, true);
   }
@@ -173,6 +174,11 @@ export function initTimeline(data) {
     ticks.select("text").style("fill", (e) => (e.season <= sf ? "var(--bg)" : "var(--ink)"));
 
     const row = bySeason.get(Math.min(last, lo));
+    const valueText = `${fmtSeason(row.season)}: ${row[metric.key] == null ? "no data" : `${metric.fmt(row[metric.key])}, ${metric.title.toLowerCase()}`}`;
+    if (chartEl.getAttribute("aria-valuetext") !== valueText) {
+      chartEl.setAttribute("aria-valuenow", row.season);
+      chartEl.setAttribute("aria-valuetext", valueText);
+    }
     cells.select(".led").each(function ([k]) {
       const mm = METRICS.find((q) => q.key === k);
       const val = k === "season" ? fmtSeason(row.season) : row[k] == null ? "--.-" : mm.fmt(row[k]);
@@ -202,13 +208,19 @@ export function initTimeline(data) {
   }
 
   function hover(event) {
-    const { x, cross } = refs;
     const reached = Math.min(last, Math.floor(current));
-    const s = Math.max(first, Math.min(reached, Math.round(x.invert(d3.pointer(event)[0]))));
+    readout(Math.max(first, Math.min(reached, Math.round(refs.x.invert(d3.pointer(event)[0])))), event);
+  }
+
+  // One season's numbers, at the pointer, or (from the keyboard) at the top of its crosshair
+  function readout(s, event = null) {
+    if (!refs) return;
+    const { x, m, cross } = refs;
     const d = bySeason.get(s);
     cross.style("display", null).attr("x1", x(s)).attr("x2", x(s));
     const ev = events.find((e) => e.season === s);
-    showTip(event, {
+    const box = chartEl.querySelector("svg").getBoundingClientRect();
+    showTip(event || { clientX: box.left + m.left + x(s), clientY: box.top + m.top }, {
       title: fmtSeason(s),
       rows: METRICS.map((mm) => ({
         value: d[mm.key] == null ? "n/a" : mm.fmt(d[mm.key]), label: mm.title, color: mm === metric ? mm.color : null,
@@ -224,10 +236,36 @@ export function initTimeline(data) {
       setSeason(first + p * (last - first));
     },
   });
+  // The scroll position where the clock shows a season: a twentieth past its line, so a scroll position rounded
+  // to the pixel still reads that season on the board, with its event in the stack
+  const seasonY = (s) => trigger.start + (HOLD[0] + ((s + 0.05 - first) / (last - first)) * (HOLD[1] - HOLD[0])) * (trigger.end - trigger.start);
+  const shownSeason = () => Math.min(last, Math.floor(current));   // the board's season
+
+  // Keyboard: arrows step a season, Page keys five, Home and End jump to the ends
+  let aim = null;   // the season the keys asked for, while the clock glides there
+  let aimAt = 0;
+  Object.entries({ tabindex: 0, role: "slider", "aria-valuemin": first, "aria-valuemax": last,
+    "aria-label": "Season. Line chart of league three-point shooting since 1979-80, with rule changes marked" })
+    .forEach(([k, v]) => chartEl.setAttribute(k, v));
+  chartEl.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") { refs?.cross.style("display", "none"); hideTip(); return; }
+    const by = { ArrowLeft: -1, ArrowDown: -1, ArrowRight: 1, ArrowUp: 1, PageDown: -5, PageUp: 5, Home: -Infinity, End: Infinity }[event.key];
+    if (by == null || event.altKey || event.ctrlKey || event.metaKey) return;
+    event.preventDefault();
+    const from = aim != null && performance.now() - aimAt < 1500 ? aim : shownSeason();
+    aim = Math.max(first, Math.min(last, from + by));
+    aimAt = performance.now();
+    scrollToY(seasonY(aim), 0.45);
+    readout(aim);
+  });
+  chartEl.addEventListener("focus", () => { if (chartEl.matches(":focus-visible")) readout(shownSeason()); });
+  chartEl.addEventListener("blur", () => { refs?.cross.style("display", "none"); hideTip(); aim = null; });
+
   new ResizeObserver(draw).observe(chartEl);
   draw();
 
-  return { trigger };
+  // stops(): where the keyboard's story steps (ui/keys.js) pause inside the scrub, one per event
+  return { trigger, stops: () => events.map((e) => seasonY(e.season)) };
 }
 
 /**

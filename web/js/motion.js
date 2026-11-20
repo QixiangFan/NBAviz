@@ -15,6 +15,7 @@ let lenis = null;
 // scroll, so it looks at rest to the snap; this flag keeps the snap out until the glide ends or the reader
 // takes over (wheel, key or touch).
 let gliding = false;
+let restsSelector = null;   // the snap's blocks (initSnap)
 
 export function initMotion() {
   gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin);
@@ -28,6 +29,21 @@ export function initMotion() {
 
 export function stopScroll() { lenis?.stop(); }
 export function startScroll() { lenis?.start(); }
+
+/** Where the page is headed: the end of a running glide, or where it is. */
+export const scrollTarget = () => (lenis ? lenis.targetScroll : window.scrollY);
+export const scrollLimit = () => (lenis ? lenis.limit : document.documentElement.scrollHeight - window.innerHeight);
+
+/** Glide to a scroll position (a keyboard step), instantly when motion is off. The snap stays out of it. */
+export function scrollToY(y, duration = 0.6) {
+  const top = Math.min(Math.max(0, y), scrollLimit());
+  if (lenis && !lenis.isStopped) {
+    gliding = true;
+    lenis.scrollTo(top, { duration, easing: (t) => 1 - Math.pow(1 - t, 3), onComplete: () => { gliding = false; } });
+  } else {
+    window.scrollTo(0, top);
+  }
+}
 
 /** Scroll to an element (smoothly when motion is on). */
 export function scrollToEl(el, offset = 0) {
@@ -55,6 +71,7 @@ export function scrollToEl(el, offset = 0) {
  * wheel, key or touch hands control back to the reader.
  */
 export function initSnap(selector) {
+  restsSelector = selector;
   if (!lenis) return;
   let timer = 0;
   let dir = 1;
@@ -71,7 +88,8 @@ export function initSnap(selector) {
   });
   const reader = () => { gliding = false; };
   addEventListener("wheel", reader, { passive: true });
-  addEventListener("keydown", reader);
+  // A key the page handles itself (a keyboard step, ui/keys.js) starts a glide of its own; any other key is the reader's
+  addEventListener("keydown", (e) => { if (!e.defaultPrevented) reader(); });
   addEventListener("touchstart", () => { reader(); touching = true; cancel(); }, { passive: true });
   ["touchend", "touchcancel"].forEach((type) => addEventListener(type, () => { touching = false; schedule(); }, { passive: true }));
 
@@ -80,17 +98,26 @@ export function initSnap(selector) {
     if (touching || gliding || lenis.isStopped || moving()) return;
     const y = lenis.targetScroll;   // where the reader's scroll stops
     const vh = window.innerHeight;
-    const tops = [...document.querySelectorAll(selector)].map((el) => el.getBoundingClientRect().top + window.scrollY).sort((a, b) => a - b);
+    const { tops, rests } = blocks();
     if (!tops.some((t) => t > y + 2 && t < y + vh - 2)) return;
-    const ends = [...tops.slice(1), document.documentElement.scrollHeight];
-    const rests = tops.flatMap((t, i) => (ends[i] - t > vh ? [t, ends[i] - vh] : [t]))
-      .map((r) => Math.min(Math.max(r, 0), lenis.limit));
     const aim = y + dir * 0.3 * vh;
     const target = rests.reduce((a, r) => (Math.abs(r - aim) < Math.abs(a - aim) ? r : a));
     if (Math.abs(target - y) <= 2) return;
     gliding = true;
     lenis.scrollTo(target, { duration: 0.35, easing: (t) => 1 - Math.pow(1 - t, 3), onComplete: () => { gliding = false; } });
   }
+}
+
+/** The snap's blocks: their tops, and the clean resting positions (each top, and a tall block's bottom at the
+ *  bottom of the screen). Keyboard steps (ui/keys.js) stop at the same places. */
+export function blocks() {
+  if (!restsSelector) return { tops: [], rests: [] };
+  const vh = window.innerHeight;
+  const tops = [...document.querySelectorAll(restsSelector)].map((el) => el.getBoundingClientRect().top + window.scrollY).sort((a, b) => a - b);
+  const ends = [...tops.slice(1), document.documentElement.scrollHeight];
+  const rests = tops.flatMap((t, i) => (ends[i] - t > vh ? [t, ends[i] - vh] : [t]))
+    .map((r) => Math.min(Math.max(r, 0), scrollLimit()));
+  return { tops, rests };
 }
 
 /** Headlines and leads slide up line by line from behind a mask when they enter the viewport.

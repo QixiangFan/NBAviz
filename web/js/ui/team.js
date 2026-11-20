@@ -69,14 +69,29 @@ export function initTeamPicker(data) {
     }
     (options.find((o) => o.d.team_id === current) || options[0]).btn.focus({ preventScroll: true });
   };
-  function close() {
+  // returnFocus: false when focus has already moved on (Tab out of the panel)
+  function close(returnFocus = true) {
     if (panel.hidden) return;
     panel.hidden = true;
     chip.setAttribute("aria-expanded", "false");
-    back.focus({ preventScroll: true });
+    if (returnFocus) back.focus({ preventScroll: true });
   }
   chip.addEventListener("click", () => (panel.hidden ? open(chip) : close()));
   addEventListener("keydown", (e) => { if (e.key === "Escape") close(); });
+  panel.addEventListener("focusout", (e) => {
+    if (e.relatedTarget && !panel.contains(e.relatedTarget)) close(false);
+  });
+  // Arrow keys move through the logo grid as laid out (columns read from the page); Home and End: first and last
+  panel.querySelector(".team-grid").addEventListener("keydown", (e) => {
+    const btns = options.map((o) => o.btn);
+    const i = btns.indexOf(document.activeElement);
+    if (i < 0 || e.altKey || e.ctrlKey || e.metaKey) return;
+    const cols = btns.filter((b) => b.offsetTop === btns[0].offsetTop).length;
+    const to = { ArrowRight: i + 1, ArrowLeft: i - 1, ArrowDown: i + cols, ArrowUp: i - cols, Home: 0, End: btns.length - 1 }[e.key];
+    if (to == null) return;
+    e.preventDefault();
+    btns[Math.max(0, Math.min(btns.length - 1, to))].focus();
+  });
   addEventListener("pointerdown", (e) => {
     if (!panel.hidden && !panel.contains(e.target) && !chip.contains(e.target) && !back.contains(e.target)) close();
   });

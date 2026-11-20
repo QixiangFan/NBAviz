@@ -209,6 +209,34 @@ select, input[type="search"] {
 }
 :focus-visible { outline: 2px solid var(--three); outline-offset: 2px; }
 .seg button:focus-visible { outline-offset: 0; }   /* inside the track's 3px padding, not over its border */
+[tabindex="-1"]:focus { outline: none; }   /* a chapter the nav jumped to holds focus, without a ring */
+
+/* --- Keyboard (js/ui/keys.js) ----------------------------------------------- */
+kbd {
+  display: inline-block; min-width: 1.9em; padding: 4px 6px 3px; border-radius: 6px; text-align: center;
+  font: 600 12px/1 var(--mono); color: var(--ink); background: var(--bg-3);
+  border: 1px solid rgba(242, 238, 230, 0.3); border-bottom-width: 2px;
+}
+/* Skip links: out of sight until the first Tab reaches them */
+.skip-links { position: fixed; top: 10px; left: 12px; z-index: 90; display: flex; gap: 8px; }
+.skip-link {
+  display: inline-flex; align-items: center; gap: 8px; padding: 9px 14px; border-radius: 999px; cursor: pointer;
+  font: 600 12px/1 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; text-decoration: none;
+  color: var(--bg); background: var(--ink); border: 0;
+  transform: translateY(-160%); transition: transform 0.2s var(--ease-out);
+}
+.skip-link:focus-visible { transform: none; }
+.skip-link kbd { min-width: 0; padding: 2px 5px; background: var(--bg); color: var(--ink); border-color: transparent; }
+.keys-help {
+  width: min(480px, calc(100vw - 32px)); padding: 0; border-radius: 16px; color: var(--ink);
+  background: rgba(18, 21, 28, 0.98); border: 1px solid var(--line); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+}
+.keys-help::backdrop { background: rgba(5, 6, 8, 0.6); backdrop-filter: blur(3px); }
+.keys-body { padding: 20px 22px; }
+.keys-help h2 { margin: 0 0 16px; font: 800 30px/1 var(--display); text-transform: uppercase; }
+.keys-help dl { display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; align-items: center; margin: 0 0 18px; }
+.keys-help dt { display: flex; flex-wrap: wrap; gap: 4px; max-width: 13em; }
+.keys-help dd { margin: 0; font-size: 14px; line-height: 1.35; }
 
 /* --- Shared chart chrome ---------------------------------------------------- */
 svg text { fill: var(--ink-2); font: 500 12px var(--text); }

@@ -19,6 +19,7 @@ import { initRibbons } from "./viz/ribbons.js";
 import { initCursor } from "./ui/cursor.js";
 import { initTeamPicker } from "./ui/team.js";
 import { initShotClock } from "./ui/shotclock.js";
+import { initKeys } from "./ui/keys.js";
 
 async function boot() {
   initMotion();
@@ -52,6 +53,7 @@ async function boot() {
   initHud();
   initCursor();
   initSnap("main > section:not(.scrolly), .scrolly .step");   // a scrolly section starts at its first step
+  initKeys({ extraStops: () => q1.stops() });   // the keyboard's story steps stop at the snap's places and at Q1's events
   ScrollTrigger.refresh();
 
   await hideLoader(data);
@@ -96,7 +98,11 @@ function initHud() {
   const links = [...document.querySelectorAll(".hud-periods a")];
   document.querySelectorAll("[data-goto]").forEach((a) => a.addEventListener("click", (e) => {
     e.preventDefault();
-    scrollToEl(document.getElementById(a.dataset.goto));
+    const target = document.getElementById(a.dataset.goto);
+    scrollToEl(target);
+    // Focus follows the jump, so the next Tab carries on inside the chapter
+    target.setAttribute("tabindex", "-1");
+    target.focus({ preventScroll: true });
   }));
   const bar = document.getElementById("game-clock-bar");
   ScrollTrigger.create({ start: 0, end: "max", onUpdate: (self) => gsap.set(bar, { scaleX: self.progress }) });
@@ -108,7 +114,11 @@ function initHud() {
       trigger: section, start: section.id === "tipoff" ? "top top" : "top 50%", end: "bottom 50%",
       onToggle: (self) => {
         if (!self.isActive) return;
-        links.forEach((a) => a.classList.toggle("active", a.dataset.goto === section.dataset.period));
+        links.forEach((a) => {
+          const on = a.dataset.goto === section.dataset.period;
+          a.classList.toggle("active", on);
+          if (on) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current");
+        });
         // A new chapter resets the clock at once, like a new possession
         if (possession && possession !== section) clock.set(left(self));
         possession = section;

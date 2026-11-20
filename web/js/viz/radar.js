@@ -2,7 +2,7 @@
 // with the league median as a dashed ring; at halftime, small glyphs of each era's average team. When a
 // radar first scrolls into view its rings open, a sweep beam turns once and each point pops out as the beam
 // crosses its axis. A new matchup runs a quicker sweep that moves the points one axis at a time. Hovering
-// an axis compares the shapes on it.
+// an axis compares the shapes on it; from the keyboard, the focused radar's arrow keys walk the axes.
 import { dur, instant } from "../motion.js";
 import { showTip, moveTip, hideTip } from "../ui/tooltip.js";
 
@@ -115,6 +115,25 @@ export function radarDuel(fig, { axes, colors, describe, max = 520, pad = 62, la
     });
     el.dots.attr("cx", (d) => at(d.s, d.j)[0]).attr("cy", (d) => at(d.s, d.j)[1]);
   }
+
+  // Keyboard: Tab to the radar, then left and right walk the axes (Home and End: first and last), Escape lets go
+  let kj = 0;
+  fig.setAttribute("tabindex", "0");
+  fig.setAttribute("aria-keyshortcuts", "ArrowLeft ArrowRight");
+  const atLabel = (j) => {
+    const r = el.labels.nodes()[j].getBoundingClientRect();
+    return { clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 };
+  };
+  fig.addEventListener("keydown", (event) => {
+    const step = { ArrowRight: 1, ArrowLeft: -1, Home: -kj, End: n - 1 - kj }[event.key];
+    if (event.key === "Escape") { focus(null); return; }
+    if (step == null || event.altKey || event.ctrlKey || event.metaKey) return;
+    event.preventDefault();
+    kj = (kj + step + n) % n;
+    focus(kj, atLabel(kj));
+  });
+  fig.addEventListener("focus", () => { if (fig.matches(":focus-visible")) focus(kj, atLabel(kj)); });
+  fig.addEventListener("blur", () => focus(null));
 
   // Hover: light up one axis and its two points, and compare the players on it
   function focus(j, event) {
